@@ -1,5 +1,4 @@
 ﻿using OAuthService.Controllers.Responses;
-using OAuthService.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -12,8 +11,8 @@ namespace OAuthService.Controllers
 	[ApiController]
 	public class InfoController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
-        public InfoController(ILogger<WeatherForecastController> logger)
+        private readonly ILogger<InfoController> _logger;
+        public InfoController(ILogger<InfoController> logger)
         {
             _logger = logger;
         }
