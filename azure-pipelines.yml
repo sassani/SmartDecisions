@@ -23,6 +23,7 @@ steps:
     restoreSolution: '$(projects)'
 
 - task: VSBuild@1
+  displayName: 'VS Build'
   inputs:
     solution: '$(projects)'
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
@@ -30,12 +31,14 @@ steps:
     configuration: '$(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
-  displayName: 'dotNet publish $(configuration)'
+  displayName: 'dotNet publish'
   inputs:
     command: publish
     publishWebProjects: True
+    projects: '$(projects)'
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: True 
+    modifyOutputPath: true
    
 - task: PublishBuildArtifacts@1
   displayName: 'publish artifacts'
