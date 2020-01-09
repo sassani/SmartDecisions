@@ -30,6 +30,7 @@ steps:
     configuration: '$(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
+  displayName: 'dotNet publish $(configuration)'
   inputs:
     command: publish
     publishWebProjects: True
@@ -37,4 +38,4 @@ steps:
     zipAfterPublish: True 
    
 - task: PublishBuildArtifacts@1
-    displayName: 'publish artifacts'
+  displayName: 'publish artifacts'
