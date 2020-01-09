@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using RestApi.Core.Domain;
-using static RestApi.Core.AppEnums;
+using OAuthService.Core.Domain;
+using static OAuthService.Core.AppEnums;
 using System;
 
-namespace RestApi.DataBase.Configurations
+namespace OAuthService.DataBase.Configurations
 {
     public class RoleDbConfig : EntityConfiguration<Role>
     {

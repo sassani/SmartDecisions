@@ -1,10 +1,10 @@
-﻿using RestApi.Core.DataServices;
-using RestApi.Helpers;
+﻿using OAuthService.Core.DataServices;
+using OAuthService.Helpers;
 using Microsoft.AspNetCore.Http;
 using UAParser;
 using System.Collections.Generic;
 
-namespace RestApi.Core.Domain
+namespace OAuthService.Core.Domain
 {
 	public class Client
 	{

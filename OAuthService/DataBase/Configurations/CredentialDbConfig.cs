@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using RestApi.Helpers;
+using OAuthService.Helpers;
 using System;
 using Microsoft.Extensions.Options;
-using RestApi.Extensions;
-using RestApi.Core.Domain;
+using OAuthService.Extensions;
+using OAuthService.Core.Domain;
 
-namespace RestApi.DataBase.Configurations
+namespace OAuthService.DataBase.Configurations
 {
     public class CredentialDbConfig : EntityConfiguration<Credential>
     {

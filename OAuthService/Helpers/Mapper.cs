@@ -1,8 +1,8 @@
-﻿using RestApi.Core.Domain;
+﻿using OAuthService.Core.Domain;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace RestApi.Helpers
+namespace OAuthService.Helpers
 {
 	public static class Mapper
 	{

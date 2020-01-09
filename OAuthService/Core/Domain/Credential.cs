@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RestApi.Core.Domain
+namespace OAuthService.Core.Domain
 {
 	public class Credential
 	{

@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RestApi.Core.Services;
-using RestApi.Core.Services.Interfaces;
-using RestApi.Extensions;
+using OAuthService.Core.Services;
+using OAuthService.Core.Services.Interfaces;
+using OAuthService.Extensions;
 
 namespace RestApi
 {

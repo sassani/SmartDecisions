@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using RestApi.Core.Domain;
+using OAuthService.Core.Domain;
 
 
-namespace RestApi.DataBase.Configurations
+namespace OAuthService.DataBase.Configurations
 {
     public class CredentialRoleDbConfig : EntityConfiguration<CredentialRole>
     {

@@ -3,7 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using RestApi.DataBase.Persistence;
+using OAuthService.DataBase.Persistence;
 
 namespace OAuthService.Migrations
 {

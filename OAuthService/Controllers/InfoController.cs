@@ -1,11 +1,11 @@
-﻿using RestApi.Controllers.Responses;
-using RestApi.Core.Services.Interfaces;
+﻿using OAuthService.Controllers.Responses;
+using OAuthService.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Net;
 
-namespace RestApi.Controllers
+namespace OAuthService.Controllers
 {
 	[AllowAnonymous]
 	[Route("api/info")]

@@ -1,7 +1,7 @@
 ﻿
-using RestApi.Core;
+using OAuthService.Core;
 
-namespace RestApi.Extensions
+namespace OAuthService.Extensions
 {
 	public class AppSettingsModel
 	{

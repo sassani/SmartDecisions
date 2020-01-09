@@ -1,7 +1,7 @@
 ﻿
 using Newtonsoft.Json;
 
-namespace RestApi.Core.Domain.DTOs
+namespace OAuthService.Core.Domain.DTOs
 {
     public class RegisterUserDto
     {

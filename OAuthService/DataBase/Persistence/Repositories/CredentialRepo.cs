@@ -1,11 +1,11 @@
-﻿using RestApi.Core.Domain;
-using RestApi.Core.DataServices.IRepositories;
+﻿using OAuthService.Core.Domain;
+using OAuthService.Core.DataServices.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 
 
-namespace RestApi.DataBase.Persistence.Repositories
+namespace OAuthService.DataBase.Persistence.Repositories
 {
 	public class CredentialRepo : Repo<Credential>, ICredentialRepo
 	{

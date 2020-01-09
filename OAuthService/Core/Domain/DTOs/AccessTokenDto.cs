@@ -1,9 +1,9 @@
-﻿using RestApi.Helpers;
+﻿using OAuthService.Helpers;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
 
-namespace RestApi.Core.Domain.DTOs
+namespace OAuthService.Core.Domain.DTOs
 {
 	public class AccessTokenDto
 	{

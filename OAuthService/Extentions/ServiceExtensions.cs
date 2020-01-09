@@ -1,13 +1,13 @@
-﻿using RestApi.DataBase;
-using RestApi.DataBase.Persistence;
-using RestApi.Core.DataServices;
+﻿using OAuthService.DataBase;
+using OAuthService.DataBase.Persistence;
+using OAuthService.Core.DataServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace RestApi.Extensions
+namespace OAuthService.Extensions
 {
 	public static class ServiceExtensions
 	{

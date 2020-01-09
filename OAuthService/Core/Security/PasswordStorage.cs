@@ -2,7 +2,7 @@
 using System.Text;
 using System.Security.Cryptography;
 
-namespace RestApi.Core.Security
+namespace OAuthService.Core.Security
 {
     class InvalidHashException : Exception
     {

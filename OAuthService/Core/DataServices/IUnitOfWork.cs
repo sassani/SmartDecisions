@@ -1,7 +1,7 @@
 ﻿using System;
-using RestApi.Core.DataServices.IRepositories;
+using OAuthService.Core.DataServices.IRepositories;
 
-namespace RestApi.Core.DataServices
+namespace OAuthService.Core.DataServices
 {
 	public interface IUnitOfWork : IDisposable
 	{

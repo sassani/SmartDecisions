@@ -1,10 +1,10 @@
 ﻿
-using RestApi.Controllers.Responses;
-using RestApi.Core.Domain;
-using RestApi.Core.Services.Interfaces;
+using OAuthService.Controllers.Responses;
+using OAuthService.Core.Domain;
+using OAuthService.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace RestApi.Controllers
+namespace OAuthService.Controllers
 {
 	public class BaseController : ControllerBase
     {

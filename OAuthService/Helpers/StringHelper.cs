@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace RestApi.Helpers
+namespace OAuthService.Helpers
 {
 	public class StringHelper
 	{

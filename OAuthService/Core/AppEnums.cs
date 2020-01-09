@@ -1,4 +1,4 @@
-﻿namespace RestApi.Core
+﻿namespace OAuthService.Core
 {
 	public class AppEnums
 	{

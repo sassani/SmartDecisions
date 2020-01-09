@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
 
-namespace RestApi.Core.Security
+namespace OAuthService.Core.Security
 {
 	public class AppRSA
 	{

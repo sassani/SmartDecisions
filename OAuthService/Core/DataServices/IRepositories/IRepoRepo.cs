@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace RestApi.Core.DataServices.IRepositories
+namespace OAuthService.Core.DataServices.IRepositories
 {
 	public interface IRepoRepo<TEntity> where TEntity : class
 	{

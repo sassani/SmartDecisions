@@ -1,9 +1,9 @@
-﻿using RestApi.Core.DataServices.IRepositories;
-using RestApi.Core.DataServices;
-using RestApi.DataBase.Persistence;
-using RestApi.DataBase.Persistence.Repositories;
+﻿using OAuthService.Core.DataServices.IRepositories;
+using OAuthService.Core.DataServices;
+using OAuthService.DataBase.Persistence;
+using OAuthService.DataBase.Persistence.Repositories;
 
-namespace RestApi.DataBase
+namespace OAuthService.DataBase
 {
 	/// <summary>
 	/// All needed Database transactions mus be handled by this class

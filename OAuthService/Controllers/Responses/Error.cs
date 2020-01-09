@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace RestApi.Controllers.Responses
+namespace OAuthService.Controllers.Responses
 {
 	public class Error
 	{

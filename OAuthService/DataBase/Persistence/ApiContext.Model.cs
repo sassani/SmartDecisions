@@ -1,9 +1,9 @@
-﻿using RestApi.Core.Domain;
-using RestApi.DataBase.Configurations;
+﻿using OAuthService.Core.Domain;
+using OAuthService.DataBase.Configurations;
 using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace RestApi.DataBase.Persistence
+namespace OAuthService.DataBase.Persistence
 {
     public partial class ApiContext
     {

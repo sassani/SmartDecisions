@@ -1,6 +1,6 @@
-﻿using RestApi.Core.Domain;
+﻿using OAuthService.Core.Domain;
 
-namespace RestApi.Core.DataServices.IRepositories
+namespace OAuthService.Core.DataServices.IRepositories
 {
 	public interface ILogsheetRepo : IRepoRepo<Logsheet>
 	{

@@ -1,13 +1,13 @@
-﻿using RestApi.Controllers.Responses;
-using RestApi.Core.Domain;
-using RestApi.Core.Domain.DTOs;
-using RestApi.Core.Services.Interfaces;
+﻿using OAuthService.Controllers.Responses;
+using OAuthService.Core.Domain;
+using OAuthService.Core.Domain.DTOs;
+using OAuthService.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace RestApi.Controllers
+namespace OAuthService.Controllers
 {
 	/// <summary>
 	/// </summary>

@@ -9,7 +9,7 @@ using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
-namespace RestApi.Controllers.Responses
+namespace OAuthService.Controllers.Responses
 {
 	public class Response
 	{

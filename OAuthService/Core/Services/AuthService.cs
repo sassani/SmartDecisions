@@ -1,11 +1,11 @@
-﻿using RestApi.Core.Domain;
-using RestApi.Core.Domain.DTOs;
-using RestApi.Helpers;
-using RestApi.Core.Services.Interfaces;
-using RestApi.Core.DataServices;
+﻿using OAuthService.Core.Domain;
+using OAuthService.Core.Domain.DTOs;
+using OAuthService.Helpers;
+using OAuthService.Core.Services.Interfaces;
+using OAuthService.Core.DataServices;
 using System;
 
-namespace RestApi.Core.Services
+namespace OAuthService.Core.Services
 {
     public class AuthService : IAuthService
     {

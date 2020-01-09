@@ -1,15 +1,15 @@
-﻿using RestApi.Core.Domain;
-using RestApi.Helpers;
-using RestApi.Core.Services.Interfaces;
-using RestApi.Core.DataServices;
+﻿using OAuthService.Core.Domain;
+using OAuthService.Helpers;
+using OAuthService.Core.Services.Interfaces;
+using OAuthService.Core.DataServices;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using RestApi.Core.Domain.DTOs;
+using OAuthService.Core.Domain.DTOs;
 
-namespace RestApi.Core.Services
+namespace OAuthService.Core.Services
 {
 	public class CredentialService : ICredentialService
 	{

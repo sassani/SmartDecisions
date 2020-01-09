@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RestApi.Core.Domain
+namespace OAuthService.Core.Domain
 {
 	public class CredentialRole
 	{

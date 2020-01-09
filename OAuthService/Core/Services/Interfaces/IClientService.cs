@@ -1,8 +1,8 @@
 ﻿
-using RestApi.Core.Domain;
-using RestApi.Core.Domain.DTOs;
+using OAuthService.Core.Domain;
+using OAuthService.Core.Domain.DTOs;
 
-namespace RestApi.Core.Services.Interfaces
+namespace OAuthService.Core.Services.Interfaces
 {
 	public interface IClientService
 	{
