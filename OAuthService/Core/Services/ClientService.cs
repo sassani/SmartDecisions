@@ -64,7 +64,7 @@ namespace OAuthService.Core.Services
 
             ClientInfo clientInfo = uaParser.Parse(uaString);
 
-            client.Browser = clientInfo.UserAgent.Family + " " + clientInfo.UserAgent.Major + "." + clientInfo.UserAgent.Minor;
+            client.Browser = clientInfo.UA.Family + " " + clientInfo.UA.Major + "." + clientInfo.UA.Minor;
             if (client.Browser == "Other .")
             {
                 client.Browser = uaString;
