@@ -6,5 +6,6 @@
   <PropertyGroup>
     <ActiveDebugProfile>OAuthService</ActiveDebugProfile>
     <ShowAllFiles>false</ShowAllFiles>
+    <NameOfLastUsedPublishProfile>FolderLocal</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>
