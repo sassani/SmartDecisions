@@ -3,6 +3,7 @@ using OAuthService.Core.DataServices.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace OAuthService.DataBase.Persistence.Repositories
 {
@@ -15,15 +16,23 @@ namespace OAuthService.DataBase.Persistence.Repositories
             this.context = context;
         }
 
-        public Logsheet FindByRefreshToken(string refreshToken)
+        public Task<Logsheet> FindLogsheetByRefreshTokenAsync(string refreshToken)
         {
             DateTime currentDay = DateTime.Now;
 
-            return context.Logsheet
-                .Where(uc => uc.RefreshToken == refreshToken && currentDay - uc.CreatedAt <= TimeSpan.FromDays(73))
-                .Include(u => u.Credential)
-                //.ThenInclude(uc => uc.UserRole)
-                .SingleOrDefault();
+            return Task.Run(() =>
+            {
+                return context.Logsheet
+                 .Where(ls => ls.RefreshToken == refreshToken)
+                 .Include(cr => cr.Credential)
+                 .SingleOrDefaultAsync();
+            });
+        }
+
+        public void UpdateLastTimeLogin(Logsheet logSheet)
+        {
+            logSheet.UpdatedAt = DateTime.Now;
+            context.Logsheet.Update(logSheet);
         }
     }
 }

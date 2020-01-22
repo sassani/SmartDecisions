@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace OAuthService.Controllers
 {
@@ -14,16 +15,16 @@ namespace OAuthService.Controllers
 	/// <error-code>01</error-code>
 	[Authorize]
 	[ApiController]
-	[Route("api/auth")]
+	[Route("[controller]")]
 	public class AuthController : BaseController
 	{
-		private readonly IAuthService authService;
+		private readonly ICredentialService credentialService;
 		private readonly IClientService clientService;
 
-		public AuthController(ICredentialService credentialSrvice, IClientService clientService, IAuthService authService) : base(credentialSrvice)
+		public AuthController(ICredentialService credentialSrvice, IClientService clientService, ICredentialService credentialService) : base(credentialSrvice)
 		{
 			ErrorCode = "01";
-			this.authService = authService;
+			this.credentialService = credentialService;
 			this.clientService = clientService;
 		}
 		
@@ -34,10 +35,10 @@ namespace OAuthService.Controllers
 		/// <returns></returns>
 		[AllowAnonymous]
 		[HttpPost()]
-		public IActionResult Login([FromBody] LoginCredentialDto loginCredential)
+		public async Task<IActionResult> Login([FromBody] LoginCredentialDto loginCredential)
 		{
 			string errCode = "01";
-			Client client = clientService.CreateClient(loginCredential.ClientId,loginCredential.ClientSecret);
+			Client client = await clientService.CreateClientAsync(loginCredential.ClientId,loginCredential.ClientSecret);
 
 			if (!client.IsValid)
 			{
@@ -49,8 +50,8 @@ namespace OAuthService.Controllers
 						} }).ToActionResult();
 			}
 
-			Credential credential = new Credential();
-			if (authService.Authenticate(loginCredential, ref credential))
+			Credential credential = await credentialService.CreateCredential(loginCredential);
+			if (credential.IsAuthenticated)
 			{
 				// check user
 				if (!credential.IsActive)
@@ -73,7 +74,7 @@ namespace OAuthService.Controllers
 
 				var payload = new
 				{
-					authToken = authService.Login(client, credential)
+					authToken = credentialService.Login(client, credential)
 				};
 				return new Response(HttpStatusCode.Accepted, payload).ToActionResult();
 			}
@@ -100,7 +101,7 @@ namespace OAuthService.Controllers
 		public IActionResult Logout()
 		{
 			string errCode = "02";
-			if (authService.Logout(GetLogsheetId()))
+			if (credentialService.Logout(GetLogsheetId()))
 			{
 
 				return new Response(HttpStatusCode.Accepted, null).ToActionResult();
@@ -118,7 +119,7 @@ namespace OAuthService.Controllers
 		public IActionResult LogoutAll()
 		{
 			string errCode = "03";
-			if (authService.Logout(GetLogsheetId(), true))
+			if (credentialService.Logout(GetLogsheetId(), true))
 			{
 				return new Response(HttpStatusCode.Accepted, null).ToActionResult();
 			}

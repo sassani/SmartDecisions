@@ -19,6 +19,7 @@ namespace OAuthService.Core.Domain
 		public string Name { get; set; }
 		public AppEnums.ClientType Type { get; set; }
 
+		// ignored properties:
 		public bool  IsValid { get; set; }
 		public string Platform { get; set; }
 		public string Browser { get; set; }

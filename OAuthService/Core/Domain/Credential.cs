@@ -18,7 +18,10 @@ namespace OAuthService.Core.Domain
 		public bool IsActive { get; set; }
 		public DateTime? LastLoginAt { get; set; }
 
-		public virtual ICollection<CredentialRole> CredentialRole { get; set; }
+        //ignored properties:
+        public bool IsAuthenticated { get; set; }
+
+        public virtual ICollection<CredentialRole> CredentialRole { get; set; }
         public virtual ICollection<Logsheet> Logsheet { get; set; }
 
     }

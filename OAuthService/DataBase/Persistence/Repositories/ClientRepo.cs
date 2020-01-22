@@ -2,6 +2,7 @@
 using OAuthService.Core.DataServices.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace OAuthService.DataBase.Persistence.Repositories
 {
@@ -18,6 +19,16 @@ namespace OAuthService.DataBase.Persistence.Repositories
 			return context.Client
 				.Where(a => a.ClientPublicId == publicId)
 				.SingleOrDefault();
+		}
+
+		public Task<Client> FindByClientPublicIdAsync(string clientPublicId)
+		{
+			return Task.Run(() =>
+			{
+				return context.Client
+				.Where(a => a.ClientPublicId == clientPublicId)
+				.SingleOrDefaultAsync();
+			});
 		}
 	}
 }

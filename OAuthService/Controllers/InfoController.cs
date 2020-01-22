@@ -7,7 +7,7 @@ using System.Net;
 namespace OAuthService.Controllers
 {
 	[AllowAnonymous]
-	[Route("api/info")]
+	[Route("info")]
 	[ApiController]
 	public class InfoController : ControllerBase
     {

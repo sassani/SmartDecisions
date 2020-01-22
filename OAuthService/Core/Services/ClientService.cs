@@ -7,6 +7,7 @@ using OAuthService.Core.DataServices;
 using Microsoft.AspNetCore.Http;
 using System;
 using UAParser;
+using System.Threading.Tasks;
 
 namespace OAuthService.Core.Services
 {
@@ -14,6 +15,7 @@ namespace OAuthService.Core.Services
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IHttpContextAccessor httpContextAccessor;
+        private Client client;
 
         public ClientService(IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
         {
@@ -21,19 +23,31 @@ namespace OAuthService.Core.Services
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        public Client CreateClient(string clientId, string clientSecret=null)
+        public Client CreateClient(string clientId, string clientSecret = null)
         {
-            Client client = new Client
+            client = new Client
             {
                 ClientPublicId = clientId,
                 ClientSecret = clientSecret,
             };
-            var t = CheckValidation(ref client);
+            var t = CheckValidation();
             client.IsValid = t;
             return client;
         }
 
-        private bool CheckValidation(ref Client client)
+        public async Task<Client> CreateClientAsync(string clientId, string clientSecret = null)
+        {
+            client = new Client
+            {
+                ClientPublicId = clientId,
+                ClientSecret = clientSecret,
+            };
+            await ValidateClient();
+            ClientParser();
+            return client;
+        }
+
+        private bool CheckValidation()
         {
             client = unitOfWork.Client.FindByClientPublicId(client.ClientPublicId);
             //Client clientDb = unitOfWork.Client.FindByClientPublicId(client.ClientPublicId);
@@ -46,11 +60,29 @@ namespace OAuthService.Core.Services
 
             //Mapper.MapDbModelToClassModel(client, clientDb);
             //client = clientDb;
-            ClientParser(client);
+            ClientParser();
             return true;
         }
 
-        private void ClientParser(Client client)
+        private async Task ValidateClient()
+        {
+            Client dbClient = await unitOfWork.Client.FindByClientPublicIdAsync(client.ClientPublicId);
+            if (dbClient != null)
+            {
+                client = dbClient;
+                client.IsValid = true;
+                if (client.Type.Equals(AppEnums.ClientType.Mobile))
+                {
+                    client.IsValid = client.ClientSecret.Equals(client.ClientSecret);
+                }
+            }
+            else
+            {
+                client.IsValid = false;
+            }
+        }
+
+        private void ClientParser()
         {
             /// ref:https://github.com/ua-parser/uap-csharp
             client.IP = httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();

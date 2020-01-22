@@ -1,10 +1,13 @@
-﻿using OAuthService.DataBase;
-using OAuthService.DataBase.Persistence;
-using OAuthService.Core.DataServices;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using OAuthService.Core.DataServices;
+using OAuthService.Core.Domain.DTOs;
+using OAuthService.Core.Domain.DTOs.Validators;
+using OAuthService.DataBase;
+using OAuthService.DataBase.Persistence;
 using System.Text;
 
 namespace OAuthService.Extensions
@@ -19,17 +22,16 @@ namespace OAuthService.Extensions
 		//	.UseSqlServer(config.DbConnection));
 		//	services.AddScoped<IUnitOfWork, UnitOfWork>();
 		//}
+		public static void AddValidators(this IServiceCollection services)
+		{
+			services.AddTransient<IValidator<LoginCredentialDto>, LoginCredentialDtoValidator>();
+		}
 
 		public static void ConfigureDbMySql(this IServiceCollection services, AppSettingsModel config)
 		{
-			var server = config.DbConfiguration.Server;
-			var db = config.DbConfiguration.Database;
-			var port = config.DbConfiguration.Port;
-            var uid = config.DbConfiguration.UserId;
-			var password = config.DbConfiguration.Password;
 			services.AddDbContext<ApiContext>(options => options
 			///.UseLazyLoadingProxies()
-			.UseMySql($"Server={server}; port={port}; Database={db}; uid={uid}; password={password};"));
+			.UseMySql(config.DbConnectionString));
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
 		}
 

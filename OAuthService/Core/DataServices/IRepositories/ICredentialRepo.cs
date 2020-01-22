@@ -1,5 +1,5 @@
 ﻿using OAuthService.Core.Domain;
-
+using System.Threading.Tasks;
 
 namespace OAuthService.Core.DataServices.IRepositories
 {
@@ -8,7 +8,7 @@ namespace OAuthService.Core.DataServices.IRepositories
 		bool IsEmailExist(string email);
 		Credential FindByEmail(string email);
         CredentialRole[] GetRoles(Credential credential);
-        void UpdateLastLogin(int credentialId);
-	}
+        void UpdateLastLogin(Credential credential);
+    }
 
 }
