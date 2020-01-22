@@ -9,16 +9,14 @@ namespace OAuthService.Controllers
 {
     /// <error-code>02</error-code>
 	[Authorize]
-    [Route("api/user")]
+    [Route("user")]
     [ApiController]
     public class UserController : BaseController
     {
-        private readonly IAuthService authService;
         private readonly IClientService clientService;
-        public UserController(ICredentialService userSrvice, IClientService clientService, IAuthService authService) : base(userSrvice)
+        public UserController(ICredentialService userSrvice, IClientService clientService) : base(userSrvice)
         {
             ErrorCode = "02";
-            this.authService = authService;
             this.clientService = clientService;
         }
 

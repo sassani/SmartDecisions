@@ -5,7 +5,7 @@ namespace OAuthService.Extensions
 {
 	public class AppSettingsModel
 	{
-		public DbConfiguration DbConfiguration { get; set; }
+		public string DbConnectionString { get; set; }
 		public string BaseUrl { get; set; }
 		public string[] CrossUrls { get; set; }
 		public Token Token { get; set; }
@@ -19,16 +19,6 @@ namespace OAuthService.Extensions
 		public string Issuer { get; set; }
 		public string Audience { get; set; }
 		public int DurationMin { get; set; }
-	}
-
-	public class DbConfiguration
-	{
-        public string DbConnectionString { get; set; }
-        public string Server { get; set; }
-		public string Database { get; set; }
-        public string UserId { get; set; }
-        public string Password { get; set; }
-		public int Port { get; set; }
 	}
 
 	public class BaseClient

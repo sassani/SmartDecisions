@@ -1,3 +1,4 @@
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -33,13 +34,15 @@ namespace RestApi
             services.ConfigureCors(appSettings);
             services.ConfigureAuthentication(appSettings);
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddMvc();
+
+            services.AddMvc().AddFluentValidation();
+            services.AddValidators();
+
             services.AddHttpContextAccessor();
 
             services.AddTransient<ITokenService, TokenService>();
             services.AddTransient<IClientService, ClientService>();
             services.AddTransient<ICredentialService, CredentialService>();
-            services.AddTransient<IAuthService, AuthService>();
 
         }
 
