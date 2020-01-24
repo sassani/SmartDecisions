@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace OAuthService.Core.Domain.DTOs
 {
-	public class LoginCredentialDto
+	public class CredentialDto
 	{
 		[Required]
 		public string ClientId { get; set; }

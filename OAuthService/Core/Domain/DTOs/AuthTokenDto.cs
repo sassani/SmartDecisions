@@ -17,16 +17,12 @@ namespace OAuthService.Core.Domain.DTOs
 		[JsonProperty(propertyName: "uid")]
 		public string CredentialId { get; set; }
 
-		[JsonProperty(propertyName: "roles")]
-		public string[] CredentialRoles { get; set; }
-
-		public AuthTokenDto(string token, string refresh, string type, Credential user)
+		public AuthTokenDto(string token, string refresh, string type, Credential credential)
 		{
 			AccessToken = token;
 			RefreshToken = refresh;
 			TokenType = type;
-			CredentialId = user.PublicId;
-			//UserRoles = user.Roles.ToArray();
+			CredentialId = credential.PublicId;
 		}
 
 	}

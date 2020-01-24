@@ -19,6 +19,9 @@ namespace OAuthService.Core.Domain.DTOs
 		[JsonProperty(propertyName: "exp")]
 		public long Expiration { get; set; }
 
+		[JsonProperty(propertyName: "isEmailVerified")]
+		public bool IsEmailVerified { get; set; }
+
 		[JsonProperty(propertyName: "roles")]
 		public string[] Roles { get; set; }
 
@@ -29,6 +32,7 @@ namespace OAuthService.Core.Domain.DTOs
 			//Roles = user.Roles.ToArray();
 			IssuedAt = DateTimeHelper.GetUnixTimestamp();
 			Expiration = DateTimeHelper.GetUnixTimestamp(60);
+			IsEmailVerified = credential.IsEmailVerified;
 		}
 	}
 }

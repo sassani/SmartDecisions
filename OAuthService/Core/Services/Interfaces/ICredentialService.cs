@@ -8,11 +8,12 @@ namespace OAuthService.Core.Services.Interfaces
 	{
 		Credential Get(int userId);
 		Credential Get(string uuid);
-		bool CheckEmail(string email);
+		bool IsEmailExisted(string email);
 		void AddUserByUserInfo(RegisterUserDto user);
 		AuthTokenDto Login(Client client, Credential user);
 		bool Logout(int userClientId, bool all = false);
-		Task<Credential> CreateCredential(LoginCredentialDto loginCredential);
+		Task<Credential> CreateCredential(CredentialDto loginCredential);
+		void Register(CredentialDto credential);
 
 	}
 }

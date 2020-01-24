@@ -26,7 +26,7 @@ namespace OAuthService.Controllers
         {
             string errCode = "01";
             // check email
-            if (!credentialSrvice.CheckEmail(user.Email))
+            if (!credentialSrvice.IsEmailExisted(user.Email))
             {
                 return new Response(HttpStatusCode.Conflict,
                             new Error[] { new Error {

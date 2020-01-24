@@ -18,10 +18,10 @@ namespace OAuthService.DataBase.Persistence.Repositories
         }
         public bool IsEmailExist(string email)
         {
-            //var t = context.User
-            //.Where(u => u.Email.ToLower().Equals(email.ToLower()))
-            //.SingleOrDefault();
-            //if(t!=null)return false;
+            var t = context.Credential
+            .Where(u => u.Email.ToLower().Equals(email.ToLower()))
+            .SingleOrDefault();
+            if (t == null) return false;
             return true;
         }
 

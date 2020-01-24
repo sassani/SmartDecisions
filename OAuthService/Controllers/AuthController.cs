@@ -35,7 +35,7 @@ namespace OAuthService.Controllers
 		/// <returns></returns>
 		[AllowAnonymous]
 		[HttpPost()]
-		public async Task<IActionResult> Login([FromBody] LoginCredentialDto loginCredential)
+		public async Task<IActionResult> Login([FromBody] CredentialDto loginCredential)
 		{
 			string errCode = "01";
 			Client client = await clientService.CreateClientAsync(loginCredential.ClientId,loginCredential.ClientSecret);
@@ -63,14 +63,14 @@ namespace OAuthService.Controllers
 						} }).ToActionResult();
 				}
 
-				if (!credential.IsEmailVerified)
-				{
-					return new Response(HttpStatusCode.Forbidden,
-						new Error[] { new Error {
-							Code = ErrorCode+errCode+"05",
-							Detail = "Your email is not verified"
-						} }).ToActionResult();
-				}
+				//if (!credential.IsEmailVerified)
+				//{
+				//	return new Response(HttpStatusCode.Forbidden,
+				//		new Error[] { new Error {
+				//			Code = ErrorCode+errCode+"05",
+				//			Detail = "Your email is not verified"
+				//		} }).ToActionResult();
+				//}
 
 				var payload = new
 				{

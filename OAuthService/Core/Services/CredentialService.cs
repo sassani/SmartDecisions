@@ -26,7 +26,7 @@ namespace OAuthService.Core.Services
             credential = new Credential();
         }
 
-        public async Task<Credential> CreateCredential(LoginCredentialDto loginCredential)
+        public async Task<Credential> CreateCredential(CredentialDto loginCredential)
         {
             Credential credentialDb;
             if (loginCredential.GrantType.ToLower().Equals("refreshtoken"))
@@ -96,6 +96,19 @@ namespace OAuthService.Core.Services
             return true;
         }
 
+        public void Register(CredentialDto credential)
+        {
+            var newCredential = new Credential
+            {
+                Email = credential.Email,
+                Password = StringHelper.StringToHash(credential.Password),
+                IsActive = true,
+                PublicId = Guid.NewGuid().ToString(),
+            };
+            unitOfWork.Credential.Add(newCredential);
+            unitOfWork.Complete();
+        }
+
         public Credential Get(int userId)
         {
             Credential user = new Credential();
@@ -112,7 +125,7 @@ namespace OAuthService.Core.Services
             return user;
         }
 
-        public bool CheckEmail(string email)
+        public bool IsEmailExisted(string email)
         {
             return unitOfWork.Credential.IsEmailExist(email);
         }

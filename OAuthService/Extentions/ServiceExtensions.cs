@@ -24,7 +24,7 @@ namespace OAuthService.Extensions
 		//}
 		public static void AddValidators(this IServiceCollection services)
 		{
-			services.AddTransient<IValidator<LoginCredentialDto>, LoginCredentialDtoValidator>();
+			services.AddTransient<IValidator<CredentialDto>, CredentialDtoValidator>();
 		}
 
 		public static void ConfigureDbMySql(this IServiceCollection services, AppSettingsModel config)
