@@ -39,13 +39,28 @@ namespace MailService
             }
             app.UseRouting();
 
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.Headers.ContainsKey("APIKey"))
+                {
+                    if (context.Request.Headers["APIKey"].ToString() == Configuration.GetValue<String>("APIKey"))
+                    {
+                        await next();
+                    }
+                    else
+                    {
+                        await context.Response.WriteAsync("Invalid APIKey");
+                    }
+                }
+                else
+                {
+                    await context.Response.WriteAsync("APIKey header is required!");
+                }
+            });
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                //endpoints.MapGet("/", async context =>
-                //{
-                //    await context.Response.WriteAsync("Hello World!");
-                //});
             });
         }
     }
