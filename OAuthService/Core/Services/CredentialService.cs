@@ -8,6 +8,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using OAuthService.Core.Domain.DTOs;
+using IntraServices;
+using Microsoft.CodeAnalysis.Options;
+using OAuthService.Extensions;
+using Microsoft.Extensions.Options;
 
 namespace OAuthService.Core.Services
 {
@@ -18,37 +22,46 @@ namespace OAuthService.Core.Services
         private string refreshToken;
         private Logsheet logsheet;
         private Credential credential;
+        private readonly IOptions<AppSettingsModel> config;
 
-        public CredentialService(IUnitOfWork unitOfWork, ITokenService tokenSrvice)
+        public CredentialService(IUnitOfWork unitOfWork, ITokenService tokenSrvice, IOptions<AppSettingsModel> config)
         {
             this.unitOfWork = unitOfWork;
             this.tokenSrvice = tokenSrvice;
             credential = new Credential();
+            this.config = config;
         }
 
         public async Task<Credential> CreateCredential(CredentialDto loginCredential)
         {
-            Credential credentialDb;
-            if (loginCredential.GrantType.ToLower().Equals("refreshtoken"))
+            try
             {
-                refreshToken = loginCredential.RefreshToken;
-                logsheet = await unitOfWork.Logsheet.FindLogsheetByRefreshTokenAsync(refreshToken);
-                if (logsheet != null && logsheet.Credential != null)
+                Credential credentialDb;
+                if (loginCredential.GrantType.ToLower().Equals("refreshtoken"))
                 {
-                    credential = logsheet.Credential;
-                    credential.IsAuthenticated = true;
+                    refreshToken = loginCredential.RefreshToken;
+                    logsheet = await unitOfWork.Logsheet.FindLogsheetByRefreshTokenAsync(refreshToken);
+                    if (logsheet != null && logsheet.Credential != null)
+                    {
+                        credential = logsheet.Credential;
+                        credential.IsAuthenticated = true;
+                    }
                 }
+                else if (loginCredential.GrantType.ToLower().Equals("idtoken"))
+                {
+                    credentialDb = unitOfWork.Credential.FindByEmail(loginCredential.Email);
+                    if (credentialDb != null && StringHelper.CompareStringToHash(credentialDb.Password, loginCredential.Password))
+                    {
+                        credential = credentialDb;
+                        credential.IsAuthenticated = true;
+                    }
+                }
+                return credential;
             }
-            else if (loginCredential.GrantType.ToLower().Equals("idtoken"))
+            catch (Exception err)
             {
-                credentialDb = unitOfWork.Credential.FindByEmail(loginCredential.Email);
-                if (credentialDb != null && StringHelper.CompareStringToHash(credentialDb.Password, loginCredential.Password))
-                {
-                    credential = credentialDb;
-                    credential.IsAuthenticated = true;
-                }
+                throw new Exception(err.Message);
             }
-            return credential;
         }
 
         public AuthTokenDto Login(Client client, Credential credential)
@@ -71,10 +84,9 @@ namespace OAuthService.Core.Services
             }
             else
             {
-
+                unitOfWork.Logsheet.UpdateLastTimeLogin(logsheet);
             }
             unitOfWork.Credential.UpdateLastLogin(credential);
-            unitOfWork.Logsheet.UpdateLastTimeLogin(logsheet);
             unitOfWork.Complete();
             return tokenSrvice.GenerateAuthToken(credential, logsheet.Id, refreshToken);
         }
@@ -96,17 +108,28 @@ namespace OAuthService.Core.Services
             return true;
         }
 
-        public void Register(CredentialDto credential)
+        public async Task Register(CredentialDto credential)
         {
-            var newCredential = new Credential
+            try
             {
-                Email = credential.Email,
-                Password = StringHelper.StringToHash(credential.Password),
-                IsActive = true,
-                PublicId = Guid.NewGuid().ToString(),
-            };
-            unitOfWork.Credential.Add(newCredential);
-            unitOfWork.Complete();
+                var newCredential = new Credential
+                {
+                    Email = credential.Email,
+                    Password = StringHelper.StringToHash(credential.Password),
+                    IsActive = true,
+                    PublicId = Guid.NewGuid().ToString(),
+                };
+                unitOfWork.Credential.Add(newCredential);
+                unitOfWork.Complete();
+
+                MailService ms = new MailService(config.Value.ServicesApiKeys.MailService);
+                await ms.SendVerificationEmail(credential.Email, "https://api.ardavansassani.com/info");// TODO: add implement verification token
+            }
+            catch (Exception err)
+            {
+
+                throw new Exception(err.Message);
+            }
         }
 
         public Credential Get(int userId)

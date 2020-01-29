@@ -28,39 +28,52 @@ namespace OAuthService.Controllers
             this.clientService = clientService;
         }
 
-		[AllowAnonymous]
-		[HttpPost()]
-		public async Task<IActionResult> RegisterCredential([FromBody] CredentialDto loginCredential)
-		{
-			string errCode = "01";
-			Client client = await clientService.CreateClientAsync(loginCredential.ClientId, loginCredential.ClientSecret);
+        [AllowAnonymous]
+        [HttpPost()]
+        public async Task<IActionResult> RegisterCredential([FromBody] CredentialDto loginCredential)
+        {
+            string errCode = "01";
+            try
+            {
+                Client client = await clientService.CreateClientAsync(loginCredential.ClientId, loginCredential.ClientSecret);
 
-			if (!client.IsValid)
-			{
-				return new Response(HttpStatusCode.Forbidden,
-						new Error[] { new Error {
-							Code = ErrorCode+errCode+"01",
-							Title = "Invalid Client",
-							Detail = "Client info is incorrect."
-						} }).ToActionResult();
-			}
+                if (!client.IsValid)
+                {
+                    return new Response(HttpStatusCode.Forbidden,
+                            new Error[] { new Error {
+                            Code = ErrorCode+errCode+"01",
+                            Title = "Invalid Client",
+                            Detail = "Client info is incorrect."
+                        } }).ToActionResult();
+                }
 
-			// check history
-			if (credentialService.IsEmailExisted(loginCredential.Email))
-			{
-				return new Response(HttpStatusCode.Conflict,
-						new Error[] { new Error {
-							Code = ErrorCode+errCode+"01",
-							Title = "Invalid Email",
-							Detail = "This email address is already being used."
-						} }).ToActionResult();
-			}
+                // check history
+                if (credentialService.IsEmailExisted(loginCredential.Email))
+                {
+                    return new Response(HttpStatusCode.Conflict,
+                            new Error[] { new Error {
+                            Code = ErrorCode+errCode+"02",
+                            Title = "Invalid Email",
+                            Detail = "This email address is already being used."
+                        } }).ToActionResult();
+                }
 
-			credentialService.Register(loginCredential);
+                await credentialService.Register(loginCredential);
+                return new Response(HttpStatusCode.OK, loginCredential.Email).ToActionResult();
+            }
+            catch (Exception err)
+            {
 
-			return new Response(HttpStatusCode.OK, null).ToActionResult();
+                return new Response(HttpStatusCode.Conflict,
+                        new Error[] { new Error {
+                            Code = ErrorCode+errCode+"03",
+                            Title = "Registering Error",
+                            Detail = err.Message
+                        } }).ToActionResult();
+            }
 
-		}
 
-	}
+        }
+
+    }
 }

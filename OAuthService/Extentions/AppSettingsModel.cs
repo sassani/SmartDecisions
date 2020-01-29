@@ -11,6 +11,7 @@ namespace OAuthService.Extensions
 		public Token Token { get; set; }
 		public BaseClient BaseClient { get; set; }
 		public BaseAdmin BaseAdmin { get; set; }
+		public ServicesApiKeys ServicesApiKeys { get; set; }
 	}
 
 	public class Token
@@ -35,5 +36,10 @@ namespace OAuthService.Extensions
 		public string Password { get; set; }
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
+	}
+
+	public class ServicesApiKeys
+	{
+		public string MailService { get; set; }
 	}
 }

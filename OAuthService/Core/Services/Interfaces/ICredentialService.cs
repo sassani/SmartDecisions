@@ -13,7 +13,7 @@ namespace OAuthService.Core.Services.Interfaces
 		AuthTokenDto Login(Client client, Credential user);
 		bool Logout(int userClientId, bool all = false);
 		Task<Credential> CreateCredential(CredentialDto loginCredential);
-		void Register(CredentialDto credential);
+		Task Register(CredentialDto credential);
 
 	}
 }
