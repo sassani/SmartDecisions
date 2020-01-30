@@ -6,7 +6,8 @@ namespace OAuthService.Core.Services.Interfaces
 	public interface ITokenService
 	{
 		AuthTokenDto GenerateAuthToken(Credential user, int userClientId, string refreshToken);
-		bool ValidateToken(string TokenString);
+		EmailVerificationTokenDto ValidateToken(string TokenString);
 		string GenerateRefreshToken(string userPublicId);
+		string GetEmailVerificationToken(string email);
 	}
 }

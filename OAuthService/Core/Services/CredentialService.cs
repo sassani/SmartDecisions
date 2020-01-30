@@ -12,6 +12,7 @@ using IntraServices;
 using Microsoft.CodeAnalysis.Options;
 using OAuthService.Extensions;
 using Microsoft.Extensions.Options;
+using Microsoft.VisualBasic;
 
 namespace OAuthService.Core.Services
 {
@@ -123,7 +124,7 @@ namespace OAuthService.Core.Services
                 unitOfWork.Complete();
 
                 MailService ms = new MailService(config.Value.ServicesApiKeys.MailService);
-                await ms.SendVerificationEmail(credential.Email, "https://api.ardavansassani.com/info");// TODO: add implement verification token
+                await ms.SendVerificationEmail(credential.Email, $"https://api.ardavansassani.com/info?evtoken={tokenSrvice.GetEmailVerificationToken(credential.Email)}");// TODO: 
             }
             catch (Exception err)
             {
@@ -164,6 +165,20 @@ namespace OAuthService.Core.Services
             //};
             //unitOfWork.User.Add(newUser);
             //unitOfWork.Complete();
+        }
+
+        public async Task VerifyEmail(string token)
+        {
+            try
+            {
+                var validatedToken = tokenSrvice.ValidateToken(token);
+                await unitOfWork.Credential.VerifyEmailByEmail(validatedToken.Email);
+            }
+            catch (Exception err)
+            {
+                throw new Exception(err.Message);
+            }
+
         }
     }
 }

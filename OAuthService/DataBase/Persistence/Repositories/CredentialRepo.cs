@@ -34,10 +34,10 @@ namespace OAuthService.DataBase.Persistence.Repositories
             //.SingleOrDefault();
         }
 
-        public CredentialRole[] GetRoles(Credential user)
+        public CredentialRole[] GetRoles(Credential credential)
         {
             return context.CredentialRole
-                .Where(ur => ur.CredentialId == user.Id)
+                .Where(ur => ur.CredentialId == credential.Id)
                 .Include(r => r.Role)
                 .ToArray();
         }
@@ -46,6 +46,23 @@ namespace OAuthService.DataBase.Persistence.Repositories
         {
             credential.LastLoginAt = DateTime.Now;
             context.Credential.Update(credential);
+        }
+
+        //public async Task VerifyEmailByEmail(Credential credential)
+        //{
+        //   await Task.Run(() => {
+        //        context.Credential.Update(credential);
+        //        });
+        //}
+        public async Task VerifyEmailByEmail(string email)
+        {
+            Credential credential = context.Credential
+                .Where(cr => cr.Email.ToLower() == email.ToLower()).FirstOrDefault();
+            credential.IsEmailVerified = true;
+            await Task.Run(() => {
+                context.Credential.Update(credential);
+                context.SaveChanges();
+            });
         }
     }
 }

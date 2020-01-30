@@ -30,12 +30,12 @@ namespace OAuthService.Controllers
 
         [AllowAnonymous]
         [HttpPost()]
-        public async Task<IActionResult> RegisterCredential([FromBody] CredentialDto loginCredential)
+        public async Task<IActionResult> RegisterCredential([FromBody] CredentialDto credential)
         {
             string errCode = "01";
             try
             {
-                Client client = await clientService.CreateClientAsync(loginCredential.ClientId, loginCredential.ClientSecret);
+                Client client = await clientService.CreateClientAsync(credential.ClientId, credential.ClientSecret);
 
                 if (!client.IsValid)
                 {
@@ -48,7 +48,7 @@ namespace OAuthService.Controllers
                 }
 
                 // check history
-                if (credentialService.IsEmailExisted(loginCredential.Email))
+                if (credentialService.IsEmailExisted(credential.Email))
                 {
                     return new Response(HttpStatusCode.Conflict,
                             new Error[] { new Error {
@@ -58,8 +58,8 @@ namespace OAuthService.Controllers
                         } }).ToActionResult();
                 }
 
-                await credentialService.Register(loginCredential);
-                return new Response(HttpStatusCode.OK, loginCredential.Email).ToActionResult();
+                await credentialService.Register(credential);
+                return new Response(HttpStatusCode.OK, credential.Email).ToActionResult();
             }
             catch (Exception err)
             {
@@ -75,5 +75,29 @@ namespace OAuthService.Controllers
 
         }
 
+        [AllowAnonymous]
+        [HttpGet("emailverification")]
+        public async Task<IActionResult> VerifyEmail()
+        {
+            string errCode = "02";
+            try
+            {
+                string token = Request.Query["evtoken"];
+                await credentialService.VerifyEmail(token);
+                return new Response(HttpStatusCode.OK, null).ToActionResult();
+            }
+            catch (Exception err)
+            {
+
+                // TODO: add 2 types of responses
+                // 1- if everything gos well --> redirect user to the web page or show somthing as OK
+                return new Response(HttpStatusCode.NotModified,
+                        new Error[] { new Error {
+                            Code = ErrorCode+errCode+"01",
+                            Title = "Email Verification Error",
+                            Detail = err.Message
+                        } }).ToActionResult();
+            }
+        }
     }
 }

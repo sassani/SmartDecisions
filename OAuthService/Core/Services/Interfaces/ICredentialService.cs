@@ -14,6 +14,6 @@ namespace OAuthService.Core.Services.Interfaces
 		bool Logout(int userClientId, bool all = false);
 		Task<Credential> CreateCredential(CredentialDto loginCredential);
 		Task Register(CredentialDto credential);
-
-	}
+        Task VerifyEmail(string token);
+    }
 }

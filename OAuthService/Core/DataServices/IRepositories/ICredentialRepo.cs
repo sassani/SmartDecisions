@@ -9,6 +9,7 @@ namespace OAuthService.Core.DataServices.IRepositories
 		Credential FindByEmail(string email);
         CredentialRole[] GetRoles(Credential credential);
         void UpdateLastLogin(Credential credential);
+        Task VerifyEmailByEmail(string email);
     }
 
 }
