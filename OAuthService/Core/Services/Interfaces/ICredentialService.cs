@@ -10,10 +10,10 @@ namespace OAuthService.Core.Services.Interfaces
 		Credential Get(string uuid);
 		bool IsEmailExisted(string email);
 		void AddUserByUserInfo(RegisterUserDto user);
-		AuthTokenDto Login(Client client, Credential user);
 		bool Logout(int userClientId, bool all = false);
 		Task<Credential> CreateCredential(CredentialDto loginCredential);
 		Task Register(CredentialDto credential);
         Task VerifyEmail(string token);
+        AuthTokenDto Login(Credential credential, Client client = null);
     }
 }

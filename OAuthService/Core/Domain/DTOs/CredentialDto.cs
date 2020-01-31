@@ -5,7 +5,6 @@ namespace OAuthService.Core.Domain.DTOs
 {
 	public class CredentialDto
 	{
-		[Required]
 		public string ClientId { get; set; }
 		public string ClientSecret { get; set; }
 

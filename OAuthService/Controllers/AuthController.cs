@@ -18,13 +18,11 @@ namespace OAuthService.Controllers
     [Route("[controller]")]
     public class AuthController : BaseController
     {
-        private readonly ICredentialService credentialService;
         private readonly IClientService clientService;
 
-        public AuthController(ICredentialService credentialSrvice, IClientService clientService, ICredentialService credentialService) : base(credentialSrvice)
+        public AuthController(ICredentialService credentialSrvice, IClientService clientService) : base(credentialSrvice)
         {
             ErrorCode = "01";
-            this.credentialService = credentialService;
             this.clientService = clientService;
         }
 
@@ -40,19 +38,23 @@ namespace OAuthService.Controllers
             string errCode = "01";
             try
             {
-                Client client = await clientService.CreateClientAsync(loginCredential.ClientId, loginCredential.ClientSecret);
-
-                if (!client.IsValid)
+                Client client = null;
+                if (loginCredential.GrantType.ToLower().Equals("idtoken"))
                 {
-                    return new Response(HttpStatusCode.Forbidden,
-                            new Error[] { new Error {
+                    client = await clientService.CreateClientAsync(loginCredential.ClientId, loginCredential.ClientSecret);
+
+                    if (!client.IsValid)
+                    {
+                        return new Response(HttpStatusCode.Forbidden,
+                                new Error[] { new Error {
                             Code = ErrorCode+errCode+"01",
                             Title = "Invalid Client",
                             Detail = "Client info is incorrect."
                         } }).ToActionResult();
+                    }
                 }
 
-                Credential credential = await credentialService.CreateCredential(loginCredential);
+                Credential credential = await credentialSrvice.CreateCredential(loginCredential);
                 if (credential.IsAuthenticated)
                 {
                     // check user
@@ -65,18 +67,9 @@ namespace OAuthService.Controllers
                         } }).ToActionResult();
                     }
 
-                    //if (!credential.IsEmailVerified)
-                    //{
-                    //	return new Response(HttpStatusCode.Forbidden,
-                    //		new Error[] { new Error {
-                    //			Code = ErrorCode+errCode+"05",
-                    //			Detail = "Your email is not verified"
-                    //		} }).ToActionResult();
-                    //}
-
                     var payload = new
                     {
-                        authToken = credentialService.Login(client, credential)
+                        authToken = credentialSrvice.Login(credential, client)
                     };
                     return new Response(HttpStatusCode.Accepted, payload).ToActionResult();
                 }
@@ -102,7 +95,7 @@ namespace OAuthService.Controllers
 
                 return new Response(HttpStatusCode.Conflict,
                            new Error[] { new Error {
-                            Code = ErrorCode+errCode+"03",
+                            Code = ErrorCode+errCode+"05",
                             Title = "Login Error",
                             Detail = err.Message
                         } }).ToActionResult();
@@ -114,7 +107,7 @@ namespace OAuthService.Controllers
         public IActionResult Logout()
         {
             string errCode = "02";
-            if (credentialService.Logout(GetLogsheetId()))
+            if (credentialSrvice.Logout(GetLogsheetId()))
             {
 
                 return new Response(HttpStatusCode.Accepted, null).ToActionResult();
@@ -132,7 +125,7 @@ namespace OAuthService.Controllers
         public IActionResult LogoutAll()
         {
             string errCode = "03";
-            if (credentialService.Logout(GetLogsheetId(), true))
+            if (credentialSrvice.Logout(GetLogsheetId(), true))
             {
                 return new Response(HttpStatusCode.Accepted, null).ToActionResult();
             }

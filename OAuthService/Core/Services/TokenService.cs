@@ -33,18 +33,18 @@ namespace OAuthService.Core.Services
             return JWT.Encode(token, secretKey, JwsAlgorithm.HS256);
         }
 
-        public EmailVerificationTokenDto ValidateToken(string tokenString)
+        public T ValidateDtoToken<T>(string tokenString)
         {
-            EmailVerificationTokenDto emailVerificationDto;
+            T validatedDtoToken;
             try
             {
-                emailVerificationDto = JWT.Decode<EmailVerificationTokenDto>(tokenString, secretKey);
+                validatedDtoToken = JWT.Decode<T>(tokenString, secretKey);
             }
             catch (Exception err)
             {
                 throw err;
             }
-            return emailVerificationDto;
+            return validatedDtoToken;
         }
 
         public string GenerateRefreshToken(string userPublicId)

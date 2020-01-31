@@ -65,7 +65,7 @@ namespace OAuthService.Core.Services
             }
         }
 
-        public AuthTokenDto Login(Client client, Credential credential)
+        public AuthTokenDto Login(Credential credential, Client client = null)
         {
             if (refreshToken == null)
             {
@@ -171,8 +171,8 @@ namespace OAuthService.Core.Services
         {
             try
             {
-                var validatedToken = tokenSrvice.ValidateToken(token);
-                await unitOfWork.Credential.VerifyEmailByEmail(validatedToken.Email);
+                var validatedToken = tokenSrvice.ValidateDtoToken<EmailVerificationTokenDto>(token);
+                await unitOfWork.Credential.VerifyEmail(validatedToken.Email);
             }
             catch (Exception err)
             {

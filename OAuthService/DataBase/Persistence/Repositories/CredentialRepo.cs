@@ -27,11 +27,8 @@ namespace OAuthService.DataBase.Persistence.Repositories
 
         public Credential FindByEmail(string email)
         {
-            return context.Credential.SingleOrDefault();
-            //.Where(u => u.Email.ToLower() == email.ToLower())
-            //.Include(u => u.UserRole)
-            //.ThenInclude(r => r.Role)
-            //.SingleOrDefault();
+            return context.Credential
+                .Where(cr => cr.Email.ToLower() == email.ToLower()).FirstOrDefault();
         }
 
         public CredentialRole[] GetRoles(Credential credential)
@@ -48,13 +45,7 @@ namespace OAuthService.DataBase.Persistence.Repositories
             context.Credential.Update(credential);
         }
 
-        //public async Task VerifyEmailByEmail(Credential credential)
-        //{
-        //   await Task.Run(() => {
-        //        context.Credential.Update(credential);
-        //        });
-        //}
-        public async Task VerifyEmailByEmail(string email)
+        public async Task VerifyEmail(string email)
         {
             Credential credential = context.Credential
                 .Where(cr => cr.Email.ToLower() == email.ToLower()).FirstOrDefault();
