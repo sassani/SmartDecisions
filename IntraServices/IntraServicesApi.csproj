@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
+    <AssemblyName>IntraServicesApi</AssemblyName>
+    <RootNamespace>IntraServicesApi</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

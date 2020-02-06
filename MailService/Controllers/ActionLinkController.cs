@@ -20,9 +20,17 @@ namespace MailService.Controllers
         }
 
         [HttpPost]
-        public void Send([FromBody] ActionLinkDto data)
+        public async Task<IActionResult> Send([FromBody] ActionLinkDto data)
         {
-            mailServer.SendActionLink(data);
+            try
+            {
+                await mailServer.SendActionLink(data);
+                return Ok(data.Email);
+            }
+            catch (Exception err)
+            {
+                return BadRequest(err.Message);
+            }
         }
     }
 }

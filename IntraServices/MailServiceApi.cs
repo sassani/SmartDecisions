@@ -5,13 +5,14 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IntraServices
+namespace IntraServicesApi
 {
-    public class MailService
+    public class MailServiceApi
     {
         private static readonly HttpClient client = new HttpClient();
-        public MailService(string apikey)
+        public MailServiceApi(string apikey)
         {
+            client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Add("apiKey", apikey);
             client.BaseAddress = new Uri("https://mailservice.ardavansassani.com");
@@ -22,7 +23,7 @@ namespace IntraServices
             {
                 Object data = new
                 {
-                    email = email,
+                    email,
                     title = "Email Verification Link",
                     description = $"Please verify your email by click the below button({email})",
                     url = token,
@@ -31,6 +32,31 @@ namespace IntraServices
                 var json = JsonConvert.SerializeObject(data);
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
                 HttpResponseMessage response = await client.PostAsync("actionlink", stringContent);
+                if (!response.IsSuccessStatusCode) throw new Exception("Mail Service Failed");
+            }
+            catch (HttpRequestException e)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task SendForgotPasswordLink(string email, string token)
+        {
+            try
+            {
+                Object data = new
+                {
+                    email,
+                    title = "Forgot Password request",
+                    description = "Click below button to change your password",
+                    url = token,
+                    label = "Change My Password"
+                };
+                var json = JsonConvert.SerializeObject(data);
+                var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+                HttpResponseMessage response = await client.PostAsync("actionlink", stringContent);
+                if (!response.IsSuccessStatusCode) throw new Exception("Mail Service Failed");
             }
             catch (HttpRequestException e)
             {
