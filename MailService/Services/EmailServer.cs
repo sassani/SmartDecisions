@@ -7,10 +7,12 @@ using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Options;
 using MailService.Services.Interfaces;
+using System.Threading.Tasks;
+using MailService.DTOs;
 
 namespace MailService.Services
 {
-    public class EmailServer: IEmailServer
+    public class EmailServer : IEmailServer
     {
         private readonly MailServerSettings config;
         public EmailServer(IOptions<MailServerSettings> options)
@@ -74,6 +76,21 @@ namespace MailService.Services
                 template.HtmlBody = rawBody;
             }
             return template;
+        }
+
+        public async Task SendActionLink(ActionLinkDto data)
+        {
+            string subject = $"{data.Title}";
+
+            var body = CreateBodyFromTemplate("Templates/ActionLinkTemplate.html", new Dictionary<string, string>() {
+                { "title" , data.Title },
+                { "description" , data.Description },
+                { "url" , data.Url },
+                { "label" , data.Label },
+            });
+
+            await Task.Run(
+                () => { Send("noreply@ardavansassani.com", "Fast Smart Solutions", data.Email, null, subject, body); });
         }
     }
 }

@@ -22,12 +22,15 @@ namespace IntraServices
             {
                 Object data = new
                 {
-                    email,
-                    token
+                    email = email,
+                    title = "Email Verification Link",
+                    description = $"Please verify your email by click the below button({email})",
+                    url = token,
+                    label = "Verify"
                 };
                 var json = JsonConvert.SerializeObject(data);
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
-                HttpResponseMessage response = await client.PostAsync("email", stringContent);
+                HttpResponseMessage response = await client.PostAsync("actionlink", stringContent);
             }
             catch (HttpRequestException e)
             {

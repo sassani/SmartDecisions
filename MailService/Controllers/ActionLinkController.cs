@@ -11,24 +11,18 @@ namespace MailService.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class EmailController : ControllerBase
+    public class ActionLinkController : ControllerBase
     {
         private readonly IEmailServer mailServer;
-        public EmailController(IEmailServer mailServer)
+        public ActionLinkController(IEmailServer mailServer)
         {
             this.mailServer = mailServer;
         }
 
         [HttpPost]
-        public void SendVerificationEmail([FromBody] EmailVerificationDto data)
+        public void Send([FromBody] ActionLinkDto data)
         {
-            mailServer.SendVerification(data.Email, data.Token);
-        }
-
-        [HttpPost]
-        public void SendActionLink([FromBody] EmailVerificationDto data)
-        {
-            mailServer.SendVerification(data.Email, data.Token);
+            mailServer.SendActionLink(data);
         }
     }
 }

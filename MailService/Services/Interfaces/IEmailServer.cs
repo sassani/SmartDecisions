@@ -1,4 +1,5 @@
-﻿using MimeKit;
+﻿using MailService.DTOs;
+using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace MailService.Services.Interfaces
     {
         void Send(string fromAdd, string fromName, string toAdd, string toName, string subject, BodyBuilder body);
         void SendVerification(string email, string token, string name = null);
+        Task SendActionLink(ActionLinkDto data);
     }
 }
