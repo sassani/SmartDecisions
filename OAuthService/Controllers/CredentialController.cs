@@ -18,12 +18,9 @@ namespace OAuthService.Controllers
     [ApiController]
     public class CredentialController : BaseController
     {
-        //private readonly IClientService clientService;
-
         public CredentialController(ICredentialService credentialSrvice) : base(credentialSrvice)
         {
             ErrorCode = "02";
-            //this.clientService = clientService;
         }
 
         [AllowAnonymous]
@@ -33,7 +30,7 @@ namespace OAuthService.Controllers
             string errCode = "01";
             try
             {
-                if (credentialSrvice.IsEmailExisted(credential.Email))
+                if (await credentialSrvice.IsEmailExistedAsync(credential.Email))
                 {
                     return new Response(HttpStatusCode.Conflict,
                             new Error[] { new Error {
@@ -43,7 +40,7 @@ namespace OAuthService.Controllers
                         } }).ToActionResult();
                 }
 
-                await credentialSrvice.Register(credential);
+                await credentialSrvice.RegisterAsync(credential);
                 return new Response(HttpStatusCode.OK, credential.Email).ToActionResult();
             }
             catch (Exception err)
@@ -68,7 +65,7 @@ namespace OAuthService.Controllers
             try
             {
                 string token = Request.Query["evtoken"];
-                await credentialSrvice.VerifyEmail(token);
+                await credentialSrvice.VerifyEmailAsync(token);
                 return new Response(HttpStatusCode.OK, null).ToActionResult();
             }
             catch (Exception err)
@@ -82,7 +79,118 @@ namespace OAuthService.Controllers
             }
         }
 
-        //[AllowAnonymous]
-        //[HttpPost()]
+        [AllowAnonymous]
+        [HttpGet("forgotpassword/{email}")]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            string errCode = "03";
+            try
+            {
+                // Check Email Address
+                if (await credentialSrvice.IsEmailExistedAsync(email))
+                {
+                    await credentialSrvice.SendForgotPasswordRequestLinkAsync(email);
+                    return new Response(HttpStatusCode.OK, email).ToActionResult();
+                }
+                else
+                {
+                    return new Response(HttpStatusCode.Unauthorized,
+                        new Error[] { new Error {
+                            Code = ErrorCode+errCode+"01",
+                            Title = "Invalid Email Address",
+                            Detail = "The provided email address is not registered in our system"
+                        } }).ToActionResult();
+                }
+            }
+            catch (Exception err)
+            {
+
+                return new Response(HttpStatusCode.Unauthorized,
+                       new Error[] { new Error {
+                            Code = ErrorCode+errCode+"02",
+                            Title = "Password Change has been Failed",
+                            Detail = err.Message
+                        } }).ToActionResult();
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPut("forgotpassword")]
+        public async Task<IActionResult> ForgotPasswordChange([FromBody] CredentialDto credential)
+        {
+            string errCode = "04";
+            //if (credential is null) throw new ArgumentNullException(nameof(credential));
+            try
+            {
+                Credential cr = await credentialSrvice.CreateCredentialAsync(credential);
+                return await ChangePassword(cr, credential.NewPassword);
+            }
+            catch (Exception err)
+            {
+
+                return new Response(HttpStatusCode.Unauthorized,
+                       new Error[] { new Error {
+                            Code = ErrorCode+errCode+"02",
+                            Title = "Password Change has been Failed",
+                            Detail = err.Message
+                        } }).ToActionResult();
+            }
+        }
+
+        [HttpPut("password")]
+        public async Task<IActionResult> ChangePassword([FromBody] CredentialDto credential)
+        {
+            string errCode = "05";
+            //if (credential is null) throw new ArgumentNullException(nameof(credential));
+
+            try
+            {
+                Credential cr = await credentialSrvice.CreateCredentialAsync(credential, GetCredentialId());
+                if (!cr.IsAuthenticated)
+                {
+                    return new Response(HttpStatusCode.Unauthorized,
+                    new Error[] { new Error {
+                            Code = ErrorCode+errCode+"01",
+                            Title = "Old Password is wrong",
+                            Detail = "Try forget password instead."
+                        } }).ToActionResult();
+                }
+                return await ChangePassword(cr, credential.NewPassword);
+            }
+            catch (Exception err)
+            {
+
+                return new Response(HttpStatusCode.Unauthorized,
+                       new Error[] { new Error {
+                            Code = ErrorCode+errCode+"02",
+                            Title = "Password Change has been Failed",
+                            Detail = err.Message
+                        } }).ToActionResult();
+            }
+        }
+
+        private async Task<IActionResult> ChangePassword(Credential cr, string newPassword)
+        {
+            string errCode = "06";
+            try
+            {
+                if (!cr.IsEmailVerified)
+                {
+                    return new Response(HttpStatusCode.Unauthorized,
+                    new Error[] { new Error {
+                            Code = ErrorCode+errCode+"01",
+                            Title = "Not Verified Email Address",
+                            Detail = "This email address was not verified. Please verify your email before changing password."
+                        } }).ToActionResult();
+                }
+                await credentialSrvice.ChangePasswordAsync(cr, newPassword);
+
+                return new Response(HttpStatusCode.OK, "password has been successfully changed").ToActionResult();
+            }
+            catch (Exception err)
+            {
+                throw new Exception(err.Message);
+            }
+        }
     }
 }

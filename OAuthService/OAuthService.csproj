@@ -40,7 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\IntraServices\IntraServices.csproj" />
+    <ProjectReference Include="..\IntraServices\IntraServicesApi.csproj" />
   </ItemGroup>
 
 </Project>

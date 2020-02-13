@@ -4,6 +4,7 @@ using OAuthService.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace OAuthService.Controllers
 {
@@ -22,11 +23,11 @@ namespace OAuthService.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult Register([FromBody] RegisterUserDto user)
+        public async Task<IActionResult> RegisterAsync([FromBody] RegisterUserDto user)
         {
             string errCode = "01";
             // check email
-            if (!credentialSrvice.IsEmailExisted(user.Email))
+            if (!await credentialSrvice.IsEmailExistedAsync(user.Email))
             {
                 return new Response(HttpStatusCode.Conflict,
                             new Error[] { new Error {

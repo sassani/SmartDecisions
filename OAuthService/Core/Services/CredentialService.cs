@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using OAuthService.Core.Domain.DTOs;
-using IntraServices;
+using IntraServicesApi;
 using Microsoft.CodeAnalysis.Options;
 using OAuthService.Extensions;
 using Microsoft.Extensions.Options;
@@ -33,35 +33,81 @@ namespace OAuthService.Core.Services
             this.config = config;
         }
 
-        public async Task<Credential> CreateCredential(CredentialDto loginCredential)
+        public async Task<Credential> CreateCredentialAsync(CredentialDto crDto)
         {
             try
             {
                 Credential credentialDb;
-                if (loginCredential.GrantType.ToLower().Equals("refreshtoken"))
+                string dtoType = crDto.RequestType.ToLower();
+                switch (dtoType)
                 {
-                    refreshToken = loginCredential.RefreshToken;
-                    logsheet = await unitOfWork.Logsheet.FindLogsheetByRefreshTokenAsync(refreshToken);
-                    if (logsheet != null && logsheet.Credential != null)
-                    {
-                        credential = logsheet.Credential;
-                        credential.IsAuthenticated = true;
-                    }
-                }
-                else if (loginCredential.GrantType.ToLower().Equals("idtoken"))
-                {
-                    credentialDb = unitOfWork.Credential.FindByEmail(loginCredential.Email);
-                    if (credentialDb != null && StringHelper.CompareStringToHash(credentialDb.Password, loginCredential.Password))
-                    {
-                        credential = credentialDb;
-                        credential.IsAuthenticated = true;
-                    }
+                    case "refreshtoken":
+                        {
+                            refreshToken = crDto.RefreshToken;
+                            logsheet = await unitOfWork.Logsheet.FindLogsheetByRefreshTokenAsync(refreshToken);
+                            if (logsheet != null && logsheet.Credential != null)
+                            {
+                                credential = logsheet.Credential;
+                                credential.IsAuthenticated = true;
+                            }
+                            break;
+                        }
+                    case "idtoken":
+                        {
+                            credentialDb = unitOfWork.Credential.FindByEmail(crDto.Email);
+                            if (credentialDb != null)
+                            {
+                                credential = credentialDb;
+                                CheckPassword(credential, crDto);
+                            }
+                            break;
+                        }
+                    case "forgotpassword":
+                        {
+                            ForgotPasswordRequestTokenDto validatedToken = tokenSrvice.ValidateDtoToken<ForgotPasswordRequestTokenDto>(crDto.ResetPasswordToken);
+                            credentialDb = unitOfWork.Credential.FindByEmail(validatedToken.Email);
+                            if (credentialDb != null) credential = credentialDb;
+                            break;
+                        }
+                    case "changepassword":
+                        {
+
+                            break;
+                        }
+                    default:
+                        break;
                 }
                 return credential;
             }
             catch (Exception err)
             {
                 throw new Exception(err.Message);
+            }
+        }
+
+        public async Task<Credential> CreateCredentialAsync(CredentialDto crDto, string uid)
+        {
+            try
+            {
+                Credential credentialDb;
+                credentialDb = await unitOfWork.Credential.FindByUidAsync(uid);
+                if (credentialDb != null )
+                {
+                    credential = credentialDb;
+                    CheckPassword(credential, crDto);
+                }
+                return credential;
+            }
+            catch (Exception err)
+            {
+                throw new Exception(err.Message);
+            }
+        }
+        private void CheckPassword(Credential cr, CredentialDto crDto)
+        {
+            if (StringHelper.CompareStringToHash(cr.Password, crDto.Password))
+            {
+                credential.IsAuthenticated = true;
             }
         }
 
@@ -109,7 +155,7 @@ namespace OAuthService.Core.Services
             return true;
         }
 
-        public async Task Register(CredentialDto credential)
+        public async Task RegisterAsync(CredentialDto credential)
         {
             try
             {
@@ -123,8 +169,9 @@ namespace OAuthService.Core.Services
                 unitOfWork.Credential.Add(newCredential);
                 unitOfWork.Complete();
 
-                MailService ms = new MailService(config.Value.ServicesApiKeys.MailService);
-                await ms.SendVerificationEmail(credential.Email, $"https://api.ardavansassani.com/info?evtoken={tokenSrvice.GetEmailVerificationToken(credential.Email)}");// TODO: 
+                MailServiceApi ms = new MailServiceApi(config.Value.ServicesApiKeys.MailService);
+                await ms.SendVerificationEmail(credential.Email, $"https://api.ardavansassani.com/info?evtoken={tokenSrvice.GetEmailVerificationToken(credential.Email)}");// TODO: provide settings for return http uri
+
             }
             catch (Exception err)
             {
@@ -149,10 +196,7 @@ namespace OAuthService.Core.Services
             return user;
         }
 
-        public bool IsEmailExisted(string email)
-        {
-            return unitOfWork.Credential.IsEmailExist(email);
-        }
+        public async Task<bool> IsEmailExistedAsync(string email) => await Task.Run(() => unitOfWork.Credential.IsEmailExist(email));
 
         public void AddUserByUserInfo(RegisterUserDto user)
         {
@@ -167,12 +211,25 @@ namespace OAuthService.Core.Services
             //unitOfWork.Complete();
         }
 
-        public async Task VerifyEmail(string token)
+        public async Task VerifyEmailAsync(string token)
         {
             try
             {
                 var validatedToken = tokenSrvice.ValidateDtoToken<EmailVerificationTokenDto>(token);
-                await unitOfWork.Credential.VerifyEmail(validatedToken.Email);
+                await unitOfWork.Credential.VerifyEmailAsync(validatedToken.Email);
+            }
+            catch (Exception err)
+            {
+                throw new Exception(err.Message);
+            }
+        }
+
+        public async Task SendForgotPasswordRequestLinkAsync(string email)
+        {
+            try
+            {
+                MailServiceApi ms = new MailServiceApi(config.Value.ServicesApiKeys.MailService);
+                await ms.SendForgotPasswordLink(email, $"https://api.ardavansassani.com/credential/resetpassword?resetpasswordtoken={tokenSrvice.GetForgotPasswordRequestToken(email)}");// TODO: provide settings for return http uri
             }
             catch (Exception err)
             {
@@ -180,5 +237,19 @@ namespace OAuthService.Core.Services
             }
 
         }
+
+        public async Task ChangePasswordAsync(Credential cr, string newPass)
+        {
+            try
+            {
+                cr.Password = StringHelper.StringToHash(newPass);
+                await Task.Run(() => unitOfWork.Complete());
+            }
+            catch (Exception err)
+            {
+                throw new Exception(err.Message);
+            }
+        }
+
     }
 }

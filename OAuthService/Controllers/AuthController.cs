@@ -39,7 +39,7 @@ namespace OAuthService.Controllers
             try
             {
                 Client client = null;
-                if (loginCredential.GrantType.ToLower().Equals("idtoken"))
+                if (loginCredential.RequestType.ToLower().Equals("idtoken"))
                 {
                     client = await clientService.CreateClientAsync(loginCredential.ClientId, loginCredential.ClientSecret);
 
@@ -54,7 +54,7 @@ namespace OAuthService.Controllers
                     }
                 }
 
-                Credential credential = await credentialSrvice.CreateCredential(loginCredential);
+                Credential credential = await credentialSrvice.CreateCredentialAsync(loginCredential);
                 if (credential.IsAuthenticated)
                 {
                     // check user
@@ -75,7 +75,7 @@ namespace OAuthService.Controllers
                 }
                 else
                 {
-                    if (loginCredential.GrantType.ToLower().Equals("refreshtoken"))
+                    if (loginCredential.RequestType.ToLower().Equals("refreshtoken"))
                     {
                         return new Response(HttpStatusCode.Forbidden,
                         new Error[] { new Error {

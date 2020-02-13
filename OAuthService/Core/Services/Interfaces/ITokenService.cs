@@ -8,6 +8,7 @@ namespace OAuthService.Core.Services.Interfaces
 		AuthTokenDto GenerateAuthToken(Credential user, int userClientId, string refreshToken);
 		string GenerateRefreshToken(string userPublicId);
 		string GetEmailVerificationToken(string email);
+        string GetForgotPasswordRequestToken(string email);
         T ValidateDtoToken<T>(string token);
     }
 }

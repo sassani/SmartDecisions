@@ -7,6 +7,7 @@ using Jose;
 using Microsoft.Extensions.Options;
 using System.Linq;
 using System;
+using System.Numerics;
 
 namespace OAuthService.Core.Services
 {
@@ -33,12 +34,29 @@ namespace OAuthService.Core.Services
             return JWT.Encode(token, secretKey, JwsAlgorithm.HS256);
         }
 
+        public string GetForgotPasswordRequestToken(string email)
+        {
+            ForgotPasswordRequestTokenDto token = new ForgotPasswordRequestTokenDto(email);
+            return JWT.Encode(token, secretKey, JwsAlgorithm.HS256);
+        }
+
         public T ValidateDtoToken<T>(string tokenString)
         {
             T validatedDtoToken;
             try
             {
                 validatedDtoToken = JWT.Decode<T>(tokenString, secretKey);
+                var t = validatedDtoToken.GetType().GetProperties();
+                long now = DateTimeHelper.GetUnixTimestamp();
+                foreach (var item in validatedDtoToken.GetType().GetProperties())
+                {
+                    if (item.Name.ToLower().Equals("expiration"))
+                    {
+                        var expDate = validatedDtoToken.GetType().GetProperty(item.Name).GetValue(validatedDtoToken);
+                        if ((long)expDate < now) throw new Exception("Token is expired");
+                        Console.WriteLine(item);
+                    }
+                }
             }
             catch (Exception err)
             {
