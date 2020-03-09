@@ -24,7 +24,7 @@ namespace OAuthService.Extensions
 		//}
 		public static void AddValidators(this IServiceCollection services)
 		{
-			services.AddSingleton<IValidator<CredentialDto>, CredentialDtoValidator>();
+			services.AddTransient<IValidator<CredentialDto>, CredentialDtoValidator>();
 		}
 
 		public static void ConfigureDbMySql(this IServiceCollection services, AppSettingsModel config)
@@ -42,10 +42,13 @@ namespace OAuthService.Extensions
 				options.AddPolicy("CorsPolicy",
 					builder => builder
 					//.WithOrigins(config.CrossUrls)
-					.AllowAnyOrigin() // TODO: change this before deployment!
+					.WithOrigins("http://localhost:4200")
+					.WithHeaders("*")
+					//.AllowAnyOrigin() // TODO: change this before deployment!
 					.AllowAnyMethod()
-					.AllowAnyHeader()
-					.AllowCredentials());
+					//.AllowAnyHeader()
+					//.WithMethods("GET","POST","DELETE","OPTIONS")
+					);
 			});
 		}
 

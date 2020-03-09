@@ -3,6 +3,7 @@ using OAuthService.Controllers.Responses;
 using OAuthService.Core.Domain;
 using OAuthService.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace OAuthService.Controllers
 {
@@ -30,17 +31,9 @@ namespace OAuthService.Controllers
 			return User.FindFirst("uid")?.Value;
 		}
 
-		//protected int GetUserId()
-		//{
-		//	if (int.TryParse(User.FindFirst("uid")?.Value, out int id))
-		//		return id;
-		//	else
-		//		return 0;
-		//}
-
-		protected Credential GetCredential()
+		protected async Task<Credential> GetCredentialAsync()
 		{
-			return credentialSrvice.Get(GetCredentialId());
+			return await credentialSrvice.CreateCredentialAsync(GetCredentialId());
 		}
 
 		protected IActionResult MakeResponse(System.Net.HttpStatusCode statusCode, object payload = null)

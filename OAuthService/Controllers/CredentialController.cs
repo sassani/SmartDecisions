@@ -23,6 +23,18 @@ namespace OAuthService.Controllers
             ErrorCode = "02";
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetCredentialInfo()
+        {
+            var cr = await GetCredentialAsync();
+            var payload = new
+            {
+                userPublicId = cr.PublicId,
+                email = cr.Email
+            };
+            return new Response(HttpStatusCode.OK, payload).ToActionResult();
+        }
+
         [AllowAnonymous]
         [HttpPost()]
         public async Task<IActionResult> AddCredential([FromBody] CredentialDto credential)
@@ -116,14 +128,13 @@ namespace OAuthService.Controllers
 
         [AllowAnonymous]
         [HttpPut("forgotpassword")]
-        public async Task<IActionResult> ForgotPasswordChange([FromBody] CredentialDto credential)
+        public async Task<IActionResult> ForgotPasswordChange([FromBody] CredentialDto credentialDto)
         {
             string errCode = "04";
-            //if (credential is null) throw new ArgumentNullException(nameof(credential));
             try
             {
-                Credential cr = await credentialSrvice.CreateCredentialAsync(credential);
-                return await ChangePassword(cr, credential.NewPassword);
+                Credential cr = await credentialSrvice.CreateCredentialAsync(credentialDto);
+                return await ChangePassword(cr, credentialDto.NewPassword);
             }
             catch (Exception err)
             {
@@ -138,14 +149,13 @@ namespace OAuthService.Controllers
         }
 
         [HttpPut("password")]
-        public async Task<IActionResult> ChangePassword([FromBody] CredentialDto credential)
+        public async Task<IActionResult> ChangePassword([FromBody] CredentialDto credentialDto)
         {
             string errCode = "05";
-            //if (credential is null) throw new ArgumentNullException(nameof(credential));
 
             try
             {
-                Credential cr = await credentialSrvice.CreateCredentialAsync(credential, GetCredentialId());
+                Credential cr = await credentialSrvice.CreateCredentialAsync(credentialDto, GetCredentialId());
                 if (!cr.IsAuthenticated)
                 {
                     return new Response(HttpStatusCode.Unauthorized,
@@ -155,7 +165,7 @@ namespace OAuthService.Controllers
                             Detail = "Try forget password instead."
                         } }).ToActionResult();
                 }
-                return await ChangePassword(cr, credential.NewPassword);
+                return await ChangePassword(cr, credentialDto.NewPassword);
             }
             catch (Exception err)
             {

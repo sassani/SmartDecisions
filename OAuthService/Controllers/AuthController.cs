@@ -3,10 +3,10 @@ using OAuthService.Core.Domain;
 using OAuthService.Core.Domain.DTOs;
 using OAuthService.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading.Tasks;
+using OAuthService.Filters;
 
 namespace OAuthService.Controllers
 {
@@ -15,6 +15,7 @@ namespace OAuthService.Controllers
     /// <error-code>01</error-code>
     [Authorize]
     [ApiController]
+    [ServiceFilter(typeof(ValidateModelAttributeFilter))]
     [Route("[controller]")]
     public class AuthController : BaseController
     {
@@ -36,6 +37,14 @@ namespace OAuthService.Controllers
         public async Task<IActionResult> Login([FromBody] CredentialDto loginCredential)
         {
             string errCode = "01";
+
+            //var validator = new CredentialDtoValidator();
+            //var result = validator.Validate(loginCredential);
+            //var errors = result.Errors;
+            //if (!this.ModelState.IsValid)
+            //{
+            //    var t = "failed";
+            //}
             try
             {
                 Client client = null;

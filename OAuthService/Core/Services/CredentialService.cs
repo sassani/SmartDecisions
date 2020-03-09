@@ -103,6 +103,25 @@ namespace OAuthService.Core.Services
                 throw new Exception(err.Message);
             }
         }
+
+        public async Task<Credential> CreateCredentialAsync(string uid)
+        {
+            try
+            {
+                Credential credentialDb;
+                credentialDb = await unitOfWork.Credential.FindByUidAsync(uid);
+                if (credentialDb != null)
+                {
+                    credential = credentialDb;
+                }
+                return credential;
+            }
+            catch (Exception err)
+            {
+                throw new Exception(err.Message);
+            }
+        }
+
         private void CheckPassword(Credential cr, CredentialDto crDto)
         {
             if (StringHelper.CompareStringToHash(cr.Password, crDto.Password))
@@ -181,14 +200,6 @@ namespace OAuthService.Core.Services
         }
 
         public Credential Get(int userId)
-        {
-            Credential user = new Credential();
-            //UserDb userDb = unitOfWork.User.Get(userId);
-            //Mapper.UserMapper(user, userDb);
-            return user;
-        }
-
-        public Credential Get(string uuid)
         {
             Credential user = new Credential();
             //UserDb userDb = unitOfWork.User.Get(userId);

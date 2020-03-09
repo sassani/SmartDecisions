@@ -1,12 +1,14 @@
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OAuthService.Core.Services;
 using OAuthService.Core.Services.Interfaces;
 using OAuthService.Extensions;
+using OAuthService.Filters;
 
 namespace RestApi
 {
@@ -24,7 +26,11 @@ namespace RestApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .ConfigureApiBehaviorOptions(opt =>
+            {
+                opt.SuppressModelStateInvalidFilter = true;
+            });
 
             var appSettingSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettingsModel>(appSettingSection);
@@ -35,8 +41,12 @@ namespace RestApi
             services.ConfigureAuthentication(appSettings);
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddMvc().AddFluentValidation();
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddFluentValidation(opt => { })
+                ;
             services.AddValidators();
+            services.AddScoped<ValidateModelAttributeFilter>();
 
             services.AddHttpContextAccessor();
 
@@ -56,9 +66,9 @@ namespace RestApi
                 System.Console.WriteLine("Environment setup:\t"+currentEnvironment.EnvironmentName);
             }
 
-            app.UseHttpsRedirection();
-
+            //app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseCors("CorsPolicy");
 
             app.UseAuthentication();
             app.UseAuthorization();
