@@ -1,13 +1,18 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
+using OAuthService.Controllers.Responses;
 using OAuthService.Core.DataServices;
 using OAuthService.Core.Domain.DTOs;
 using OAuthService.Core.Domain.DTOs.Validators;
 using OAuthService.DataBase;
 using OAuthService.DataBase.Persistence;
+using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace OAuthService.Extensions
@@ -73,6 +78,38 @@ namespace OAuthService.Extensions
 					ValidIssuer = config.Token.Issuer,
 					ValidAudience = config.Token.Audience,
 					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.Token.SecretKey))
+				};
+				opt.Events = new JwtBearerEvents // TODO: create a filter to handle this
+				{
+					OnChallenge = async context =>
+					{
+						// Override the response status code.
+						context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+
+						// Emit the WWW-Authenticate header.
+						context.Response.Headers.Append(
+							HeaderNames.WWWAuthenticate,
+							context.Options.Challenge);
+						context.Response.Headers.Append(
+							HeaderNames.ContentType,
+							"application/json");
+
+						string title = "";
+						string detail = "";
+						if (!string.IsNullOrEmpty(context.Error))title = context.Error;
+						if (!string.IsNullOrEmpty(context.ErrorDescription))detail = context.ErrorDescription;
+						List<Error> errors = new List<Error>();
+						Error err = new Error
+						{
+							Code = "111111",
+							Title = title,
+							Detail = detail
+						};
+						errors.Add(err);
+						await context.Response.WriteAsync(new Response(System.Net.HttpStatusCode.BadRequest, errors).ToString());
+
+						context.HandleResponse();
+					}
 				};
 			});
 		}
