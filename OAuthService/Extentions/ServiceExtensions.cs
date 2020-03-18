@@ -94,8 +94,8 @@ namespace OAuthService.Extensions
 							HeaderNames.ContentType,
 							"application/json");
 
-						string title = "";
-						string detail = "";
+						string title = "Authorization Failed";
+						string detail = "Authorization token is required";
 						if (!string.IsNullOrEmpty(context.Error))title = context.Error;
 						if (!string.IsNullOrEmpty(context.ErrorDescription))detail = context.ErrorDescription;
 						List<Error> errors = new List<Error>();
