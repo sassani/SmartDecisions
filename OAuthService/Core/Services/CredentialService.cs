@@ -91,7 +91,7 @@ namespace OAuthService.Core.Services
             {
                 Credential credentialDb;
                 credentialDb = await unitOfWork.Credential.FindByUidAsync(uid);
-                if (credentialDb != null )
+                if (credentialDb != null)
                 {
                     credential = credentialDb;
                     CheckPassword(credential, crDto);
@@ -189,7 +189,7 @@ namespace OAuthService.Core.Services
                 unitOfWork.Complete();
 
                 MailServiceApi ms = new MailServiceApi(config.Value.ServicesApiKeys.MailService);
-                await ms.SendVerificationEmail(credential.Email, $"https://api.ardavansassani.com/info?evtoken={tokenSrvice.GetEmailVerificationToken(credential.Email)}");// TODO: provide settings for return http uri
+                await ms.SendVerificationEmail(credential.Email, $"https://api.ardavansassani.com/info?evtoken={tokenSrvice.EmailVerificationToken(credential.Email)}");// TODO: provide settings for return http uri
 
             }
             catch (Exception err)
@@ -237,10 +237,12 @@ namespace OAuthService.Core.Services
 
         public async Task SendForgotPasswordRequestLinkAsync(string email)
         {
+            string uri = "https://api.ardavansassani.com/credential/changepassword/";
             try
             {
                 MailServiceApi ms = new MailServiceApi(config.Value.ServicesApiKeys.MailService);
-                await ms.SendForgotPasswordLink(email, $"https://api.ardavansassani.com/credential/resetpassword?resetpasswordtoken={tokenSrvice.GetForgotPasswordRequestToken(email)}");// TODO: provide settings for return http uri
+                // TODO: provide settings for return http uri
+                await ms.SendForgotPasswordLink(email, $"{uri}{tokenSrvice.ForgotPasswordRequestToken(email)}");
             }
             catch (Exception err)
             {

@@ -8,7 +8,7 @@ namespace OAuthService.Core.Domain.DTOs.Validators
         {
             string txt = " field is required";
 
-            RuleFor(cr => cr.RequestType).NotNull().WithMessage($"grantType{txt}").DependentRules(() =>
+            RuleFor(cr => cr.RequestType).NotNull().WithMessage($"RequestType{txt}").DependentRules(() =>
             {
                 RuleFor(cr => cr.ClientId).NotNull()
                     .When(cr => cr.RequestType.ToLower() == "idtoken").WithMessage($"clientId{txt}");
@@ -38,7 +38,7 @@ namespace OAuthService.Core.Domain.DTOs.Validators
                 .NotNull()
                     .When(cr => 
                        cr.RequestType.ToLower() == "idtoken" 
-                    && cr.ClientId.ToLower() == "2").WithMessage($"clientsecret{txt} when you call it from mobile");
+                    && cr.ClientId.ToLower() == "2").WithMessage($"clientsecret{txt} when you call it from mobile");//TODO: change clientId for other app
 
                 RuleFor(cr => cr.ResetPasswordToken).NotNull()
                     .When(cr => cr.RequestType.ToLower() == "forgotpassword").WithMessage($"resetpasswordtoken{txt}");

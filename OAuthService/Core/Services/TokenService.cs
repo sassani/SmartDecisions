@@ -28,13 +28,13 @@ namespace OAuthService.Core.Services
             return new AuthTokenDto(signedAccessToken, refreshToken, "bearer", credential);
         }
 
-        public string GetEmailVerificationToken(string email)
+        public string EmailVerificationToken(string email)
         {
             EmailVerificationTokenDto token = new EmailVerificationTokenDto(email);
             return JWT.Encode(token, secretKey, JwsAlgorithm.HS256);
         }
 
-        public string GetForgotPasswordRequestToken(string email)
+        public string ForgotPasswordRequestToken(string email)
         {
             ForgotPasswordRequestTokenDto token = new ForgotPasswordRequestTokenDto(email);
             return JWT.Encode(token, secretKey, JwsAlgorithm.HS256);
@@ -53,7 +53,7 @@ namespace OAuthService.Core.Services
                     if (item.Name.ToLower().Equals("expiration"))
                     {
                         var expDate = validatedDtoToken.GetType().GetProperty(item.Name).GetValue(validatedDtoToken);
-                        if ((long)expDate < now) throw new Exception("Token is expired");
+                        if ((long)expDate > now) throw new Exception("Token is expired");
                         Console.WriteLine(item);
                     }
                 }

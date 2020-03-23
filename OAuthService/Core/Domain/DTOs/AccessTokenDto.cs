@@ -34,7 +34,7 @@ namespace OAuthService.Core.Domain.DTOs
 			LogsheetId = logsheetId;
 			//Roles = user.Roles.ToArray();
 			IssuedAt = DateTimeHelper.GetUnixTimestamp();
-			Expiration = DateTimeHelper.GetUnixTimestamp(1);
+			Expiration = DateTimeHelper.GetUnixTimestamp(60);
 			Email = credential.Email;
 			IsEmailVerified = credential.IsEmailVerified;
 		}

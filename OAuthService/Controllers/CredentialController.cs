@@ -10,12 +10,14 @@ using OAuthService.Controllers.Responses;
 using OAuthService.Core.Domain;
 using OAuthService.Core.Domain.DTOs;
 using OAuthService.Core.Services.Interfaces;
+using OAuthService.Filters;
 
 namespace OAuthService.Controllers
 {
     [Authorize]
     [Route("[controller]")]
     [ApiController]
+    [ServiceFilter(typeof(ValidateModelAttributeFilter))]
     public class CredentialController : BaseController
     {
         public CredentialController(ICredentialService credentialSrvice) : base(credentialSrvice)
@@ -82,7 +84,7 @@ namespace OAuthService.Controllers
             }
             catch (Exception err)
             {
-                return new Response(HttpStatusCode.Unauthorized,
+                return new Response(HttpStatusCode.BadRequest,
                         new Error[] { new Error {
                             Code = ErrorCode+errCode+"01",
                             Title = "Email Verification Failed",
@@ -106,7 +108,7 @@ namespace OAuthService.Controllers
                 }
                 else
                 {
-                    return new Response(HttpStatusCode.Unauthorized,
+                    return new Response(HttpStatusCode.BadRequest,
                         new Error[] { new Error {
                             Code = ErrorCode+errCode+"01",
                             Title = "Invalid Email Address",
@@ -117,7 +119,7 @@ namespace OAuthService.Controllers
             catch (Exception err)
             {
 
-                return new Response(HttpStatusCode.Unauthorized,
+                return new Response(HttpStatusCode.BadRequest,
                        new Error[] { new Error {
                             Code = ErrorCode+errCode+"02",
                             Title = "Password Change has been Failed",
@@ -139,7 +141,7 @@ namespace OAuthService.Controllers
             catch (Exception err)
             {
 
-                return new Response(HttpStatusCode.Unauthorized,
+                return new Response(HttpStatusCode.BadRequest,
                        new Error[] { new Error {
                             Code = ErrorCode+errCode+"02",
                             Title = "Password Change has been Failed",
@@ -158,7 +160,7 @@ namespace OAuthService.Controllers
                 Credential cr = await credentialSrvice.CreateCredentialAsync(credentialDto, GetCredentialId());
                 if (!cr.IsAuthenticated)
                 {
-                    return new Response(HttpStatusCode.Unauthorized,
+                    return new Response(HttpStatusCode.Forbidden,
                     new Error[] { new Error {
                             Code = ErrorCode+errCode+"01",
                             Title = "Old Password is wrong",
@@ -170,7 +172,7 @@ namespace OAuthService.Controllers
             catch (Exception err)
             {
 
-                return new Response(HttpStatusCode.Unauthorized,
+                return new Response(HttpStatusCode.BadRequest,
                        new Error[] { new Error {
                             Code = ErrorCode+errCode+"02",
                             Title = "Password Change has been Failed",
@@ -186,7 +188,7 @@ namespace OAuthService.Controllers
             {
                 if (!cr.IsEmailVerified)
                 {
-                    return new Response(HttpStatusCode.Unauthorized,
+                    return new Response(HttpStatusCode.Forbidden,
                     new Error[] { new Error {
                             Code = ErrorCode+errCode+"01",
                             Title = "Not Verified Email Address",

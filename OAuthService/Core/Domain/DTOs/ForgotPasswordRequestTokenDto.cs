@@ -18,7 +18,7 @@ namespace OAuthService.Core.Domain.DTOs
 		{
 			Email = email;
 			IssuedAt = DateTimeHelper.GetUnixTimestamp();
-			Expiration = DateTimeHelper.GetUnixTimestamp(1 * 1 * 60);// 1 hour
+			Expiration = DateTimeHelper.GetUnixTimestamp(1 * 1 * 20);// 20 min
 		}
 	}
 }
