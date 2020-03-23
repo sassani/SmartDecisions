@@ -9,7 +9,7 @@ namespace IntraServicesApi
 {
     public class MailServiceApi
     {
-        private static readonly HttpClient client = new HttpClient();
+        private readonly HttpClient client = new HttpClient();
         public MailServiceApi(string apikey)
         {
             client.DefaultRequestHeaders.Clear();
