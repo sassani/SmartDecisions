@@ -53,8 +53,7 @@ namespace OAuthService.Core.Services
                     if (item.Name.ToLower().Equals("expiration"))
                     {
                         var expDate = validatedDtoToken.GetType().GetProperty(item.Name).GetValue(validatedDtoToken);
-                        if ((long)expDate > now) throw new Exception("Token is expired");
-                        Console.WriteLine(item);
+                        if ((long)expDate < now) throw new Exception("Token is expired");
                     }
                 }
             }
