@@ -237,11 +237,10 @@ namespace OAuthService.Core.Services
 
         public async Task SendForgotPasswordRequestLinkAsync(string email)
         {
-            string uri = "https://api.ardavansassani.com/credential/changepassword/";
+            string uri = config.Value.RedirectUrls.ForgotPasswordChange;
             try
             {
                 MailServiceApi ms = new MailServiceApi(config.Value.ServicesApiKeys.MailService);
-                // TODO: provide settings for return http uri
                 await ms.SendForgotPasswordLink(email, $"{uri}{tokenSrvice.ForgotPasswordRequestToken(email)}");
             }
             catch (Exception err)
