@@ -11,6 +11,7 @@ using OAuthService.Core.Domain.DTOs;
 using OAuthService.Core.Domain.DTOs.Validators;
 using OAuthService.DataBase;
 using OAuthService.DataBase.Persistence;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
@@ -69,6 +70,7 @@ namespace OAuthService.Extensions
 			{
 				opt.TokenValidationParameters = new TokenValidationParameters
 				{
+					ClockSkew = TimeSpan.Zero,
 					RequireSignedTokens = true,
 					ValidateIssuer = false,
 					ValidateAudience = false,
