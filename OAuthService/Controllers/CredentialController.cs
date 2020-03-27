@@ -32,7 +32,8 @@ namespace OAuthService.Controllers
             var payload = new
             {
                 userPublicId = cr.PublicId,
-                email = cr.Email
+                email = cr.Email,
+                isEnailVerifyed = cr.IsEmailVerified
             };
             return new Response(HttpStatusCode.OK, payload).ToActionResult();
         }
@@ -72,14 +73,35 @@ namespace OAuthService.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("emailverification")]
-        public async Task<IActionResult> VerifyEmail()
+        [HttpGet("emailverification/{email}")]
+        public async Task<IActionResult> EmailVerificationRequest(string email)
         {
             string errCode = "02";
             try
             {
-                string token = Request.Query["evtoken"];
-                await credentialSrvice.VerifyEmailAsync(token);
+                var cr = await GetCredentialAsync();
+                await credentialSrvice.SendEmailVerificationToken(email);
+                return new Response(HttpStatusCode.OK, email).ToActionResult();
+            }
+            catch (Exception err)
+            {
+                return new Response(HttpStatusCode.BadRequest,
+                        new Error[] { new Error {
+                            Code = ErrorCode+errCode+"01",
+                            Title = "Email Verification Request Hass Been Failed",
+                            Detail = err.Message
+                        } }).ToActionResult();
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("emailverification")]
+        public async Task<IActionResult> VerifyEmail([FromBody] EmailVerificationDto evDto)
+        {
+            string errCode = "06";
+            try
+            {
+                await credentialSrvice.VerifyEmailAsync(evDto.Token);
                 return new Response(HttpStatusCode.OK, null).ToActionResult();
             }
             catch (Exception err)
