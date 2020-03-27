@@ -72,6 +72,7 @@ namespace OAuthService.Controllers
                         return new Response(HttpStatusCode.Forbidden,
                             new Error[] { new Error {
                             Code = ErrorCode+errCode+"04",
+                            Title = "Unavalable User",
                             Detail = "Your account is suspended"
                         } }).ToActionResult();
                     }
@@ -89,12 +90,14 @@ namespace OAuthService.Controllers
                         return new Response(HttpStatusCode.Forbidden,
                         new Error[] { new Error {
                         Code = ErrorCode+errCode+"02",
+                        Title = "Incorrect Credential",
                         Detail = "Refresh token is incorrect or expired."
                     } }).ToActionResult();
                     }
                     return new Response(HttpStatusCode.Forbidden,
                         new Error[] { new Error {
                         Code = ErrorCode+errCode+"03",
+                        Title = "Incorrect Credential",
                         Detail = "Email or password is incorrect."
                     } }).ToActionResult();
                 }
