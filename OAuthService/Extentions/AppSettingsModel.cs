@@ -12,7 +12,7 @@ namespace OAuthService.Extensions
 		public BaseClient BaseClient { get; set; }
 		public BaseAdmin BaseAdmin { get; set; }
 		public ServicesApiKeys ServicesApiKeys { get; set; }
-		public RedirectUrls RedirectUrls { get;}
+		public RedirectUrls RedirectUrls { get; set; }
 	}
 
 	public class Token
