@@ -19,5 +19,6 @@ namespace OAuthService.Core.Services.Interfaces
         Task<Credential> CreateCredentialAsync(CredentialDto crDto, string uid);
         Task<Credential> CreateCredentialAsync(string uid);
         Task<Credential> CreateCredentialAsync(CredentialDto crDto);
+        Task SendEmailVerificationToken(string email);
     }
 }
