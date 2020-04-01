@@ -31,21 +31,21 @@ namespace OAuthService.Controllers
             var cr = await GetCredentialAsync();
             var payload = new
             {
-                userPublicId = cr.PublicId,
-                email = cr.Email,
-                isEnailVerifyed = cr.IsEmailVerified
+                cr.PublicId,
+                cr.Email,
+                cr.IsEmailVerified
             };
             return new Response(HttpStatusCode.OK, payload).ToActionResult();
         }
 
         [AllowAnonymous]
         [HttpPost()]
-        public async Task<IActionResult> AddCredential([FromBody] CredentialDto credential)
+        public async Task<IActionResult> AddCredential([FromBody] CredentialDto crDto)
         {
             string errCode = "01";
             try
             {
-                if (await credentialSrvice.IsEmailExistedAsync(credential.Email))
+                if (await credentialSrvice.IsEmailExistedAsync(crDto.Email!))
                 {
                     return new Response(HttpStatusCode.Conflict,
                             new Error[] { new Error {
@@ -55,8 +55,8 @@ namespace OAuthService.Controllers
                         } }).ToActionResult();
                 }
 
-                await credentialSrvice.RegisterAsync(credential);
-                return new Response(HttpStatusCode.OK, credential.Email).ToActionResult();
+                await credentialSrvice.RegisterAsync(crDto);
+                return new Response(HttpStatusCode.OK, crDto.Email!).ToActionResult();
             }
             catch (Exception err)
             {
@@ -102,7 +102,7 @@ namespace OAuthService.Controllers
             try
             {
                 await credentialSrvice.VerifyEmailAsync(evDto.Token);
-                return new Response(HttpStatusCode.OK, null).ToActionResult();
+                return new Response(HttpStatusCode.OK).ToActionResult();
             }
             catch (Exception err)
             {
@@ -152,13 +152,13 @@ namespace OAuthService.Controllers
 
         [AllowAnonymous]
         [HttpPut("forgotpassword")]
-        public async Task<IActionResult> ForgotPasswordChange([FromBody] CredentialDto credentialDto)
+        public async Task<IActionResult> ForgotPasswordChange([FromBody] CredentialDto crDto)
         {
             string errCode = "04";
             try
             {
-                Credential cr = await credentialSrvice.CreateCredentialAsync(credentialDto);
-                return await ChangePassword(cr, credentialDto.NewPassword);
+                Credential cr = await credentialSrvice.CreateCredentialAsync(crDto);
+                return await ChangePassword(cr, crDto.NewPassword!);
             }
             catch (Exception err)
             {
@@ -173,13 +173,13 @@ namespace OAuthService.Controllers
         }
 
         [HttpPut("password")]
-        public async Task<IActionResult> ChangePassword([FromBody] CredentialDto credentialDto)
+        public async Task<IActionResult> ChangePassword([FromBody] CredentialDto crDto)
         {
             string errCode = "05";
 
             try
             {
-                Credential cr = await credentialSrvice.CreateCredentialAsync(credentialDto, GetCredentialId());
+                Credential cr = await credentialSrvice.CreateCredentialAsync(crDto, GetCredentialId());
                 if (!cr.IsAuthenticated)
                 {
                     return new Response(HttpStatusCode.Forbidden,
@@ -189,7 +189,7 @@ namespace OAuthService.Controllers
                             Detail = "Try forget password instead."
                         } }).ToActionResult();
                 }
-                return await ChangePassword(cr, credentialDto.NewPassword);
+                return await ChangePassword(cr, crDto.NewPassword!);
             }
             catch (Exception err)
             {

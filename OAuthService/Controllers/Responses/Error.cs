@@ -9,15 +9,12 @@ namespace OAuthService.Controllers.Responses
 	public class Error
 	{
 		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-		public string Id { get; set; }
+		public string Code { get; set; } = default!;
 
 		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-		public string Code { get; set; }
+		public string Title { get; set; } = default!;
 
 		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-		public string Title { get; set; }
-
-		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-		public string Detail { get; set; }
+		public string? Detail { get; set; }
 	}
 }

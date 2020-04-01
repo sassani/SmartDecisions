@@ -15,7 +15,7 @@ namespace OAuthService.Core.Services
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IHttpContextAccessor httpContextAccessor;
-        private Client client;
+        private Client? client;
 
         public ClientService(IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
         {
@@ -23,24 +23,24 @@ namespace OAuthService.Core.Services
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        public Client CreateClient(string clientId, string clientSecret = null)
+        public Client CreateClient(string clientId, string? clientSecret = null)
         {
             client = new Client
             {
                 ClientPublicId = clientId,
-                ClientSecret = clientSecret,
+                ClientSecret = clientSecret!,
             };
             var t = CheckValidation();
             client.IsValid = t;
             return client;
         }
 
-        public async Task<Client> CreateClientAsync(string clientId, string clientSecret = null)
+        public async Task<Client> CreateClientAsync(string clientId, string? clientSecret = null)
         {
             client = new Client
             {
                 ClientPublicId = clientId,
-                ClientSecret = clientSecret,
+                ClientSecret = clientSecret!,
             };
             await ValidateClient();
             ClientParser();
@@ -49,7 +49,7 @@ namespace OAuthService.Core.Services
 
         private bool CheckValidation()
         {
-            client = unitOfWork.Client.FindByClientPublicId(client.ClientPublicId);
+            client = unitOfWork.Client.FindByClientPublicId(client!.ClientPublicId);
             //Client clientDb = unitOfWork.Client.FindByClientPublicId(client.ClientPublicId);
             if (client == null) return false;
 
@@ -66,7 +66,7 @@ namespace OAuthService.Core.Services
 
         private async Task ValidateClient()
         {
-            Client dbClient = await unitOfWork.Client.FindByClientPublicIdAsync(client.ClientPublicId);
+            Client dbClient = await unitOfWork.Client.FindByClientPublicIdAsync(client!.ClientPublicId);
             if (dbClient != null)
             {
                 client = dbClient;
@@ -85,7 +85,7 @@ namespace OAuthService.Core.Services
         private void ClientParser()
         {
             /// ref:https://github.com/ua-parser/uap-csharp
-            client.IP = httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
+            client!.IP = httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
             string uaString = httpContextAccessor.HttpContext.Request.Headers["User-Agent"].ToString();
 
             // get a parser with the embedded regex patterns

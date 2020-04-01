@@ -16,7 +16,7 @@ namespace OAuthService.Helpers
 			}
 		}
 
-		public static List<PropertyInfo> MapDbModelToClassModel(object clsModel, object dbModel, object mapperItems = null)
+		public static List<PropertyInfo> MapDbModelToClassModel(object clsModel, object dbModel, object? mapperItems = null)
 		{
 			int missedPropCount = 0;
 			List<PropertyInfo> missedProps = new List<PropertyInfo>();

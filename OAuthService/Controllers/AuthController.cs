@@ -34,7 +34,7 @@ namespace OAuthService.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost()]
-        public async Task<IActionResult> Login([FromBody] CredentialDto loginCredential)
+        public async Task<IActionResult> Login([FromBody] CredentialDto crDto)
         {
             string errCode = "01";
 
@@ -47,10 +47,10 @@ namespace OAuthService.Controllers
             //}
             try
             {
-                Client client = null;
-                if (loginCredential.RequestType.ToLower().Equals("idtoken"))
+                Client client = new Client();
+                if (crDto.RequestType.ToLower().Equals("idtoken"))
                 {
-                    client = await clientService.CreateClientAsync(loginCredential.ClientId, loginCredential.ClientSecret);
+                    client = await clientService.CreateClientAsync(crDto.ClientId!, crDto.ClientSecret);
 
                     if (!client.IsValid)
                     {
@@ -63,7 +63,7 @@ namespace OAuthService.Controllers
                     }
                 }
 
-                Credential credential = await credentialSrvice.CreateCredentialAsync(loginCredential);
+                Credential credential = await credentialSrvice.CreateCredentialAsync(crDto);
                 if (credential.IsAuthenticated)
                 {
                     // check user
@@ -85,7 +85,7 @@ namespace OAuthService.Controllers
                 }
                 else
                 {
-                    if (loginCredential.RequestType.ToLower().Equals("refreshtoken"))
+                    if (crDto.RequestType.ToLower().Equals("refreshtoken"))
                     {
                         return new Response(HttpStatusCode.Forbidden,
                         new Error[] { new Error {
@@ -122,7 +122,7 @@ namespace OAuthService.Controllers
             if (credentialSrvice.Logout(GetLogsheetId()))
             {
 
-                return new Response(HttpStatusCode.Accepted, null).ToActionResult();
+                return new Response(HttpStatusCode.Accepted).ToActionResult();
             }
 
             return new Response(HttpStatusCode.BadGateway,
@@ -139,7 +139,7 @@ namespace OAuthService.Controllers
             string errCode = "03";
             if (credentialSrvice.Logout(GetLogsheetId(), true))
             {
-                return new Response(HttpStatusCode.Accepted, null).ToActionResult();
+                return new Response(HttpStatusCode.Accepted).ToActionResult();
             }
 
             return new Response(HttpStatusCode.BadGateway,

@@ -19,10 +19,15 @@ namespace OAuthService.DataBase.Configurations
         public override void Config(EntityTypeBuilder<Credential> builder)
         {
             builder.HasIndex(f => f.PublicId).IsUnique();
+            builder.Property(f => f.PublicId).IsRequired();
             builder.Property(f => f.Email).IsUnicode().IsRequired().HasMaxLength(25);
             builder.Property(f => f.Password).IsRequired().HasMaxLength(75);
             builder.Property(f => f.IsActive).HasColumnType("TINYINT(1)");
             builder.Property(f => f.IsEmailVerified).HasColumnType("TINYINT(1)");
+
+            builder.HasOne<User>(c => c.User)
+                .WithOne(u => u.Credential)
+                .HasForeignKey<User>(u => u.PublicId);
 
             //Ignored properties
             builder.Ignore(f => f.IsAuthenticated);

@@ -121,7 +121,7 @@ namespace OAuthService.Migrations
             migrationBuilder.InsertData(
                 table: "Credential",
                 columns: new[] { "Id", "Email", "IsActive", "IsEmailVerified", "LastLoginAt", "Password", "PublicId" },
-                values: new object[] { 1, "a.sassani@gmail.com", true, true, null, "$5$10$dGxTx7tECwnupyQxo0iAGN$6EwyCSDswb2JBJUZoKQQUqGCxdkU43SiMszlbglV59k=", "41e6655b-cf0b-4c37-8239-07f62f11b266" });
+                values: new object[] { 1, "a.sassani@gmail.com", true, true, null!, "$5$10$dGxTx7tECwnupyQxo0iAGN$6EwyCSDswb2JBJUZoKQQUqGCxdkU43SiMszlbglV59k=", "41e6655b-cf0b-4c37-8239-07f62f11b266" });
 
             migrationBuilder.InsertData(
                 table: "Role",

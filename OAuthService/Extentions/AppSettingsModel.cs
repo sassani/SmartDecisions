@@ -1,4 +1,4 @@
-﻿
+﻿#nullable disable
 using OAuthService.Core;
 
 namespace OAuthService.Extensions

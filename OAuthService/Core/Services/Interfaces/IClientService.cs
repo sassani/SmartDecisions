@@ -7,7 +7,7 @@ namespace OAuthService.Core.Services.Interfaces
 {
 	public interface IClientService
 	{
-		Client CreateClient(string clientId, string clientSecret = null);
-		Task<Client> CreateClientAsync(string clientId, string clientSecret = null);
+		Client CreateClient(string clientId, string? clientSecret = null);
+		Task<Client> CreateClientAsync(string clientId, string? clientSecret = null);
 	}
 }

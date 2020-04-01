@@ -12,10 +12,10 @@ namespace OAuthService.Controllers
     [ApiController]
     public class InfoController : ControllerBase
     {
-        private readonly ILogger<InfoController> _logger;
+        private readonly ILogger<InfoController> logger;
         public InfoController(ILogger<InfoController> logger)
         {
-            _logger = logger;
+            this.logger = logger;
         }
 
         [AllowAnonymous]

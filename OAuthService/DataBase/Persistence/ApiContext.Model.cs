@@ -3,6 +3,7 @@ using OAuthService.DataBase.Configurations;
 using Microsoft.EntityFrameworkCore;
 using System;
 
+#nullable disable
 namespace OAuthService.DataBase.Persistence
 {
     public partial class ApiContext

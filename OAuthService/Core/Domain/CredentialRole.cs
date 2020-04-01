@@ -10,9 +10,9 @@ namespace OAuthService.Core.Domain
 		public int Id { get; set; }
 
 		public int CredentialId { get; set; }
-		public virtual Credential Credential { get; set; }
+		public virtual Credential Credential { get; set; } = new Credential();
 
 		public int RoleId { get; set; }
-		public virtual Role Role { get; set; }
+		public virtual Role Role { get; set; } = new Role();
 	}
 }

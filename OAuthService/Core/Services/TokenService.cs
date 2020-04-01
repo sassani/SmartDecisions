@@ -13,11 +13,11 @@ namespace OAuthService.Core.Services
 {
     public class TokenService : ITokenService
     {
-        private readonly IOptions<AppSettingsModel> config;
+        //private readonly IOptions<AppSettingsModel> config;
         private readonly byte[] secretKey;
         public TokenService(IOptions<AppSettingsModel> config)
         {
-            this.config = config;
+            //this.config = config;
             secretKey = config.Value.Token.SecretKey.Select(x => (byte)x).ToArray();
         }
 
@@ -46,14 +46,15 @@ namespace OAuthService.Core.Services
             try
             {
                 validatedDtoToken = JWT.Decode<T>(tokenString, secretKey);
-                var t = validatedDtoToken.GetType().GetProperties();
+                if (validatedDtoToken == null) throw new Exception("Bad token");
+                //var t = validatedDtoToken.GetType().GetProperties();
                 long now = DateTimeHelper.GetUnixTimestamp();
                 foreach (var item in validatedDtoToken.GetType().GetProperties())
                 {
                     if (item.Name.ToLower().Equals("expiration"))
                     {
-                        var expDate = validatedDtoToken.GetType().GetProperty(item.Name).GetValue(validatedDtoToken);
-                        if ((long)expDate < now) throw new Exception("Token is expired");
+                        var expDate = validatedDtoToken.GetType().GetProperty(item.Name)!.GetValue(validatedDtoToken);
+                        if ((long)expDate! < now) throw new Exception("Token is expired");
                     }
                 }
             }

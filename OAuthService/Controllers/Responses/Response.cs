@@ -14,31 +14,56 @@ namespace OAuthService.Controllers.Responses
 	public class Response
 	{
 		[JsonProperty(PropertyName = "data", NullValueHandling = NullValueHandling.Ignore)]
-		public object Data { get; private set; } = null;
+		public object? Data { get; private set; }
 
 		[JsonProperty(PropertyName = "errors", NullValueHandling = NullValueHandling.Ignore)]
-		public IEnumerable<Error> Errors { get; private set; } = null;
+		public IEnumerable<Error>? Errors { get; private set; }
 
 		[JsonProperty(PropertyName = "meta", NullValueHandling = NullValueHandling.Ignore)]
-		public Dictionary<string, object> Meta { get; set; } = null;
+		public Dictionary<string, object>? Meta { get; set; }
 
 		[JsonProperty(PropertyName = "links", NullValueHandling = NullValueHandling.Ignore)]
-		public object Links { get; set; }
+		public object? Links { get; set; }
 
 		private readonly HttpStatusCode status;
 
 		public Response(HttpStatusCode status, IEnumerable<Error> errors)
 		{
+			this.status = status;
 			Errors = errors;
+		}
+
+		public Response(HttpStatusCode status)
+		{
 			this.status = status;
 		}
 
-		public Response(HttpStatusCode status, object data, object links = null, Dictionary<string, object> meta = null)
+		public Response(HttpStatusCode status, object data)
 		{
+			this.status = status;
+			Data = data;
+		}
+
+		public Response(HttpStatusCode status, object data, object links)
+		{
+			this.status = status;
+			Data = data;
+			Links = links;
+		}
+
+		public Response(HttpStatusCode status, object data, Dictionary<string, object> meta)
+		{
+			this.status = status;
+			Data = data;
+			Meta = meta;
+		}
+
+		public Response(HttpStatusCode status, object data, object links, Dictionary<string, object> meta)
+		{
+			this.status = status;
 			Data = data;
 			Meta = meta;
 			Links = links;
-			this.status = status;
 		}
 
 		[OnSerializing]
@@ -61,19 +86,17 @@ namespace OAuthService.Controllers.Responses
 				ContractResolver = new CoreJsonLoaderResolver()
 			};
 
-			using (var writer = new StringWriter())
+			using var writer = new StringWriter();
+			using (var jsonWriter = new JsonTextWriter(writer))
 			{
-				using (var jsonWriter = new JsonTextWriter(writer))
-				{
-					jsonWriter.CloseOutput = false;
-					jsonWriter.AutoCompleteOnClose = false;
+				jsonWriter.CloseOutput = false;
+				jsonWriter.AutoCompleteOnClose = false;
 
-					var jsonSerializer = JsonSerializer.Create(jsonSerializerSettings);
-					jsonSerializer.Serialize(jsonWriter, this);
-				}
-
-				return writer.ToString();
+				var jsonSerializer = JsonSerializer.Create(jsonSerializerSettings);
+				jsonSerializer.Serialize(jsonWriter, this);
 			}
+
+			return writer.ToString();
 
 		}
 
@@ -99,8 +122,8 @@ namespace OAuthService.Controllers.Responses
 			{
 				prop.Ignored = true;
 			}
-
-			prop.PropertyName = Char.ToLower(prop.PropertyName[0]) + prop.PropertyName.Substring(1);
+			if (prop.PropertyName != null) prop.PropertyName = Char.ToLower(prop.PropertyName[0]) + prop.PropertyName.Substring(1);
+			
 			return prop;
 		}
 	}

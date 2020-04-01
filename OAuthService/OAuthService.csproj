@@ -6,6 +6,7 @@
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
     <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+	<Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

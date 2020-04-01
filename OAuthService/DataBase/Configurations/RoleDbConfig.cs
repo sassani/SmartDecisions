@@ -18,7 +18,7 @@ namespace OAuthService.DataBase.Configurations
             {
                 builder.HasData(new Role
                 {
-                    Id = (int)role,
+                    Id = (int)role!,
                     Type = (RoleType)role,
                 });
             }

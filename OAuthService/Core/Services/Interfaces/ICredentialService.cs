@@ -9,11 +9,11 @@ namespace OAuthService.Core.Services.Interfaces
         Credential Get(int userId);
         //Credential Get(string uuid);
         Task<bool> IsEmailExistedAsync(string email);
-        void AddUserByUserInfo(RegisterUserDto user);
+        //void AddUserByUserInfo(RegisterUserDto user);
         bool Logout(int loginId, bool all = false);
         Task RegisterAsync(CredentialDto credential);
         Task VerifyEmailAsync(string token);
-        AuthTokenDto Login(Credential credential, Client client = null);
+        AuthTokenDto Login(Credential credential, Client? client = null);
         Task SendForgotPasswordRequestLinkAsync(string email);
         Task ChangePasswordAsync(Credential cr, string newPass);
         Task<Credential> CreateCredentialAsync(CredentialDto crDto, string uid);

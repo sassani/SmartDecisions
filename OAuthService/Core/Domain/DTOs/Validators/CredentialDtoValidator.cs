@@ -38,7 +38,7 @@ namespace OAuthService.Core.Domain.DTOs.Validators
                 .NotNull()
                     .When(cr => 
                        cr.RequestType.ToLower() == "idtoken" 
-                    && cr.ClientId.ToLower() == "2").WithMessage($"clientsecret{txt} when you call it from mobile");//TODO: change clientId for other app
+                    && cr.ClientId!.ToLower() == "2").WithMessage($"clientsecret{txt} when you call it from mobile");//TODO: change clientId for other app
 
                 RuleFor(cr => cr.ResetPasswordToken).NotNull()
                     .When(cr => cr.RequestType.ToLower() == "forgotpassword").WithMessage($"resetpasswordtoken{txt}");

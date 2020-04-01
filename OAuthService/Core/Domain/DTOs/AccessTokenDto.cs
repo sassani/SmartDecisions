@@ -26,7 +26,7 @@ namespace OAuthService.Core.Domain.DTOs
 		public bool IsEmailVerified { get; set; }
 
 		[JsonProperty(propertyName: "roles")]
-		public string[] Roles { get; set; }
+		public string[]? Roles { get; set; }// TODO: will change in the future
 
 		public AccessTokenDto(Credential credential, int logsheetId)
 		{

@@ -14,6 +14,7 @@ using OAuthService.Extensions;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualBasic;
 
+#nullable disable
 namespace OAuthService.Core.Services
 {
     public class CredentialService : ICredentialService
@@ -132,7 +133,7 @@ namespace OAuthService.Core.Services
 
         public AuthTokenDto Login(Credential credential, Client client = null)
         {
-            if (refreshToken == null)
+            if (refreshToken == null && client != null)
             {
                 refreshToken = tokenSrvice.GenerateRefreshToken(credential.PublicId);
                 logsheet = new Logsheet()
@@ -222,18 +223,18 @@ namespace OAuthService.Core.Services
 
         public async Task<bool> IsEmailExistedAsync(string email) => await Task.Run(() => unitOfWork.Credential.IsEmailExist(email));
 
-        public void AddUserByUserInfo(RegisterUserDto user)
-        {
-            //UserDb newUser = new UserDb
-            //{
-            //	FirstName = user.FirstName,
-            //	LastName = user.LastName,
-            //	Email = user.Email,
-            //	Password = StringHelper.StringToHash(user.Password)
-            //};
-            //unitOfWork.User.Add(newUser);
-            //unitOfWork.Complete();
-        }
+        //public void AddUserByUserInfo(RegisterUserDto user)
+        //{
+        //    //UserDb newUser = new UserDb
+        //    //{
+        //    //	FirstName = user.FirstName,
+        //    //	LastName = user.LastName,
+        //    //	Email = user.Email,
+        //    //	Password = StringHelper.StringToHash(user.Password)
+        //    //};
+        //    //unitOfWork.User.Add(newUser);
+        //    //unitOfWork.Complete();
+        //}
 
         public async Task VerifyEmailAsync(string token)
         {
