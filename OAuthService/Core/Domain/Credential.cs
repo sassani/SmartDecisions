@@ -5,11 +5,11 @@ namespace OAuthService.Core.Domain
 {
 	public class Credential
 	{
-        //public Credential()
-        //{
-        //    CredentialRole = new HashSet<CredentialRole>();
-        //    Logsheet = new HashSet<Logsheet>();
-        //}
+        public Credential()
+        {
+            CredentialRole = new HashSet<CredentialRole>();
+            Logsheet = new HashSet<Logsheet>();
+        }
         public int Id { get; set; }
         public string PublicId { get; set; } = default!;
 		public string Email { get; set; } = default!;
@@ -21,9 +21,9 @@ namespace OAuthService.Core.Domain
         //ignored properties:
         public bool IsAuthenticated { get; set; }
 
-        public virtual ICollection<CredentialRole> CredentialRole { get; set; } = new HashSet<CredentialRole>();
-        public virtual ICollection<Logsheet> Logsheet { get; set; } = new HashSet<Logsheet>();
-        public virtual User User { get; set; } = new User();
+        public virtual ICollection<CredentialRole> CredentialRole { get; set; }
+        public virtual ICollection<Logsheet> Logsheet { get; set; }
+
 
 
     }

@@ -15,7 +15,7 @@ namespace OAuthService.Controllers
     /// <error-code>01</error-code>
     [Authorize]
     [ApiController]
-    [ServiceFilter(typeof(ValidateModelAttributeFilter))]
+    //[ServiceFilter(typeof(ValidateModelAttributeFilter))]
     [Route("[controller]")]
     public class AuthController : BaseController
     {

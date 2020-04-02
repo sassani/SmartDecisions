@@ -6,10 +6,7 @@ namespace OAuthService.Core.Services.Interfaces
 {
     public interface ICredentialService
     {
-        Credential Get(int userId);
-        //Credential Get(string uuid);
         Task<bool> IsEmailExistedAsync(string email);
-        //void AddUserByUserInfo(RegisterUserDto user);
         bool Logout(int loginId, bool all = false);
         Task RegisterAsync(CredentialDto credential);
         Task VerifyEmailAsync(string token);

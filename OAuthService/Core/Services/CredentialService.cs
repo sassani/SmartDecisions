@@ -14,7 +14,6 @@ using OAuthService.Extensions;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualBasic;
 
-#nullable disable
 namespace OAuthService.Core.Services
 {
     public class CredentialService : ICredentialService
@@ -211,14 +210,6 @@ namespace OAuthService.Core.Services
             {
                 throw new Exception("This Email is not registered in our system");
             }
-        }
-
-        public Credential Get(int userId)
-        {
-            Credential user = new Credential();
-            //UserDb userDb = unitOfWork.User.Get(userId);
-            //Mapper.UserMapper(user, userDb);
-            return user;
         }
 
         public async Task<bool> IsEmailExistedAsync(string email) => await Task.Run(() => unitOfWork.Credential.IsEmailExist(email));

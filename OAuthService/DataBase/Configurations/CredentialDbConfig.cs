@@ -25,10 +25,6 @@ namespace OAuthService.DataBase.Configurations
             builder.Property(f => f.IsActive).HasColumnType("TINYINT(1)");
             builder.Property(f => f.IsEmailVerified).HasColumnType("TINYINT(1)");
 
-            builder.HasOne<User>(c => c.User)
-                .WithOne(u => u.Credential)
-                .HasForeignKey<User>(u => u.PublicId);
-
             //Ignored properties
             builder.Ignore(f => f.IsAuthenticated);
         }

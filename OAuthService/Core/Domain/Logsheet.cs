@@ -11,10 +11,10 @@ namespace OAuthService.Core.Domain
 		public string RefreshToken { get; set; } = default!;
 
 		public int CredentialId { get; set; }
-		public virtual Credential Credential { get; set; } = new Credential();
+		public virtual Credential Credential { get; set; }
 
 		public int ClientId { get; set; }
-		public virtual Client Client { get; set; } = new Client();
+		public virtual Client Client { get; set; }
 
 		public string? Platform { get; set; }
 		public string? Browser { get; set; }

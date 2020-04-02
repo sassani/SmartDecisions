@@ -8,10 +8,10 @@ namespace OAuthService.Core.Domain
 {
 	public class Client
 	{
-		//public Client()
-		//{
-		//	Logsheet = new HashSet<Logsheet>();
-		//}
+		public Client()
+		{
+			Logsheet = new HashSet<Logsheet>();
+		}
 
 		public int Id { get; set; }
 		public string ClientPublicId { get; set; } = default!;
@@ -26,6 +26,6 @@ namespace OAuthService.Core.Domain
 		public string? IP { get; set; }
 
 
-        public virtual ICollection<Logsheet> Logsheet { get; set; } = new HashSet<Logsheet>();
+        public virtual ICollection<Logsheet> Logsheet { get; set; }
 	}
 }
