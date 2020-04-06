@@ -3,7 +3,13 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>02eb1685-3c83-414b-b70f-3246c69b3bb4</UserSecretsId>
+	<Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="DataBase\" />
+  </ItemGroup>
 
 
 </Project>
