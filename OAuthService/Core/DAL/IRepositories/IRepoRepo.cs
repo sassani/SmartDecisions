@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace OAuthService.Core.DataServices.IRepositories
+namespace OAuthService.Core.DAL.IRepositories
 {
 	public interface IRepoRepo<TEntity> where TEntity : class
 	{

@@ -1,8 +1,8 @@
 ﻿using OAuthService.Core.Domain;
 using OAuthService.Core.Domain.DTOs;
-using OAuthService.Helpers;
+using Helpers;
 using OAuthService.Core.Services.Interfaces;
-using OAuthService.Core.DataServices;
+using OAuthService.Core.DAL;
 
 using Microsoft.AspNetCore.Http;
 using System;

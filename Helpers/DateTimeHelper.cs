@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OAuthService.Helpers
+namespace Helpers
 {
     public class DateTimeHelper
     {

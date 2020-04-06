@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using OAuthService.Helpers;
+using Helpers;
 
 namespace OAuthService.Core.Domain.DTOs
 {

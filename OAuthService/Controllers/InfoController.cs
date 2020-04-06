@@ -1,4 +1,4 @@
-﻿using OAuthService.Controllers.Responses;
+﻿using Shared.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

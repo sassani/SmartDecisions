@@ -1,5 +1,5 @@
 ﻿using OAuthService.Core.Domain;
-using OAuthService.Core.DataServices.IRepositories;
+using OAuthService.Core.DAL.IRepositories;
 
 namespace OAuthService.DataBase.Persistence.Repositories
 {

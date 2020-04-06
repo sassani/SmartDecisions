@@ -1,5 +1,5 @@
-﻿using OAuthService.Core.DataServices;
-using OAuthService.Helpers;
+﻿using OAuthService.Core.DAL;
+using Helpers;
 using Microsoft.AspNetCore.Http;
 using UAParser;
 using System.Collections.Generic;

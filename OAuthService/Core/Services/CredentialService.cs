@@ -1,7 +1,7 @@
 ﻿using OAuthService.Core.Domain;
-using OAuthService.Helpers;
+using Helpers;
 using OAuthService.Core.Services.Interfaces;
-using OAuthService.Core.DataServices;
+using OAuthService.Core.DAL;
 
 using System;
 using System.Collections.Generic;
@@ -30,6 +30,8 @@ namespace OAuthService.Core.Services
             this.unitOfWork = unitOfWork;
             this.tokenSrvice = tokenSrvice;
             credential = new Credential();
+            logsheet = new Logsheet();
+            refreshToken = default!;
             this.config = config;
         }
 
@@ -37,13 +39,11 @@ namespace OAuthService.Core.Services
         {
             try
             {
-                Credential credentialDb;
-                string dtoType = crDto.RequestType.ToLower();
-                switch (dtoType)
+                switch (crDto.RequestType.ToLower())
                 {
-                    case "refreshtoken":
+                    case CONSTANTS.REQUEST_TYPE.REFRESH_TOKEN:
                         {
-                            refreshToken = crDto.RefreshToken;
+                            refreshToken = crDto.RefreshToken!;
                             logsheet = await unitOfWork.Logsheet.FindLogsheetByRefreshTokenAsync(refreshToken);
                             if (logsheet != null && logsheet.Credential != null)
                             {
@@ -52,26 +52,21 @@ namespace OAuthService.Core.Services
                             }
                             break;
                         }
-                    case "idtoken":
+                    case CONSTANTS.REQUEST_TYPE.ID_TOKEN:
                         {
-                            credentialDb = unitOfWork.Credential.FindByEmail(crDto.Email);
+                            var credentialDb = unitOfWork.Credential.FindByEmail(crDto.Email!);
                             if (credentialDb != null)
                             {
                                 credential = credentialDb;
-                                CheckPassword(credential, crDto);
+                                credential.IsAuthenticated = CheckPassword(credential, crDto);
                             }
                             break;
                         }
-                    case "forgotpassword":
+                    case CONSTANTS.REQUEST_TYPE.FORGOT_PASSWORD:
                         {
-                            ForgotPasswordRequestTokenDto validatedToken = tokenSrvice.ValidateDtoToken<ForgotPasswordRequestTokenDto>(crDto.ResetPasswordToken);
-                            credentialDb = unitOfWork.Credential.FindByEmail(validatedToken.Email);
+                            ForgotPasswordRequestTokenDto validatedToken = tokenSrvice.ValidateDtoToken<ForgotPasswordRequestTokenDto>(crDto.ResetPasswordToken!);
+                            var credentialDb = unitOfWork.Credential.FindByEmail(validatedToken.Email);
                             if (credentialDb != null) credential = credentialDb;
-                            break;
-                        }
-                    case "changepassword":
-                        {
-
                             break;
                         }
                     default:
@@ -89,12 +84,11 @@ namespace OAuthService.Core.Services
         {
             try
             {
-                Credential credentialDb;
-                credentialDb = await unitOfWork.Credential.FindByUidAsync(uid);
+                var credentialDb = await unitOfWork.Credential.FindByUidAsync(uid);
                 if (credentialDb != null)
                 {
                     credential = credentialDb;
-                    CheckPassword(credential, crDto);
+                    credential.IsAuthenticated = CheckPassword(credential, crDto);
                 }
                 return credential;
             }
@@ -108,8 +102,7 @@ namespace OAuthService.Core.Services
         {
             try
             {
-                Credential credentialDb;
-                credentialDb = await unitOfWork.Credential.FindByUidAsync(uid);
+                var credentialDb = await unitOfWork.Credential.FindByUidAsync(uid);
                 if (credentialDb != null)
                 {
                     credential = credentialDb;
@@ -122,15 +115,12 @@ namespace OAuthService.Core.Services
             }
         }
 
-        private void CheckPassword(Credential cr, CredentialDto crDto)
+        private bool CheckPassword(Credential cr, CredentialDto crDto)
         {
-            if (StringHelper.CompareStringToHash(cr.Password, crDto.Password))
-            {
-                credential.IsAuthenticated = true;
-            }
+            return StringHelper.CompareStringToHash(cr.Password, crDto.Password);
         }
 
-        public AuthTokenDto Login(Credential credential, Client client = null)
+        public AuthTokenDto Login(Credential credential, Client? client = null)
         {
             if (refreshToken == null && client != null)
             {
@@ -213,19 +203,6 @@ namespace OAuthService.Core.Services
         }
 
         public async Task<bool> IsEmailExistedAsync(string email) => await Task.Run(() => unitOfWork.Credential.IsEmailExist(email));
-
-        //public void AddUserByUserInfo(RegisterUserDto user)
-        //{
-        //    //UserDb newUser = new UserDb
-        //    //{
-        //    //	FirstName = user.FirstName,
-        //    //	LastName = user.LastName,
-        //    //	Email = user.Email,
-        //    //	Password = StringHelper.StringToHash(user.Password)
-        //    //};
-        //    //unitOfWork.User.Add(newUser);
-        //    //unitOfWork.Complete();
-        //}
 
         public async Task VerifyEmailAsync(string token)
         {

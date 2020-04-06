@@ -8,7 +8,7 @@ using Microsoft.Extensions.Hosting;
 using OAuthService.Core.Services;
 using OAuthService.Core.Services.Interfaces;
 using OAuthService.Extensions;
-using OAuthService.Filters;
+using Filters;
 
 namespace RestApi
 {

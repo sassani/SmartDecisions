@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using OAuthService.Controllers.Responses;
+using Shared.Response;
 using OAuthService.Core.Domain;
 using OAuthService.Core.Domain.DTOs;
 using OAuthService.Core.Services.Interfaces;
-using OAuthService.Filters;
+using Filters;
 
 namespace OAuthService.Controllers
 {

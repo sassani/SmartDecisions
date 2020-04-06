@@ -1,5 +1,5 @@
-﻿using OAuthService.Core.DataServices.IRepositories;
-using OAuthService.Core.DataServices;
+﻿using OAuthService.Core.DAL.IRepositories;
+using OAuthService.Core.DAL;
 using OAuthService.DataBase.Persistence;
 using OAuthService.DataBase.Persistence.Repositories;
 

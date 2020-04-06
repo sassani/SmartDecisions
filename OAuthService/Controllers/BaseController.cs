@@ -1,5 +1,5 @@
 ﻿
-using OAuthService.Controllers.Responses;
+using Shared.Response;
 using OAuthService.Core.Domain;
 using OAuthService.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;

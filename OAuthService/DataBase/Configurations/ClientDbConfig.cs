@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using OAuthService.Helpers;
+using Helpers;
 using Microsoft.Extensions.Options;
 using OAuthService.Extensions;
 using OAuthService.Core.Domain;

@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using OAuthService.Controllers.Responses;
+using Shared.Response;
 using System.Collections.Generic;
 
-namespace OAuthService.Filters
+namespace Filters
 {
     public class ValidateModelAttributeFilter: ActionFilterAttribute
     {

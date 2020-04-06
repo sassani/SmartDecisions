@@ -1,7 +1,7 @@
 ﻿using OAuthService.Core.Domain;
 using System.Threading.Tasks;
 
-namespace OAuthService.Core.DataServices.IRepositories
+namespace OAuthService.Core.DAL.IRepositories
 {
 	public interface ICredentialRepo : IRepoRepo<Credential>
 	{

@@ -1,20 +1,10 @@
-﻿using OAuthService.Core.Domain;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 
-namespace OAuthService.Helpers
+namespace Helpers
 {
 	public static class Mapper
 	{
-
-		public static void UserMapper(Credential user, Credential userDb)
-		{
-			var missedProps = MapDbModelToClassModel(user, userDb);
-			foreach (var ur in userDb.CredentialRole)
-			{
-				user.CredentialRole.Add(ur);
-			}
-		}
 
 		public static List<PropertyInfo> MapDbModelToClassModel(object clsModel, object dbModel, object? mapperItems = null)
 		{

@@ -1,5 +1,5 @@
 ﻿using OAuthService.Core.Domain;
-using OAuthService.Core.DataServices.IRepositories;
+using OAuthService.Core.DAL.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;

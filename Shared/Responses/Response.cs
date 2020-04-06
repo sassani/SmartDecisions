@@ -9,7 +9,7 @@ using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
-namespace OAuthService.Controllers.Responses
+namespace Shared.Response
 {
 	public class Response
 	{

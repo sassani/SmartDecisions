@@ -1,4 +1,4 @@
-﻿using OAuthService.Helpers;
+﻿using Helpers;
 using Newtonsoft.Json;
 using System;
 using System.Linq;

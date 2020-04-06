@@ -1,4 +1,4 @@
-﻿using OAuthService.Controllers.Responses;
+﻿using Shared.Response;
 using OAuthService.Core.Domain;
 using OAuthService.Core.Domain.DTOs;
 using OAuthService.Core.Services.Interfaces;
@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading.Tasks;
-using OAuthService.Filters;
+using Filters;
 
 namespace OAuthService.Controllers
 {
@@ -15,7 +15,7 @@ namespace OAuthService.Controllers
     /// <error-code>01</error-code>
     [Authorize]
     [ApiController]
-    //[ServiceFilter(typeof(ValidateModelAttributeFilter))]
+    [ServiceFilter(typeof(ValidateModelAttributeFilter))]
     [Route("[controller]")]
     public class AuthController : BaseController
     {

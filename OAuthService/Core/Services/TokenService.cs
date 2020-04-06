@@ -1,6 +1,6 @@
 ﻿using OAuthService.Core.Domain;
 using OAuthService.Core.Domain.DTOs;
-using OAuthService.Helpers;
+using Helpers;
 using OAuthService.Core.Services.Interfaces;
 using OAuthService.Extensions;
 using Jose;
