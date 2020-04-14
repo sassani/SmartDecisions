@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OAuthService.Core.Domain;
+using Shared.DAL.Configurations;
 using static OAuthService.Core.AppEnums;
-using System;
 
 namespace OAuthService.DataBase.Configurations
 {

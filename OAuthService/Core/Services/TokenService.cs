@@ -1,13 +1,12 @@
-﻿using OAuthService.Core.Domain;
-using OAuthService.Core.Domain.DTOs;
+﻿using System;
+using System.Linq;
 using Helpers;
-using OAuthService.Core.Services.Interfaces;
-using OAuthService.Extensions;
 using Jose;
 using Microsoft.Extensions.Options;
-using System.Linq;
-using System;
-using System.Numerics;
+using OAuthService.Core.Domain;
+using OAuthService.Core.Domain.DTOs;
+using OAuthService.Core.Services.Interfaces;
+using OAuthService.Extensions;
 
 namespace OAuthService.Core.Services
 {
@@ -24,7 +23,8 @@ namespace OAuthService.Core.Services
         public AuthTokenDto GenerateAuthToken(Credential credential, int userClientId, string refreshToken)
         {
             AccessTokenDto accessToken = new AccessTokenDto(credential, userClientId);
-            string signedAccessToken = JWT.Encode(accessToken, secretKey, JwsAlgorithm.HS256);
+            var accessTokenJson = System.Text.Json.JsonSerializer.Serialize(accessToken);
+            string signedAccessToken = JWT.Encode(accessTokenJson, secretKey, JwsAlgorithm.HS256);
             return new AuthTokenDto(signedAccessToken, refreshToken, "bearer", credential);
         }
 

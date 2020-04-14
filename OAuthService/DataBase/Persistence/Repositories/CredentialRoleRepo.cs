@@ -1,9 +1,10 @@
-﻿using OAuthService.Core.Domain;
-using OAuthService.Core.DAL.IRepositories;
+﻿using OAuthService.Core.DAL.IRepositories;
+using OAuthService.Core.Domain;
+using Shared.DAL;
 
 namespace OAuthService.DataBase.Persistence.Repositories
 {
-	public class CredentialRoleRepo : Repo<CredentialRole>, ICredentialRoleRepo
+	public class CredentialRoleRepo : Repository<CredentialRole>, ICredentialRoleRepo
 	{
 		public CredentialRoleRepo(ApiContext context) : base(context)
 		{

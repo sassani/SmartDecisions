@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OAuthService.Core.Domain;
-
+using Shared.DAL.Configurations;
 
 namespace OAuthService.DataBase.Configurations
 {

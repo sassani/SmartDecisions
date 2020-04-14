@@ -1,11 +1,11 @@
-﻿using OAuthService.Core.Domain;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using OAuthService.Core.Domain;
+using Shared.DAL.Interfaces;
 
 namespace OAuthService.Core.DAL.IRepositories
 {
-	public interface IClientRepo : IRepoRepo<Client>
+    public interface IClientRepo : IRepository<Client>
 	{
-		Client FindByClientPublicId(string clientId);
         Task<Client> FindByClientPublicIdAsync(string clientPublicId);
     }
 }

@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
+﻿using System;
 using Helpers;
-using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Options;
-using OAuthService.Extensions;
 using OAuthService.Core.Domain;
+using OAuthService.Extensions;
+using Shared.DAL.Configurations;
 
 namespace OAuthService.DataBase.Configurations
 {

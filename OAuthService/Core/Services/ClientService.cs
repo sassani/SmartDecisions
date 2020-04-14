@@ -23,18 +23,6 @@ namespace OAuthService.Core.Services
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        public Client CreateClient(string clientId, string? clientSecret = null)
-        {
-            client = new Client
-            {
-                ClientPublicId = clientId,
-                ClientSecret = clientSecret!,
-            };
-            var t = CheckValidation();
-            client.IsValid = t;
-            return client;
-        }
-
         public async Task<Client> CreateClientAsync(string clientId, string? clientSecret = null)
         {
             client = new Client
@@ -45,23 +33,6 @@ namespace OAuthService.Core.Services
             await ValidateClient();
             ClientParser();
             return client;
-        }
-
-        private bool CheckValidation()
-        {
-            client = unitOfWork.Client.FindByClientPublicId(client!.ClientPublicId);
-            //Client clientDb = unitOfWork.Client.FindByClientPublicId(client.ClientPublicId);
-            if (client == null) return false;
-
-            if (client.Type.Equals(AppEnums.ClientType.Mobile))
-            {
-                if (!client.ClientSecret.Equals(client.ClientSecret)) return false;
-            }
-
-            //Mapper.MapDbModelToClassModel(client, clientDb);
-            //client = clientDb;
-            ClientParser();
-            return true;
         }
 
         private async Task ValidateClient()

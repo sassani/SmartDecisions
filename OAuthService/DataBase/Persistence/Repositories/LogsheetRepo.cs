@@ -1,13 +1,14 @@
-﻿using OAuthService.Core.Domain;
-using OAuthService.Core.DAL.IRepositories;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using OAuthService.Core.DAL.IRepositories;
+using OAuthService.Core.Domain;
+using Shared.DAL;
 
 namespace OAuthService.DataBase.Persistence.Repositories
 {
-    public class LogsheetRepo : Repo<Logsheet>, ILogsheetRepo
+    public class LogsheetRepo : Repository<Logsheet>, ILogsheetRepo
     {
         private readonly new ApiContext context;
 
@@ -18,15 +19,10 @@ namespace OAuthService.DataBase.Persistence.Repositories
 
         public Task<Logsheet> FindLogsheetByRefreshTokenAsync(string refreshToken)
         {
-            DateTime currentDay = DateTime.Now;
-
-            return Task.Run(() =>
-            {
-                return context.Logsheet
-                 .Where(ls => ls.RefreshToken == refreshToken)
-                 .Include(cr => cr.Credential)
-                 .SingleOrDefaultAsync();
-            });
+            return context.Logsheet
+                .Where(ls => ls.RefreshToken == refreshToken)
+                .Include(ls => ls.Credential)
+                .SingleOrDefaultAsync();
         }
 
         public void UpdateLastTimeLogin(Logsheet logSheet)

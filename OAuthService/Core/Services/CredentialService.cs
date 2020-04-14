@@ -54,7 +54,7 @@ namespace OAuthService.Core.Services
                         }
                     case CONSTANTS.REQUEST_TYPE.ID_TOKEN:
                         {
-                            var credentialDb = unitOfWork.Credential.FindByEmail(crDto.Email!);
+                            var credentialDb = await unitOfWork.Credential.FindByEmailAsync(crDto.Email!);
                             if (credentialDb != null)
                             {
                                 credential = credentialDb;
@@ -65,7 +65,7 @@ namespace OAuthService.Core.Services
                     case CONSTANTS.REQUEST_TYPE.FORGOT_PASSWORD:
                         {
                             ForgotPasswordRequestTokenDto validatedToken = tokenSrvice.ValidateDtoToken<ForgotPasswordRequestTokenDto>(crDto.ResetPasswordToken!);
-                            var credentialDb = unitOfWork.Credential.FindByEmail(validatedToken.Email);
+                            var credentialDb = await unitOfWork.Credential.FindByEmailAsync(validatedToken.Email);
                             if (credentialDb != null) credential = credentialDb;
                             break;
                         }
@@ -202,7 +202,7 @@ namespace OAuthService.Core.Services
             }
         }
 
-        public async Task<bool> IsEmailExistedAsync(string email) => await Task.Run(() => unitOfWork.Credential.IsEmailExist(email));
+        public async Task<bool> IsEmailExistedAsync(string email) =>  await unitOfWork.Credential.IsEmailExistAsync(email);
 
         public async Task VerifyEmailAsync(string token)
         {

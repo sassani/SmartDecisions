@@ -1,12 +1,13 @@
-﻿using OAuthService.Core.Domain;
-using OAuthService.Core.DAL.IRepositories;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using OAuthService.Core.DAL.IRepositories;
+using OAuthService.Core.Domain;
+using Shared.DAL;
 
 namespace OAuthService.DataBase.Persistence.Repositories
 {
-	public class ClientRepo : Repo<Client>, IClientRepo
+	public class ClientRepo : Repository<Client>, IClientRepo
 	{
 		private new ApiContext context;
 		public ClientRepo(ApiContext context) : base(context)
@@ -14,21 +15,11 @@ namespace OAuthService.DataBase.Persistence.Repositories
 			this.context = context;
 		}
 
-		public Client FindByClientPublicId(string publicId)
+		public async Task<Client> FindByClientPublicIdAsync(string clientPublicId)
 		{
-			return context.Client
-				.Where(a => a.ClientPublicId == publicId)
-				.SingleOrDefault();
-		}
-
-		public Task<Client> FindByClientPublicIdAsync(string clientPublicId)
-		{
-			return Task.Run(() =>
-			{
-				return context.Client
+			return await context.Client
 				.Where(a => a.ClientPublicId == clientPublicId)
 				.SingleOrDefaultAsync();
-			});
 		}
 	}
 }

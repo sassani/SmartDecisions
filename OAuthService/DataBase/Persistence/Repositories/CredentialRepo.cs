@@ -1,15 +1,16 @@
-﻿using OAuthService.Core.Domain;
-using OAuthService.Core.DAL.IRepositories;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using OAuthService.Core.DAL.IRepositories;
+using OAuthService.Core.Domain;
+using Shared.DAL;
 
 
 
 namespace OAuthService.DataBase.Persistence.Repositories
 {
-    public class CredentialRepo : Repo<Credential>, ICredentialRepo
+    public class CredentialRepo : Repository<Credential>, ICredentialRepo
     {
         private readonly new ApiContext context;
         public CredentialRepo(ApiContext context) : base(context)
@@ -17,19 +18,20 @@ namespace OAuthService.DataBase.Persistence.Repositories
             this.context = context;
         }
 
-        public bool IsEmailExist(string email)
+        public async Task<bool> IsEmailExistAsync(string email)
         {
-            var t = context.Credential
+            var t = await context.Credential
             .Where(u => u.Email.ToLower().Equals(email.ToLower()))
-            .SingleOrDefault();
+            .SingleOrDefaultAsync();
             if (t == null) return false;
             return true;
         }
 
-        public Credential FindByEmail(string email)
+        public async Task<Credential> FindByEmailAsync(string email)
         {
-            return context.Credential
-                .Where(cr => cr.Email.ToLower() == email.ToLower()).FirstOrDefault();
+            return await context.Credential
+                .Where(cr => cr.Email.ToLower() == email.ToLower())
+                .FirstOrDefaultAsync();
         }
 
         public CredentialRole[] GetRoles(Credential credential)

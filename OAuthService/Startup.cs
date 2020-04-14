@@ -9,6 +9,7 @@ using OAuthService.Core.Services;
 using OAuthService.Core.Services.Interfaces;
 using OAuthService.Extensions;
 using Filters;
+using System;
 
 namespace RestApi
 {
@@ -20,8 +21,6 @@ namespace RestApi
         }
 
         public IConfiguration Configuration { get; }
-        //private IWebHostEnvironment currentEnvironment;
-
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -63,7 +62,7 @@ namespace RestApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                System.Console.WriteLine("Environment setup:\t"+env.EnvironmentName);
+                Console.WriteLine("OAuth Service is running ...");
             }
 
             //app.UseHttpsRedirection();
