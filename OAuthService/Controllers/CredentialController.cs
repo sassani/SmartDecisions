@@ -11,6 +11,7 @@ using OAuthService.Core.Domain;
 using OAuthService.Core.Domain.DTOs;
 using OAuthService.Core.Services.Interfaces;
 using Filters;
+using Shared.Attributes;
 
 namespace OAuthService.Controllers
 {
@@ -22,9 +23,9 @@ namespace OAuthService.Controllers
     {
         public CredentialController(ICredentialService credentialSrvice) : base(credentialSrvice)
         {
-            ErrorCode = "02";
         }
 
+        [EndPointData("00")]
         [HttpGet]
         public async Task<IActionResult> GetCredentialInfo()
         {
@@ -39,17 +40,17 @@ namespace OAuthService.Controllers
         }
 
         [AllowAnonymous]
+        [EndPointData("01")]
         [HttpPost()]
         public async Task<IActionResult> AddCredential([FromBody] CredentialDto crDto)
         {
-            string errCode = "01";
             try
             {
                 if (await credentialSrvice.IsEmailExistedAsync(crDto.Email!))
                 {
                     return new Response(HttpStatusCode.Conflict,
                             new Error[] { new Error {
-                            Code = ErrorCode+errCode+"02",
+                            Code = ErrorCode+"02",
                             Title = "Invalid Email",
                             Detail = "This email address is already being used."
                         } }).ToActionResult();
@@ -63,20 +64,18 @@ namespace OAuthService.Controllers
 
                 return new Response(HttpStatusCode.Conflict,
                         new Error[] { new Error {
-                            Code = ErrorCode+errCode+"03",
+                            Code = ErrorCode+"03",
                             Title = "Registering Error",
                             Detail = err.Message
                         } }).ToActionResult();
             }
-
-
         }
 
         [AllowAnonymous]
+        [EndPointData("02")]
         [HttpGet("emailverification/{email}")]
         public async Task<IActionResult> EmailVerificationRequest(string email)
         {
-            string errCode = "02";
             try
             {
                 var cr = await GetCredentialAsync();
@@ -87,7 +86,7 @@ namespace OAuthService.Controllers
             {
                 return new Response(HttpStatusCode.BadRequest,
                         new Error[] { new Error {
-                            Code = ErrorCode+errCode+"01",
+                            Code =ErrorCode+"01",
                             Title = "Email Verification Request Hass Been Failed",
                             Detail = err.Message
                         } }).ToActionResult();
@@ -95,10 +94,10 @@ namespace OAuthService.Controllers
         }
 
         [AllowAnonymous]
+        [EndPointData("06")]
         [HttpPost("emailverification")]
         public async Task<IActionResult> VerifyEmail([FromBody] EmailVerificationDto evDto)
         {
-            string errCode = "06";
             try
             {
                 await credentialSrvice.VerifyEmailAsync(evDto.Token);
@@ -108,7 +107,7 @@ namespace OAuthService.Controllers
             {
                 return new Response(HttpStatusCode.BadRequest,
                         new Error[] { new Error {
-                            Code = ErrorCode+errCode+"01",
+                            Code = ErrorCode+"01",
                             Title = "Email Verification Failed",
                             Detail = err.Message
                         } }).ToActionResult();
@@ -116,10 +115,10 @@ namespace OAuthService.Controllers
         }
 
         [AllowAnonymous]
+        [EndPointData("03")]
         [HttpGet("forgotpassword/{email}")]
         public async Task<IActionResult> ForgotPassword(string email)
         {
-            string errCode = "03";
             try
             {
                 // Check Email Address
@@ -132,7 +131,7 @@ namespace OAuthService.Controllers
                 {
                     return new Response(HttpStatusCode.BadRequest,
                         new Error[] { new Error {
-                            Code = ErrorCode+errCode+"01",
+                            Code = ErrorCode+"01",
                             Title = "Invalid Email Address",
                             Detail = "The provided email address is not registered in our system"
                         } }).ToActionResult();
@@ -143,7 +142,7 @@ namespace OAuthService.Controllers
 
                 return new Response(HttpStatusCode.BadRequest,
                        new Error[] { new Error {
-                            Code = ErrorCode+errCode+"02",
+                            Code = ErrorCode+"02",
                             Title = "Password Change has been Failed",
                             Detail = err.Message
                         } }).ToActionResult();
@@ -151,10 +150,10 @@ namespace OAuthService.Controllers
         }
 
         [AllowAnonymous]
+        [EndPointData("04")]
         [HttpPut("forgotpassword")]
         public async Task<IActionResult> ForgotPasswordChange([FromBody] CredentialDto crDto)
         {
-            string errCode = "04";
             try
             {
                 Credential cr = await credentialSrvice.CreateCredentialAsync(crDto);
@@ -165,18 +164,17 @@ namespace OAuthService.Controllers
 
                 return new Response(HttpStatusCode.BadRequest,
                        new Error[] { new Error {
-                            Code = ErrorCode+errCode+"02",
+                            Code = ErrorCode+"02",
                             Title = "Password Change has been Failed",
                             Detail = err.Message
                         } }).ToActionResult();
             }
         }
 
+        [EndPointData("05")]
         [HttpPut("password")]
         public async Task<IActionResult> ChangePassword([FromBody] CredentialDto crDto)
         {
-            string errCode = "05";
-
             try
             {
                 Credential cr = await credentialSrvice.CreateCredentialAsync(crDto, GetCredentialId());
@@ -184,7 +182,7 @@ namespace OAuthService.Controllers
                 {
                     return new Response(HttpStatusCode.Forbidden,
                     new Error[] { new Error {
-                            Code = ErrorCode+errCode+"01",
+                            Code = ErrorCode+"01",
                             Title = "Old Password is wrong",
                             Detail = "Try forget password instead."
                         } }).ToActionResult();
@@ -196,23 +194,23 @@ namespace OAuthService.Controllers
 
                 return new Response(HttpStatusCode.BadRequest,
                        new Error[] { new Error {
-                            Code = ErrorCode+errCode+"02",
+                            Code = ErrorCode+"02",
                             Title = "Password Change has been Failed",
                             Detail = err.Message
                         } }).ToActionResult();
             }
         }
 
+        [EndPointData("06")]
         private async Task<IActionResult> ChangePassword(Credential cr, string newPassword)
         {
-            string errCode = "06";
             try
             {
                 if (!cr.IsEmailVerified)
                 {
                     return new Response(HttpStatusCode.Forbidden,
                     new Error[] { new Error {
-                            Code = ErrorCode+errCode+"01",
+                            Code = ErrorCode+"01",
                             Title = "Not Verified Email Address",
                             Detail = "This email address was not verified. Please verify your email before changing password."
                         } }).ToActionResult();

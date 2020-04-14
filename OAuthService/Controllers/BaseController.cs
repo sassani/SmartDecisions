@@ -1,24 +1,24 @@
-﻿
-using Shared.Response;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using OAuthService.Core.Domain;
 using OAuthService.Core.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+using Shared;
+using Shared.Controllers;
 
 namespace OAuthService.Controllers
 {
-	public class BaseController : ControllerBase
+	public class BaseController : ServicesBaseController
     {
-		protected string ErrorCode { get; set; } = "00";
-
 		protected readonly ICredentialService credentialSrvice;
 
 		protected BaseController(ICredentialService credentialSrvice)
 		{
+			ServiceCode = GLOBAL_CONSTANTS.SERVICES.AUTH_SERVICE.CODE;
+			Controllers = GLOBAL_CONSTANTS.SERVICES.AUTH_SERVICE.CONTROLLERS;
 			this.credentialSrvice = credentialSrvice;
 		}
 
-		protected int GetLogsheetId()
+		protected override int GetLogsheetId()
 		{
 			if (int.TryParse(User.FindFirst("lid")?.Value, out int id))
 				return id;
@@ -26,7 +26,7 @@ namespace OAuthService.Controllers
 				return 0;
 		}
 
-		protected string GetCredentialId()
+		protected override string GetCredentialId()
 		{
 			var uid = User.FindFirst("uid")?.Value;
 			return uid ?? "";
@@ -36,15 +36,5 @@ namespace OAuthService.Controllers
 		{
 			return await credentialSrvice.CreateCredentialAsync(GetCredentialId());
 		}
-
-		//protected IActionResult MakeResponse(System.Net.HttpStatusCode statusCode, object? payload = null)
-		//{
-		//	return new Response(statusCode, payload).ToActionResult();
-		//}
-
-		//protected IActionResult MakeErrorResponse(System.Net.HttpStatusCode statusCode, Error error)
-		//{
-		//	return new Response(statusCode, new Error[] { error }).ToActionResult();
-		//}
 	}
 }

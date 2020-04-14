@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading.Tasks;
 using Filters;
+using Shared.Attributes;
 
 namespace OAuthService.Controllers
 {
@@ -23,7 +24,6 @@ namespace OAuthService.Controllers
 
         public AuthController(ICredentialService credentialSrvice, IClientService clientService) : base(credentialSrvice)
         {
-            ErrorCode = "01";
             this.clientService = clientService;
         }
 
@@ -33,18 +33,10 @@ namespace OAuthService.Controllers
         /// <param name="login User Credential"></param>
         /// <returns></returns>
         [AllowAnonymous]
+        [EndPointData("01")]
         [HttpPost()]
         public async Task<IActionResult> Login([FromBody] CredentialDto crDto)
         {
-            string errCode = "01";
-
-            //var validator = new CredentialDtoValidator();
-            //var result = validator.Validate(loginCredential);
-            //var errors = result.Errors;
-            //if (!this.ModelState.IsValid)
-            //{
-            //    var t = "failed";
-            //}
             try
             {
                 Client client = new Client();
@@ -56,7 +48,7 @@ namespace OAuthService.Controllers
                     {
                         return new Response(HttpStatusCode.Forbidden,
                                 new Error[] { new Error {
-                            Code = ErrorCode+errCode+"01",
+                            Code = ErrorCode+"01",
                             Title = "Invalid Client",
                             Detail = "Client info is incorrect."
                         } }).ToActionResult();
@@ -71,7 +63,7 @@ namespace OAuthService.Controllers
                     {
                         return new Response(HttpStatusCode.Forbidden,
                             new Error[] { new Error {
-                            Code = ErrorCode+errCode+"04",
+                            Code = ErrorCode+"04",
                             Title = "Unavalable User",
                             Detail = "Your account is suspended"
                         } }).ToActionResult();
@@ -89,14 +81,14 @@ namespace OAuthService.Controllers
                     {
                         return new Response(HttpStatusCode.Forbidden,
                         new Error[] { new Error {
-                        Code = ErrorCode+errCode+"02",
+                        Code = ErrorCode+"02",
                         Title = "Incorrect Credential",
                         Detail = "Refresh token is incorrect or expired."
                     } }).ToActionResult();
                     }
                     return new Response(HttpStatusCode.Forbidden,
                         new Error[] { new Error {
-                        Code = ErrorCode+errCode+"03",
+                        Code = ErrorCode+"03",
                         Title = "Incorrect Credential",
                         Detail = "Email or password is incorrect."
                     } }).ToActionResult();
@@ -107,7 +99,7 @@ namespace OAuthService.Controllers
 
                 return new Response(HttpStatusCode.Conflict,
                            new Error[] { new Error {
-                            Code = ErrorCode+errCode+"05",
+                            Code = ErrorCode+"05",
                             Title = "Login Error",
                             Detail = err.Message
                         } }).ToActionResult();
@@ -115,10 +107,11 @@ namespace OAuthService.Controllers
 
         }
 
+
+        [EndPointData("02")]
         [HttpDelete()]
         public IActionResult Logout()
         {
-            string errCode = "02";
             if (credentialSrvice.Logout(GetLogsheetId()))
             {
 
@@ -127,16 +120,16 @@ namespace OAuthService.Controllers
 
             return new Response(HttpStatusCode.BadGateway,
                         new Error[] { new Error {
-                            Code = ErrorCode+errCode+"01",
+                            Code = ErrorCode+"01",
                             Title = "Invalid data.",
                             Detail = "Maybe you have signed out before!"
                         } }).ToActionResult();
         }
 
+        [EndPointData("03")]
         [HttpDelete("all")]
         public IActionResult LogoutAll()
         {
-            string errCode = "03";
             if (credentialSrvice.Logout(GetLogsheetId(), true))
             {
                 return new Response(HttpStatusCode.Accepted).ToActionResult();
@@ -144,7 +137,7 @@ namespace OAuthService.Controllers
 
             return new Response(HttpStatusCode.BadGateway,
                         new Error[] { new Error {
-                            Code = ErrorCode+errCode+"01",
+                            Code = ErrorCode+"01",
                             Title = "Invalid data.",
                             Detail = "Maybe you have signed out before!"
                         } }).ToActionResult();
