@@ -1,19 +1,36 @@
 {
+  "$schema": "http://json.schemastore.org/ocelot",
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:1001"
+  },
   "ReRoutes": [
     {
       "DownstreamPathTemplate": "/{any}",
+      "UpstreamPathTemplate": "/user/{any}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5001
+          "Port": 7001
         }
       ],
-      "UpstreamPathTemplate": "/auth/{any}",
-      "UpstreamHttpMethod": [ "Get","POST","PUT","DELETE" ]
+      "UpstreamHttpMethod": [ "Get", "POST", "PUT", "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/{any}",
+      "UpstreamPathTemplate": "/suser/{any}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "UpstreamHttpMethod": [ "Get", "POST", "PUT", "DELETE" ],
+      "AuthenticationOptions": {
+        "AllowedScopes": [],
+        "AuthenticationProviderKey": "strongKey"
+      }
     }
-  ],
-  "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:44395"
-  }
+  ]
 }

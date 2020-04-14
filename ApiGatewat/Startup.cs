@@ -1,22 +1,28 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Net;
+using System.Text;
+using ApiGateway.Extensions;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Shared.Response;
 
-namespace ApiGatewat
+namespace ApiGateway
 {
     public class Startup
     {
+        private AppSettingsModel config;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -27,7 +33,16 @@ namespace ApiGatewat
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddControllers();
+
+            var appSettingSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettingsModel>(appSettingSection);
+            AppSettingsModel appSettings = appSettingSection.Get<AppSettingsModel>();
+            config = appSettings;
+
+            services.ConfigureCors(appSettings);
+            services.ConfigureAuthentication(appSettings);
             services.AddOcelot();
         }
 
@@ -36,6 +51,7 @@ namespace ApiGatewat
         {
             if (env.IsDevelopment())
             {
+                Console.WriteLine("API Gateway is running ...");
                 app.UseDeveloperExceptionPage();
             }
 
@@ -43,13 +59,72 @@ namespace ApiGatewat
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-            app.UseOcelot().Wait();
+
+            var ocelotConfig = new OcelotPipelineConfiguration
+            {
+
+                AuthenticationMiddleware = async (context, next) =>
+                {
+                    if (context.DownstreamReRoute.IsAuthenticated)
+                    {
+                        var tokenValidationParams = new TokenValidationParameters
+                        {
+                            ClockSkew = TimeSpan.Zero,
+                            RequireSignedTokens = true,
+                            ValidateIssuer = false,
+                            ValidateAudience = false,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+
+                            ValidIssuer = config.Token.Issuer,
+                            ValidAudience = config.Token.Audience,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.Token.SecretKey))
+                        };
+
+                        SecurityToken validatedToken;
+                        JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+                        try
+                        {
+                            var authorizationHeader = context.HttpContext.Request.Headers["Authorization"];
+                            if (authorizationHeader.Count == 0) throw new Exception("Authorization token is required");
+
+                            var token = authorizationHeader[0].Split(" ")[1];
+                            var user = handler.ValidateToken(token, tokenValidationParams, out validatedToken);
+                            // TODO: clean errors descriptions by its Ids
+                            context.DownstreamRequest.Content.Headers.Add("XXX_VALIDATED_TOKEN", validatedToken.ToString());
+                            await next.Invoke();
+                        }
+                        catch (Exception err)
+                        {
+                            var res = context.HttpContext.Response;
+                            res.StatusCode = (int)HttpStatusCode.Unauthorized;
+                            res.Headers.Append(HeaderNames.ContentType, "application/json");
+                            List<Error> errors = new List<Error>();
+                            Error error = new Error
+                            {
+                                Code = "111111",
+                                Title = "Authorization Failed",
+                                Detail = err.Message
+                            };
+                            errors.Add(error);
+
+                            await res.WriteAsync(new Response(HttpStatusCode.BadRequest, errors).ToString());
+                        }
+                    }
+                    else
+                    {
+                        await next.Invoke();
+                    }
+                }
+            };
+
+            app.UseOcelot(ocelotConfig).Wait();
         }
     }
 }
