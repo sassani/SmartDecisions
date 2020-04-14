@@ -18,5 +18,6 @@ namespace UserService.Core.Domain
         public string? State { get; set; }
         public string Country { get; set; } = default!;
         public string? ZipCode { get; set; }
+        public string? PhoneNumber { get; set; }
     }
 }
