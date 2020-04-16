@@ -1,7 +1,6 @@
-﻿using OAuthService.Core.Domain;
+﻿using Microsoft.EntityFrameworkCore;
+using OAuthService.Core.Domain;
 using OAuthService.DataBase.Configurations;
-using Microsoft.EntityFrameworkCore;
-using System;
 
 #nullable disable
 namespace OAuthService.DataBase.Persistence

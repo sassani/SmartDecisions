@@ -1,20 +1,20 @@
-﻿using FluentValidation;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Text;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
-using Shared.Response;
 using OAuthService.Core.DAL;
 using OAuthService.Core.Domain.DTOs;
 using OAuthService.Core.Domain.DTOs.Validators;
 using OAuthService.DataBase;
 using OAuthService.DataBase.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
+using Shared.Response;
 
 namespace OAuthService.Extensions
 {

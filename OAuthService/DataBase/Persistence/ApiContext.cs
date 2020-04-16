@@ -1,8 +1,6 @@
-﻿using OAuthService.Core.Domain;
-using OAuthService.Extensions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System;
+using OAuthService.Extensions;
 
 namespace OAuthService.DataBase.Persistence
 {
