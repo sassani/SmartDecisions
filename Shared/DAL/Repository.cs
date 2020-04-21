@@ -23,6 +23,11 @@ namespace Shared.DAL
 			return entities.Find(id);
 		}
 
+		public TEntity Get(string id)
+		{
+			return entities.Find(id);
+		}
+
 		public IEnumerable<TEntity> GetAll()
 		{
 			return entities.ToList();
