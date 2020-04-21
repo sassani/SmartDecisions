@@ -1,130 +1,91 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc;
+//using Newtonsoft.Json;
+//using Newtonsoft.Json.Linq;
+//using Newtonsoft.Json.Serialization;
+using System.Text.Json;
 
 namespace Shared.Response
 {
-	public class Response
-	{
-		[JsonProperty(PropertyName = "data", NullValueHandling = NullValueHandling.Ignore)]
-		public object? Data { get; private set; }
+    public class Response
+    {
+        [JsonPropertyName("data")]
+        public object? Data { get; private set; }
 
-		[JsonProperty(PropertyName = "errors", NullValueHandling = NullValueHandling.Ignore)]
-		public IEnumerable<Error>? Errors { get; private set; }
+        [JsonPropertyName("errors")]
+        public IEnumerable<Error>? Errors { get; private set; }
 
-		[JsonProperty(PropertyName = "meta", NullValueHandling = NullValueHandling.Ignore)]
-		public Dictionary<string, object>? Meta { get; set; }
+        [JsonPropertyName("meta")]
+        public Dictionary<string, object>? Meta { get; set; }
 
-		[JsonProperty(PropertyName = "links", NullValueHandling = NullValueHandling.Ignore)]
-		public object? Links { get; set; }
+        [JsonPropertyName("links")]
+        public object? Links { get; set; }
 
-		private readonly HttpStatusCode status;
+        private readonly HttpStatusCode status;
 
-		public Response(HttpStatusCode status, IEnumerable<Error> errors)
-		{
-			this.status = status;
-			Errors = errors;
-		}
+        public Response(HttpStatusCode status, IEnumerable<Error> errors)
+        {
+            this.status = status;
+            Errors = errors;
+        }
 
-		public Response(HttpStatusCode status)
-		{
-			this.status = status;
-		}
+        public Response(HttpStatusCode status)
+        {
+            this.status = status;
+            Data = new int[] { };
+        }
 
-		public Response(HttpStatusCode status, object data)
-		{
-			this.status = status;
-			Data = data;
-		}
+        public Response(HttpStatusCode status, object data)
+        {
+            this.status = status;
+            Data = data;
+        }
 
-		public Response(HttpStatusCode status, object data, object links)
-		{
-			this.status = status;
-			Data = data;
-			Links = links;
-		}
+        public Response(HttpStatusCode status, object data, object links)
+        {
+            this.status = status;
+            Data = data;
+            Links = links;
+        }
 
-		public Response(HttpStatusCode status, object data, Dictionary<string, object> meta)
-		{
-			this.status = status;
-			Data = data;
-			Meta = meta;
-		}
+        public Response(HttpStatusCode status, object data, Dictionary<string, object> meta)
+        {
+            this.status = status;
+            Data = data;
+            Meta = meta;
+        }
 
-		public Response(HttpStatusCode status, object data, object links, Dictionary<string, object> meta)
-		{
-			this.status = status;
-			Data = data;
-			Meta = meta;
-			Links = links;
-		}
+        public Response(HttpStatusCode status, object data, object links, Dictionary<string, object> meta)
+        {
+            this.status = status;
+            Data = data;
+            Meta = meta;
+            Links = links;
+        }
 
-		[OnSerializing]
-		internal void OnSerializingMethod(StreamingContext context)
-		{
-			// Response MUST contain at least one of the following top level members
+        public override string ToString()
+        {
+            return JsonSerializer.Serialize(this, new JsonSerializerOptions()
+            {
+                IgnoreNullValues = true
+            });
+        }
 
-			if (Data == null && Errors == null && Meta == null)
-			{
-				// Otherwise we create empty array for data
-				Data = new JArray();
-			}
-		}
+        public ActionResult ToActionResult()
+        {
+            return new ContentResult()
+            {
+                ContentType = "application/json; charset=utf-8",
+                Content = ToString(),
+                StatusCode = (int)status
+            };
+        }
 
-		public override string ToString()
-		{
-			JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings
-			{
-				NullValueHandling = NullValueHandling.Include,
-				ContractResolver = new CoreJsonLoaderResolver()
-			};
-
-			using var writer = new StringWriter();
-			using (var jsonWriter = new JsonTextWriter(writer))
-			{
-				jsonWriter.CloseOutput = false;
-				jsonWriter.AutoCompleteOnClose = false;
-
-				var jsonSerializer = JsonSerializer.Create(jsonSerializerSettings);
-				jsonSerializer.Serialize(jsonWriter, this);
-			}
-
-			return writer.ToString();
-
-		}
-
-		public ActionResult ToActionResult()
-		{
-			return new ContentResult()
-			{
-				ContentType = "application/json; charset=utf-8",
-				Content = ToString(),
-				StatusCode = (int)status
-			};
-		}
-
-	}
-
-	class CoreJsonLoaderResolver : DefaultContractResolver
-	{
-		protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
-		{
-			JsonProperty prop = base.CreateProperty(member, memberSerialization);
-
-			if (prop.PropertyName == "LazyLoader")
-			{
-				prop.Ignored = true;
-			}
-			if (prop.PropertyName != null) prop.PropertyName = Char.ToLower(prop.PropertyName[0]) + prop.PropertyName.Substring(1);
-			
-			return prop;
-		}
-	}
+    }
 }
