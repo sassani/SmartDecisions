@@ -6,7 +6,7 @@
   "ReRoutes": [
     {
       "DownstreamPathTemplate": "/{any}",
-      "UpstreamPathTemplate": "/user/{any}",
+      "UpstreamPathTemplate": "/userservice/{any}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -14,7 +14,11 @@
           "Port": 7001
         }
       ],
-      "UpstreamHttpMethod": [ "Get", "POST", "PUT", "DELETE" ]
+      "UpstreamHttpMethod": [ "Get", "POST", "PUT", "DELETE" ],
+      "AuthenticationOptions": {
+        "AllowedScopes": [],
+        "AuthenticationProviderKey": "strongKey"
+      }
     },
     {
       "DownstreamPathTemplate": "/{any}",

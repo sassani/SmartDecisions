@@ -108,7 +108,7 @@ namespace ApiGateway
                             List<Error> errors = new List<Error>();
                             Error error = new Error
                             {
-                                Code = "111111",
+                                Code = "00000000",
                                 Title = "Authorization Failed",
                                 Detail = err.Message
                             };
