@@ -65,7 +65,7 @@ namespace Shared.Controllers
         {
             string HEADER_NAME = "XXX_VALIDATED_TOKEN";
             if (!Request.Headers.TryGetValue(HEADER_NAME, out StringValues token)) throw new Exception($"Header ({HEADER_NAME}) is required");
-            return AccessToken.Decode(token);
+            return AccessToken.DecodeValidatedToken(token);
         }
     }
 }

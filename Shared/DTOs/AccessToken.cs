@@ -27,7 +27,7 @@ namespace Shared.DTOs
 		[JsonPropertyName("roles")]
 		public string[]? Roles { get; set; }// TODO: will change in the future
 
-		public static AccessToken Decode(StringValues token)
+		public static AccessToken DecodeValidatedToken(StringValues token)
 		{
 			AccessToken accessToken = new AccessToken();
 			if (token.Count != 0)
