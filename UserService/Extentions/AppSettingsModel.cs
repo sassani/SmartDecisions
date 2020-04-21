@@ -1,7 +1,7 @@
 ﻿#nullable disable
 using UserService.Core;
 
-namespace OAuthService.Extensions
+namespace UserService.Extensions
 {
 	public class AppSettingsModel
 	{

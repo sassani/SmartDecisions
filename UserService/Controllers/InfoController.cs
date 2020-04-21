@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Attributes;
 using Shared.Response;
+using UserService.Core.DAL;
 
 namespace UserService.Controllers
 {
@@ -11,6 +12,10 @@ namespace UserService.Controllers
     [ApiController]
     public class InfoController : BaseController
     {
+        public InfoController(IUnitOfWork unitOfWork): base(unitOfWork)
+        {
+        }
+
         [EndPointData("00")]
         [HttpGet]
         public async Task<IActionResult> GetInfoSecureAsync()

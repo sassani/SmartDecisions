@@ -1,9 +1,11 @@
-﻿using Shared.DAL.Interfaces;
+﻿using System.Threading.Tasks;
+using Shared.DAL.Interfaces;
 using UserService.Core.Domain;
 
 namespace UserService.Core.DAL.IRepositories
 {
-    interface IUserRepo : IRepository<User>
+    public interface IUserRepo : IRepository<User>
     {
+        Task<User> GetWithAddressAsync(string id);
     }
 }

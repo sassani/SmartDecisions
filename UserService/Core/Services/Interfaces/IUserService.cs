@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace UserService.Core.Services.Interfaces
 {
-    interface IUserService
+    public interface IUserService
     {
     }
 }

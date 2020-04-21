@@ -1,11 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using UserService.Core.DAL.IRepositories;
 
 namespace UserService.Core.DAL
 {
-    interface IUnitOfWork
+    public interface IUnitOfWork: IDisposable
     {
+        IUserRepo User { get; }
+        IAddressRepo Address { get; }
+
+
+        Task<int> Complete();
     }
 }
