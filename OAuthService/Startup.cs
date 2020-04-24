@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using OAuthService.Core.Services;
-using OAuthService.Core.Services.Interfaces;
-using OAuthService.Extensions;
+using IdentityService.Core.Services;
+using IdentityService.Core.Services.Interfaces;
+using IdentityService.Extensions;
 using Filters;
 using System;
 

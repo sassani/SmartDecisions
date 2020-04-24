@@ -1,4 +1,4 @@
-﻿namespace UserService.Core
+﻿namespace DecissionCore.Core
 {
     public class AppEnums
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace OAuthService.Core.Domain
+namespace IdentityService.Core.Domain
 {
 	public class Credential
 	{

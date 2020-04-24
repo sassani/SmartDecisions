@@ -1,7 +1,7 @@
-﻿using OAuthService.Core.Domain;
-using OAuthService.Core.Domain.DTOs;
+﻿using IdentityService.Core.Domain;
+using IdentityService.Core.Domain.DTOs;
 
-namespace OAuthService.Core.Services.Interfaces
+namespace IdentityService.Core.Services.Interfaces
 {
 	public interface ITokenService
 	{

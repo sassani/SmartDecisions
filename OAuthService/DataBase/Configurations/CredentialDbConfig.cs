@@ -3,11 +3,11 @@ using Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Options;
-using OAuthService.Core.Domain;
-using OAuthService.Extensions;
+using IdentityService.Core.Domain;
+using IdentityService.Extensions;
 using Shared.DAL.Configurations;
 
-namespace OAuthService.DataBase.Configurations
+namespace IdentityService.DataBase.Configurations
 {
     public class CredentialDbConfig : EntityConfiguration<Credential>
     {

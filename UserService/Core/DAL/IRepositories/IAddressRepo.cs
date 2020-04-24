@@ -1,9 +1,12 @@
-﻿using Shared.DAL.Interfaces;
-using UserService.Core.Domain;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Shared.DAL.Interfaces;
+using DecissionCore.Core.Domain;
 
-namespace UserService.Core.DAL.IRepositories
+namespace DecissionCore.Core.DAL.IRepositories
 {
     public interface IAddressRepo:IRepository<Address>
     {
+        Task<ICollection<Address>> GetAllUserAddressesAsync(string userId);
     }
 }

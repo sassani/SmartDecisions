@@ -1,15 +1,15 @@
-﻿using OAuthService.Core.Domain;
-using OAuthService.Core.Domain.DTOs;
+﻿using IdentityService.Core.Domain;
+using IdentityService.Core.Domain.DTOs;
 using Helpers;
-using OAuthService.Core.Services.Interfaces;
-using OAuthService.Core.DAL;
+using IdentityService.Core.Services.Interfaces;
+using IdentityService.Core.DAL;
 
 using Microsoft.AspNetCore.Http;
 using System;
 using UAParser;
 using System.Threading.Tasks;
 
-namespace OAuthService.Core.Services
+namespace IdentityService.Core.Services
 {
     public class ClientService : IClientService
     {

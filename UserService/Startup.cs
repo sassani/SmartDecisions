@@ -1,15 +1,20 @@
 using System;
 using AutoMapper;
+using AutoMapper.EquivalencyExpression;
 using Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using UserService.Extensions;
-using UserService.Extentions;
+using DecissionCore.Core;
+using DecissionCore.DataBase;
+using DecissionCore.Extensions;
+using DecissionCore.Extentions;
 
-namespace UserService
+namespace DecissionCore
 {
     public class Startup
     {
@@ -23,6 +28,8 @@ namespace UserService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
+            services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddControllers()
                 .ConfigureApiBehaviorOptions(opt =>
                 {
@@ -35,8 +42,19 @@ namespace UserService
             AppSettingsModel appSettings = appSettingSection.Get<AppSettingsModel>();
 
             services.ConfigureDbMySql(appSettings);
+            services.ConfigureAuthentication(appSettings);
             services.AddScoped<ValidateModelAttributeFilter>();
-            services.AddAutoMapper(typeof(AutoMapperProfile));
+            //services.AddAutoMapper(typeof(AutoMapperProfile));
+            services.AddAutoMapper((serviceProvider, automapper) =>
+            {
+                automapper.AddCollectionMappers();
+                automapper.UseEntityFrameworkCoreModel<ApiContext>(serviceProvider);
+                automapper.AddProfile(typeof(AutoMapperProfile));
+            }, typeof(ApiContext).Assembly);
+
+            //var serviceProvider = services.BuildServiceProvider();
+
+            services.AddTransient<IGetClaimsProvider, GetClaimsFromUser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,7 +69,8 @@ namespace UserService
             //app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

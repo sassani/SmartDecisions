@@ -25,6 +25,7 @@ namespace Shared
                 public static readonly Dictionary<string, string> CONTROLLERS = new Dictionary<string, string>() {
                     { "Info","00" },
                     { "User","01" },
+                    { "Address","02" },
                 };
             }
         }

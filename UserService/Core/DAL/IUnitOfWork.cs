@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using UserService.Core.DAL.IRepositories;
+using DecissionCore.Core.DAL.IRepositories;
 
-namespace UserService.Core.DAL
+namespace DecissionCore.Core.DAL
 {
     public interface IUnitOfWork: IDisposable
     {

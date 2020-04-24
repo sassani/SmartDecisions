@@ -2,11 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using OAuthService.Core.DAL.IRepositories;
-using OAuthService.Core.Domain;
+using IdentityService.Core.DAL.IRepositories;
+using IdentityService.Core.Domain;
 using Shared.DAL;
 
-namespace OAuthService.DataBase.Persistence.Repositories
+namespace IdentityService.DataBase.Persistence.Repositories
 {
     public class LogsheetRepo : Repository<Logsheet>, ILogsheetRepo
     {

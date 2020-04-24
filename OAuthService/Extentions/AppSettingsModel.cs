@@ -1,7 +1,7 @@
 ﻿#nullable disable
-using OAuthService.Core;
+using IdentityService.Core;
 
-namespace OAuthService.Extensions
+namespace IdentityService.Extensions
 {
 	public class AppSettingsModel
 	{

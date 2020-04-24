@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
-namespace UserService.Core.Domain.DTOs
+namespace DecissionCore.Core.Domain.DTOs
 {
     public class AddressDto
     {

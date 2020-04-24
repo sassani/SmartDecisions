@@ -1,4 +1,4 @@
-﻿namespace UserService.Core.Domain
+﻿namespace DecissionCore.Core.Domain
 {
     public class Address
     {

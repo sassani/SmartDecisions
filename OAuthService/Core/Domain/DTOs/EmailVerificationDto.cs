@@ -1,5 +1,5 @@
 ﻿
-namespace OAuthService.Core.Domain.DTOs
+namespace IdentityService.Core.Domain.DTOs
 {
     public class EmailVerificationDto
     {

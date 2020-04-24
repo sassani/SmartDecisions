@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
-using OAuthService.Core.DAL;
-using OAuthService.Core.Domain.DTOs;
-using OAuthService.Core.Domain.DTOs.Validators;
-using OAuthService.DataBase;
-using OAuthService.DataBase.Persistence;
+using IdentityService.Core.DAL;
+using IdentityService.Core.Domain.DTOs;
+using IdentityService.Core.Domain.DTOs.Validators;
+using IdentityService.DataBase;
+using IdentityService.DataBase.Persistence;
 using Shared.Response;
 
-namespace OAuthService.Extensions
+namespace IdentityService.Extensions
 {
 	public static class ServiceExtensions
 	{

@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using OAuthService.Core.Domain;
+using IdentityService.Core.Domain;
 using Shared.DAL.Configurations;
-using static OAuthService.Core.AppEnums;
+using static IdentityService.Core.AppEnums;
 
-namespace OAuthService.DataBase.Configurations
+namespace IdentityService.DataBase.Configurations
 {
     public class RoleDbConfig : EntityConfiguration<Role>
     {

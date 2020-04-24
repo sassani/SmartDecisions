@@ -1,7 +1,7 @@
 ﻿using System;
-using OAuthService.Core.DAL.IRepositories;
+using IdentityService.Core.DAL.IRepositories;
 
-namespace OAuthService.Core.DAL
+namespace IdentityService.Core.DAL
 {
 	public interface IUnitOfWork : IDisposable
 	{

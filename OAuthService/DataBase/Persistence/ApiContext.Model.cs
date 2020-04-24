@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OAuthService.Core.Domain;
-using OAuthService.DataBase.Configurations;
+using IdentityService.Core.Domain;
+using IdentityService.DataBase.Configurations;
 
 #nullable disable
-namespace OAuthService.DataBase.Persistence
+namespace IdentityService.DataBase.Persistence
 {
     public partial class ApiContext
     {

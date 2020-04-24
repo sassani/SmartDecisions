@@ -1,8 +1,8 @@
 ﻿
 using System.Threading.Tasks;
-using OAuthService.Core.Domain;
+using IdentityService.Core.Domain;
 
-namespace OAuthService.Core.Services.Interfaces
+namespace IdentityService.Core.Services.Interfaces
 {
 	public interface IClientService
 	{

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace UserService.Migrations
+namespace DecissionCore.Migrations
 {
     public partial class initialize : Migration
     {

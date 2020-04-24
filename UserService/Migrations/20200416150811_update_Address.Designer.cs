@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using UserService.DataBase;
+using DecissionCore.DataBase;
 
-namespace UserService.Migrations
+namespace DecissionCore.Migrations
 {
     [DbContext(typeof(ApiContext))]
     [Migration("20200416150811_update_Address")]

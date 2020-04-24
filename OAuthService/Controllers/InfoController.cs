@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using System.Net;
 using System.IO;
 
-namespace OAuthService.Controllers
+namespace IdentityService.Controllers
 {
     [Authorize]
     [Route("info")]

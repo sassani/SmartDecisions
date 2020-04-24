@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using static OAuthService.CONSTANTS;
+using static IdentityService.CONSTANTS;
 
-namespace OAuthService.Core.Domain.DTOs.Validators
+namespace IdentityService.Core.Domain.DTOs.Validators
 {
     public class CredentialDtoValidator : AbstractValidator<CredentialDto>
     {

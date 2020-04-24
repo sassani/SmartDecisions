@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Shared.DAL;
-using UserService.Core.DAL.IRepositories;
-using UserService.Core.Domain;
+using DecissionCore.Core.DAL.IRepositories;
+using DecissionCore.Core.Domain;
 
-namespace UserService.DataBase.Repositories
+namespace DecissionCore.DataBase.Repositories
 {
     public class UserRepo : Repository<User>, IUserRepo
     {

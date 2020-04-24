@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using OAuthService.Core.Domain;
-using OAuthService.Core.Services.Interfaces;
+using IdentityService.Core.Domain;
+using IdentityService.Core.Services.Interfaces;
 using Shared;
 using Shared.Controllers;
 
-namespace OAuthService.Controllers
+namespace IdentityService.Controllers
 {
 	public class BaseController : ServicesBaseController
     {

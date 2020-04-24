@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using OAuthService.Extensions;
+using IdentityService.Extensions;
 
-namespace OAuthService.DataBase.Persistence
+namespace IdentityService.DataBase.Persistence
 {
 	public partial class ApiContext : DbContext
 	{

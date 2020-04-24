@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace UserService.Migrations
+namespace DecissionCore.Migrations
 {
     public partial class update_Address : Migration
     {

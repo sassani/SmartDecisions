@@ -3,12 +3,12 @@ using System.Linq;
 using Helpers;
 using Jose;
 using Microsoft.Extensions.Options;
-using OAuthService.Core.Domain;
-using OAuthService.Core.Domain.DTOs;
-using OAuthService.Core.Services.Interfaces;
-using OAuthService.Extensions;
+using IdentityService.Core.Domain;
+using IdentityService.Core.Domain.DTOs;
+using IdentityService.Core.Services.Interfaces;
+using IdentityService.Extensions;
 
-namespace OAuthService.Core.Services
+namespace IdentityService.Core.Services
 {
     public class TokenService : ITokenService
     {

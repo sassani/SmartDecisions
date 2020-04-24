@@ -1,15 +1,25 @@
 ﻿using AutoMapper;
-using UserService.Core.Domain;
-using UserService.Core.Domain.DTOs;
+using AutoMapper.EquivalencyExpression;
+using DecissionCore.Core.Domain;
+using DecissionCore.Core.Domain.DTOs;
 
-namespace UserService.Extentions
+namespace DecissionCore.Extentions
 {
     public class AutoMapperProfile : Profile
     {
         public AutoMapperProfile()
         {
-            CreateMap<User, UserDto>().ReverseMap();
-            CreateMap<Address, AddressDto>().ReverseMap();
+            CreateMap<User, UserDto>();
+            CreateMap<UserDto, User>()
+                .ForMember(u => u.Addresses, opt => opt.Ignore())
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+
+
+            CreateMap<Address, AddressDto>();
+            CreateMap<AddressDto, Address>()
+                .ForMember(a=>a.Id, opt=>opt.Ignore())
+                .EqualityComparison((dto, entity) => dto.Id == entity.Id)
+                .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

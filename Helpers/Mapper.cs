@@ -25,5 +25,23 @@ namespace Helpers
 			}
 			return missedProps;
 		}
+
+		/// <summary>
+		/// Map dto object to an entity
+		/// entity must has same properties in dto
+		/// </summary>
+		/// <param name="entity"></param>
+		/// <param name="dto"></param>
+		public static void PatchEntityByDto(object entity, object dto)
+		{
+			foreach (var item in dto.GetType().GetProperties())
+			{
+				var itemValue = dto.GetType().GetProperty(item.Name)!.GetValue(dto);
+				if (itemValue != null && item.PropertyType.Namespace != "System.Collections.Generic")
+				{
+					entity.GetType().GetProperty(item.Name)!.SetValue(entity, itemValue);
+				}
+			}
+		}
 	}
 }

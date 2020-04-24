@@ -1,22 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Filters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Attributes;
 using Shared.Response;
-using UserService.Core.DAL;
-using UserService.Core.Domain;
-using UserService.Core.Domain.DTOs;
+using DecissionCore.Core.DAL;
+using DecissionCore.Core.Domain;
+using DecissionCore.Core.Domain.DTOs;
 
-namespace UserService.Controllers
+namespace DecissionCore.Controllers
 {
     [Route("[controller]")]
     [ApiController]
     [ServiceFilter(typeof(ValidateModelAttributeFilter))]
+    [Authorize]
     public class UserController : BaseController
     {
         private IMapper mapper;
@@ -28,14 +28,11 @@ namespace UserService.Controllers
 
         [EndPointData("00")]
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var payload = new
-            {
-                user = GetCredentialId()
-
-            };
-            return new Response(HttpStatusCode.Accepted, payload).ToActionResult();
+            User user = await UnitOfWork.User.GetWithAddressAsync(GetCredentialId());
+            UserDto userDto = mapper.Map<UserDto>(user);
+            return new Response(HttpStatusCode.Accepted, userDto).ToActionResult();
         }
 
         [EndPointData("01")]
@@ -76,23 +73,18 @@ namespace UserService.Controllers
             {
                 string userId = GetCredentialId();
                 User user = await UnitOfWork.User.GetWithAddressAsync(userId);
-
                 if (user == null) throw new Exception($"A User with Id ({userId}) Is not registered yet");
-                List<string> list = new List<string>();
 
-                foreach (var item in userDto.GetType().GetProperties())
-                {
-                    var itemValue = userDto.GetType().GetProperty(item.Name)!.GetValue(userDto);
-                    if (itemValue != null && item.PropertyType.Namespace != "System.Collections.Generic")
-                    {
-                        user.GetType().GetProperty(item.Name)!.SetValue(user, itemValue);
-                    }
-                }
+                mapper.Map(userDto, user);
 
                 await UnitOfWork.Complete();
-                userDto = mapper.Map<UserDto>(user);
+                //userDto = mapper.Map<UserDto>(user);
+                var payload = new
+                {
+                    updatedUser = mapper.Map<UserDto>(user)
+                };
 
-                return new Response(HttpStatusCode.Accepted, userDto).ToActionResult();
+                return new Response(HttpStatusCode.Accepted, payload).ToActionResult();
             }
             catch (Exception err)
             {

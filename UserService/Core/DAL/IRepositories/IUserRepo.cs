@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Shared.DAL.Interfaces;
-using UserService.Core.Domain;
+using DecissionCore.Core.Domain;
 
-namespace UserService.Core.DAL.IRepositories
+namespace DecissionCore.Core.DAL.IRepositories
 {
     public interface IUserRepo : IRepository<User>
     {

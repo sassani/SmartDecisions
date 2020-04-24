@@ -1,15 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using UserService.Core.Domain;
-using UserService.DataBase.Configurations;
+using DecissionCore.Core;
+using DecissionCore.Core.Domain;
+using DecissionCore.DataBase.Configurations;
 
-namespace UserService.DataBase
+namespace DecissionCore.DataBase
 {
 	public class ApiContext : DbContext
     {
-		public ApiContext(DbContextOptions<ApiContext> options)
+		private readonly string userId;
+		public ApiContext(DbContextOptions<ApiContext> options,
+			IGetClaimsProvider userData)
 			: base(options)
 		{
-			
+			userId = userData.UserId;
 		}
 
 		public virtual DbSet<User> User { get; set; }
@@ -17,6 +20,8 @@ namespace UserService.DataBase
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.ApplyConfiguration(new UserDbConfig());
+
+			//modelBuilder.Entity<Address>().HasQueryFilter(a => a.UserId == userId);
 		}
 	}
 }

@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using OAuthService.Core.Domain;
+using IdentityService.Core.Domain;
 using Shared.DAL.Configurations;
 
-namespace OAuthService.DataBase.Configurations
+namespace IdentityService.DataBase.Configurations
 {
     public class CredentialRoleDbConfig : EntityConfiguration<CredentialRole>
     {

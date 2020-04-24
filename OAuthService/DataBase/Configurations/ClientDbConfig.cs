@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Helpers;
 using Microsoft.Extensions.Options;
-using OAuthService.Extensions;
-using OAuthService.Core.Domain;
+using IdentityService.Extensions;
+using IdentityService.Core.Domain;
 using Shared.DAL.Configurations;
 
-namespace OAuthService.DataBase.Configurations
+namespace IdentityService.DataBase.Configurations
 {
     public class ClientDbConfig : EntityConfiguration<Client>
     {

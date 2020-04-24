@@ -1,8 +1,8 @@
-﻿using OAuthService.Core.Domain;
-using OAuthService.Core.Domain.DTOs;
+﻿using IdentityService.Core.Domain;
+using IdentityService.Core.Domain.DTOs;
 using System.Threading.Tasks;
 
-namespace OAuthService.Core.Services.Interfaces
+namespace IdentityService.Core.Services.Interfaces
 {
     public interface ICredentialService
     {

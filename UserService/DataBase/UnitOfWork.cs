@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using UserService.Core.DAL;
-using UserService.Core.DAL.IRepositories;
-using UserService.DataBase.Repositories;
+using DecissionCore.Core.DAL;
+using DecissionCore.Core.DAL.IRepositories;
+using DecissionCore.DataBase.Repositories;
 
-namespace UserService.DataBase
+namespace DecissionCore.DataBase
 {
     public class UnitOfWork : IUnitOfWork
     {

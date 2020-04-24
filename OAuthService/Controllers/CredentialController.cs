@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Response;
-using OAuthService.Core.Domain;
-using OAuthService.Core.Domain.DTOs;
-using OAuthService.Core.Services.Interfaces;
+using IdentityService.Core.Domain;
+using IdentityService.Core.Domain.DTOs;
+using IdentityService.Core.Services.Interfaces;
 using Filters;
 using Shared.Attributes;
 
-namespace OAuthService.Controllers
+namespace IdentityService.Controllers
 {
     [Authorize]
     [Route("[controller]")]

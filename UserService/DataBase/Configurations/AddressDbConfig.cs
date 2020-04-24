@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Shared.DAL.Configurations;
-using UserService.Core.Domain;
+using DecissionCore.Core.Domain;
 
-namespace UserService.DataBase.Configurations
+namespace DecissionCore.DataBase.Configurations
 {
     public class AddressDbConfig : EntityConfiguration<Address>
     {

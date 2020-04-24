@@ -1,9 +1,9 @@
-﻿using OAuthService.Core.DAL.IRepositories;
-using OAuthService.Core.DAL;
-using OAuthService.DataBase.Persistence;
-using OAuthService.DataBase.Persistence.Repositories;
+﻿using IdentityService.Core.DAL.IRepositories;
+using IdentityService.Core.DAL;
+using IdentityService.DataBase.Persistence;
+using IdentityService.DataBase.Persistence.Repositories;
 
-namespace OAuthService.DataBase
+namespace IdentityService.DataBase
 {
 	/// <summary>
 	/// All needed Database transactions mus be handled by this class

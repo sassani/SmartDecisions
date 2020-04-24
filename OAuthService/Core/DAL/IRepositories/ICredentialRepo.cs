@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using OAuthService.Core.Domain;
+using IdentityService.Core.Domain;
 using Shared.DAL.Interfaces;
 
-namespace OAuthService.Core.DAL.IRepositories
+namespace IdentityService.Core.DAL.IRepositories
 {
     public interface ICredentialRepo : IRepository<Credential>
 	{

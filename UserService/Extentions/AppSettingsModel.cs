@@ -1,7 +1,7 @@
 ﻿#nullable disable
-using UserService.Core;
+using DecissionCore.Core;
 
-namespace UserService.Extensions
+namespace DecissionCore.Extensions
 {
 	public class AppSettingsModel
 	{

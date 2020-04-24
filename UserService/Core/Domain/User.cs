@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace UserService.Core.Domain
+namespace DecissionCore.Core.Domain
 {
     public class User
     {

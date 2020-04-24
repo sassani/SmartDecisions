@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Linq;
 
-namespace OAuthService.Core.Domain.DTOs
+namespace IdentityService.Core.Domain.DTOs
 {
 	public class AuthTokenDto
 	{

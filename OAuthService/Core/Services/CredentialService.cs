@@ -1,20 +1,20 @@
-﻿using OAuthService.Core.Domain;
+﻿using IdentityService.Core.Domain;
 using Helpers;
-using OAuthService.Core.Services.Interfaces;
-using OAuthService.Core.DAL;
+using IdentityService.Core.Services.Interfaces;
+using IdentityService.Core.DAL;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using OAuthService.Core.Domain.DTOs;
+using IdentityService.Core.Domain.DTOs;
 using IntraServicesApi;
 using Microsoft.CodeAnalysis.Options;
-using OAuthService.Extensions;
+using IdentityService.Extensions;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualBasic;
 
-namespace OAuthService.Core.Services
+namespace IdentityService.Core.Services
 {
     public class CredentialService : ICredentialService
     {

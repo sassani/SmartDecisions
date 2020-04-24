@@ -1,10 +1,10 @@
-﻿using OAuthService.Core.DAL;
+﻿using IdentityService.Core.DAL;
 using Helpers;
 using Microsoft.AspNetCore.Http;
 using UAParser;
 using System.Collections.Generic;
 
-namespace OAuthService.Core.Domain
+namespace IdentityService.Core.Domain
 {
 	public class Client
 	{

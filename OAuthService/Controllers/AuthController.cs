@@ -1,7 +1,7 @@
 ﻿using Shared.Response;
-using OAuthService.Core.Domain;
-using OAuthService.Core.Domain.DTOs;
-using OAuthService.Core.Services.Interfaces;
+using IdentityService.Core.Domain;
+using IdentityService.Core.Domain.DTOs;
+using IdentityService.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Filters;
 using Shared.Attributes;
 
-namespace OAuthService.Controllers
+namespace IdentityService.Controllers
 {
     /// <summary>
     /// </summary>

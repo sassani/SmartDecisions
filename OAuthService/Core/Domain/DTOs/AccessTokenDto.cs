@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using Shared.DTOs;
 
-namespace OAuthService.Core.Domain.DTOs
+namespace IdentityService.Core.Domain.DTOs
 {
 	public class AccessTokenDto : AccessToken
 	{

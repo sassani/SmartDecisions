@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using OAuthService.DataBase.Persistence;
+using IdentityService.DataBase.Persistence;
 
-namespace OAuthService.Migrations
+namespace IdentityService.Migrations
 {
     [DbContext(typeof(ApiContext))]
     [Migration("20200108171901_initialCreate")]

@@ -1,4 +1,4 @@
-﻿namespace OAuthService.Core
+﻿namespace IdentityService.Core
 {
     public class AppEnums
     {
