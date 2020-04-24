@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using DecissionCore.DataBase;
+using DecissionService.DataBase;
 
-namespace DecissionCore.Migrations
+namespace DecissionService.Migrations
 {
     [DbContext(typeof(ApiContext))]
     [Migration("20200416133127_initialize")]

@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using DecissionCore.Core.DAL;
-using DecissionCore.DataBase;
+using DecissionService.Core.DAL;
+using DecissionService.DataBase;
 
-namespace DecissionCore.Extensions
+namespace DecissionService.Extensions
 {
     public static class ServiceExtensions
     {

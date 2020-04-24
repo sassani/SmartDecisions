@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Shared;
 using Shared.Controllers;
-using DecissionCore.Core.DAL;
-using DecissionCore.Core.Services.Interfaces;
-using DecissionCore.DataBase;
+using DecissionService.Core.DAL;
+using DecissionService.Core.Services.Interfaces;
+using DecissionService.DataBase;
 
-namespace DecissionCore.Controllers
+namespace DecissionService.Controllers
 {
     [ApiController]
     public class BaseController : ServicesBaseController

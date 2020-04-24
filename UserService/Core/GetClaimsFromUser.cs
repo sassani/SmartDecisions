@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace DecissionCore.Core
+namespace DecissionService.Core
 {
     public class GetClaimsFromUser : IGetClaimsProvider
     {

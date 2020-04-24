@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace DecissionCore.Core.Domain.DTOs
+namespace DecissionService.Core.Domain.DTOs
 {
     public class UserDto
     {

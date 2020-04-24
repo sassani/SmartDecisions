@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Attributes;
 using Shared.Response;
-using DecissionCore.Core.DAL;
-using DecissionCore.Core.Domain;
-using DecissionCore.Core.Domain.DTOs;
+using DecissionService.Core.DAL;
+using DecissionService.Core.Domain;
+using DecissionService.Core.Domain.DTOs;
 
-namespace DecissionCore.Controllers
+namespace DecissionService.Controllers
 {
     [Route("[controller]")]
     [ApiController]

@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Shared.DAL.Configurations;
-using DecissionCore.Core.Domain;
+using DecissionService.Core.Domain;
 
-namespace DecissionCore.DataBase.Configurations
+namespace DecissionService.DataBase.Configurations
 {
     public class UserDbConfig : EntityConfiguration<User>
     {

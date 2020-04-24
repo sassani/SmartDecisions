@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.EquivalencyExpression;
-using DecissionCore.Core.Domain;
-using DecissionCore.Core.Domain.DTOs;
+using DecissionService.Core.Domain;
+using DecissionService.Core.Domain.DTOs;
 
-namespace DecissionCore.Extentions
+namespace DecissionService.Extentions
 {
     public class AutoMapperProfile : Profile
     {

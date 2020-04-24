@@ -9,12 +9,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using DecissionCore.Core;
-using DecissionCore.DataBase;
-using DecissionCore.Extensions;
-using DecissionCore.Extentions;
+using DecissionService.Core;
+using DecissionService.DataBase;
+using DecissionService.Extensions;
+using DecissionService.Extentions;
 
-namespace DecissionCore
+namespace DecissionService
 {
     public class Startup
     {

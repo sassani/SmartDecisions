@@ -3,10 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Shared.DAL;
-using DecissionCore.Core.DAL.IRepositories;
-using DecissionCore.Core.Domain;
+using DecissionService.Core.DAL.IRepositories;
+using DecissionService.Core.Domain;
 
-namespace DecissionCore.DataBase.Repositories
+namespace DecissionService.DataBase.Repositories
 {
     public class AddressRepo : Repository<Address>, IAddressRepo
     {

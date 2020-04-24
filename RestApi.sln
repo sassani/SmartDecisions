@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailService", "MailService\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntraServicesApi", "IntraServices\IntraServicesApi.csproj", "{9E37C264-9C59-4838-874E-61274299EA11}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DecissionCore", "UserService\DecissionCore.csproj", "{E9386D7D-8819-442C-A806-4F30E0D19BF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DecissionService", "UserService\DecissionService.csproj", "{E9386D7D-8819-442C-A806-4F30E0D19BF1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGatewat", "ApiGatewat\ApiGatewat.csproj", "{44500F47-D335-41C2-AA7A-73D4FA3D7FDD}"
 EndProject

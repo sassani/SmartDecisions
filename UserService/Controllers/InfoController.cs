@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Attributes;
 using Shared.Response;
-using DecissionCore.Core.DAL;
+using DecissionService.Core.DAL;
 
-namespace DecissionCore.Controllers
+namespace DecissionService.Controllers
 {
     [Route("[controller]")]
     [ApiController]

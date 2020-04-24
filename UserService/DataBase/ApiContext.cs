@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using DecissionCore.Core;
-using DecissionCore.Core.Domain;
-using DecissionCore.DataBase.Configurations;
+using DecissionService.Core;
+using DecissionService.Core.Domain;
+using DecissionService.DataBase.Configurations;
 
-namespace DecissionCore.DataBase
+namespace DecissionService.DataBase
 {
 	public class ApiContext : DbContext
     {
