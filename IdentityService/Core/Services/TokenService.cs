@@ -1,0 +1,74 @@
+﻿using System;
+using System.Linq;
+using Helpers;
+using Jose;
+using Microsoft.Extensions.Options;
+using IdentityService.Core.Domain;
+using IdentityService.Core.Domain.DTOs;
+using IdentityService.Core.Services.Interfaces;
+using IdentityService.Extensions;
+
+namespace IdentityService.Core.Services
+{
+    public class TokenService : ITokenService
+    {
+        private readonly AppSettingsModel config;
+        private readonly byte[] secretKey;
+        public TokenService(IOptions<AppSettingsModel> options)
+        {
+            config = options.Value;
+            secretKey = options.Value.Token.SecretKey.Select(x => (byte)x).ToArray();
+        }
+
+        public AuthTokenDto GenerateAuthToken(Credential credential, int userClientId, string refreshToken)
+        {
+            AccessTokenDto accessToken = new AccessTokenDto(credential, userClientId, config.Token.ValidationPeriod);
+            var accessTokenJson = System.Text.Json.JsonSerializer.Serialize(accessToken);
+            string signedAccessToken = JWT.Encode(accessTokenJson, secretKey, JwsAlgorithm.HS256);
+            return new AuthTokenDto(signedAccessToken, refreshToken, "bearer", credential);
+        }
+
+        public string EmailVerificationToken(string email)
+        {
+            EmailVerificationTokenDto token = new EmailVerificationTokenDto(email);
+            return JWT.Encode(token, secretKey, JwsAlgorithm.HS256);
+        }
+
+        public string ForgotPasswordRequestToken(string email)
+        {
+            ForgotPasswordRequestTokenDto token = new ForgotPasswordRequestTokenDto(email);
+            return JWT.Encode(token, secretKey, JwsAlgorithm.HS256);
+        }
+
+        public T ValidateDtoToken<T>(string tokenString)
+        {
+            T validatedDtoToken;
+            try
+            {
+                validatedDtoToken = JWT.Decode<T>(tokenString, secretKey);
+                if (validatedDtoToken == null) throw new Exception("Bad token");
+                //var t = validatedDtoToken.GetType().GetProperties();
+                long now = DateTimeHelper.GetUnixTimestamp();
+                foreach (var item in validatedDtoToken.GetType().GetProperties())
+                {
+                    if (item.Name.ToLower().Equals("expiration"))
+                    {
+                        var expDate = validatedDtoToken.GetType().GetProperty(item.Name)!.GetValue(validatedDtoToken);
+                        if ((long)expDate! < now) throw new Exception("Token is expired");
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                throw err;
+            }
+            return validatedDtoToken;
+        }
+
+        public string GenerateRefreshToken(string userPublicId)
+        {
+            return userPublicId + StringHelper.GenerateRandom(37);
+            //return StringHelper.StringToHash(userPublicId + StringHelper.GenerateRandom(25));
+        }
+    }
+}
