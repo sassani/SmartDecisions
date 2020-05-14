@@ -10,12 +10,12 @@ namespace IntraServicesApi
     public class MailServiceApi
     {
         private readonly HttpClient client = new HttpClient();
-        public MailServiceApi(string apikey)
+        public MailServiceApi(string apikey, string mailServerUrl)
         {
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Add("apiKey", apikey);
-            client.BaseAddress = new Uri("https://mailservice.ardavansassani.com");
+            client.BaseAddress = new Uri(mailServerUrl);
         }
         public async Task SendVerificationEmail(string email, string token)
         {
@@ -49,7 +49,7 @@ namespace IntraServicesApi
                 {
                     email,
                     title = "Forgot Password request",
-                    description = "Click below button to change your password",
+                    description = "Please click below button to change your password",
                     url = token,
                     label = "Change My Password"
                 };
