@@ -27,6 +27,10 @@ namespace Shared.DAL
 		{
 			return entities.Find(id);
 		}
+		public TEntity Get(Guid id)
+		{
+			return entities.Find(id);
+		}
 
 		public IEnumerable<TEntity> GetAll()
 		{

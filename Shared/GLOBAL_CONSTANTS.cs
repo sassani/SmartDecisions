@@ -8,9 +8,9 @@ namespace Shared
     {
         public static class SERVICES
         {
-            public static class AUTH_SERVICE
+            public static class IDENTITY_SERVICE
             {
-                public const string NAME = "OAuthService";
+                public const string NAME = "IdentityService";
                 public const string CODE = "01";
                 public static readonly Dictionary<string, string> CONTROLLERS = new Dictionary<string, string>() {
                     { "Info","00" },
@@ -18,14 +18,13 @@ namespace Shared
                     { "Credential","02" },
                 };
             }
-            public static class USER_SERVICE
+            public static class APPLICATION_SERVICE
             {
-                public const string NAME = "UserService";
+                public const string NAME = "ApplicationService";
                 public const string CODE = "02";
                 public static readonly Dictionary<string, string> CONTROLLERS = new Dictionary<string, string>() {
                     { "Info","00" },
-                    { "User","01" },
-                    { "Address","02" },
+                    { "Profile","01" }
                 };
             }
         }

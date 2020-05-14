@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
 using Shared.Attributes;
-using Shared.DTOs;
 
 namespace Shared.Controllers
 {
@@ -41,15 +38,13 @@ namespace Shared.Controllers
 
         protected virtual int GetLogsheetId()
         {
-            return GetValidatedAccessToken().LogsheetId;
+            return int.Parse(User.FindFirst("lid")?.Value);
         }
 
         protected virtual string GetCredentialId()
         {
-            return GetValidatedAccessToken().CredentialId;
+            return User.FindFirst("uid")?.Value;
         }
-
-
 
         private string ControllerName()
         {
@@ -59,13 +54,6 @@ namespace Shared.Controllers
         private string GetControllerCode()
         {
             return Controllers[ControllerName()];
-        }
-
-        private AccessToken GetValidatedAccessToken()
-        {
-            string HEADER_NAME = "XXX_VALIDATED_TOKEN";
-            if (!Request.Headers.TryGetValue(HEADER_NAME, out StringValues token)) throw new Exception($"Header ({HEADER_NAME}) is required");
-            return AccessToken.DecodeValidatedToken(token);
         }
     }
 }

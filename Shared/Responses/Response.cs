@@ -71,9 +71,11 @@ namespace Shared.Response
 
         public override string ToString()
         {
+            if (Data == null && Errors == null) Data = new int[] { };
             return JsonSerializer.Serialize(this, new JsonSerializerOptions()
             {
-                IgnoreNullValues = true
+                IgnoreNullValues = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
         }
 
