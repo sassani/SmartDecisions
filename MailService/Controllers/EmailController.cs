@@ -20,15 +20,9 @@ namespace MailService.Controllers
         }
 
         [HttpPost]
-        public void SendVerificationEmail([FromBody] EmailVerificationDto data)
+        public async Task Send([FromBody] MessageDto message)
         {
-            mailServer.SendVerification(data.Email, data.Token);
-        }
-
-        [HttpPost]
-        public void SendActionLink([FromBody] EmailVerificationDto data)
-        {
-            mailServer.SendVerification(data.Email, data.Token);
+            await mailServer.SendAsync(message);
         }
     }
 }

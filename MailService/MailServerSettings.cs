@@ -13,5 +13,7 @@ namespace MailService
         public string Username { get; set; }
         public string Password { get; set; }
         public string ApiKey { get; set; }
+        public string DomainName { get; set; }
+        public string CompanyName { get; set; }
     }
 }
