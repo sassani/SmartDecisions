@@ -135,7 +135,7 @@ namespace IdentityService.Controllers
         {
             try
             {
-                await credentialSrvice.ChangePasswordAsync(crDto, GetCredentialId());
+                await credentialSrvice.ChangePasswordAsync(crDto);
                 return new Response(HttpStatusCode.OK, new { message = "password has been successfully changed" }).ToActionResult();
 
             }

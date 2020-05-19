@@ -11,7 +11,7 @@ namespace IdentityService.Core.Services.Interfaces
         Task VerifyEmailAsync(string token);
         Task SendForgotPasswordRequestLinkAsync(string email);
         //Task ChangePasswordAsync(Credential cr, string newPass);
-        Task ChangePasswordAsync(CredentialDto crdt, string uid);
+        Task ChangePasswordAsync(CredentialDto crdt, string? uid = null);
         Task<Credential> CreateCredentialAsync(CredentialDto crDto, string uid);
         Task<Credential> CreateCredentialAsync(string uid);
         Task<Credential> CreateCredentialAsync(CredentialDto crDto);
