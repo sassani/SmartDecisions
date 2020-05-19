@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -17,52 +18,45 @@ namespace IntraServicesApi
             client.DefaultRequestHeaders.Add("apiKey", apikey);
             client.BaseAddress = new Uri(mailServerUrl);
         }
+
         public async Task SendVerificationEmail(string email, string token)
         {
-            try
+            await SendActionLink(new
             {
-                Object data = new
-                {
-                    email,
-                    title = "Email Verification Link",
-                    description = $"Please verify your email by click the below button({email})",
-                    url = token,
-                    label = "Verify"
-                };
-                var json = JsonConvert.SerializeObject(data);
-                var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
-                HttpResponseMessage response = await client.PostAsync("actionlink", stringContent);
-                if (!response.IsSuccessStatusCode) throw new Exception("Mail Service Failed");
-            }
-            catch (HttpRequestException e)
-            {
-
-                throw;
-            }
+                email,
+                title = "Email Verification Link",
+                description = $"Please verify your email by click the below button({email})",
+                url = token,
+                label = "Verify"
+            });
         }
 
         public async Task SendForgotPasswordLink(string email, string token)
         {
+            await SendActionLink(new
+            {
+                email,
+                title = "Forgot Password request",
+                description = "Please click below button to change your password",
+                url = token,
+                label = "Change My Password"
+            });
+        }
+
+        private async Task SendActionLink(object data)
+        {
             try
             {
-                Object data = new
-                {
-                    email,
-                    title = "Forgot Password request",
-                    description = "Please click below button to change your password",
-                    url = token,
-                    label = "Change My Password"
-                };
                 var json = JsonConvert.SerializeObject(data);
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
                 HttpResponseMessage response = await client.PostAsync("actionlink", stringContent);
-                if (!response.IsSuccessStatusCode) throw new Exception("Mail Service Failed");
+                if (!response.IsSuccessStatusCode) throw new IntraServiceException(HttpStatusCode.InternalServerError, "Mail Server Error", $"The response status: ({response.StatusCode})");
             }
-            catch (HttpRequestException e)
+            catch (Exception)
             {
-
-                throw;
+                throw new IntraServiceException(HttpStatusCode.InternalServerError, "Mail Server Error", "Mail server does not respond");
             }
+
         }
     }
 }
