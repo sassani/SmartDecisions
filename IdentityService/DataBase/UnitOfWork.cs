@@ -2,6 +2,7 @@
 using IdentityService.Core.DAL;
 using IdentityService.DataBase.Persistence;
 using IdentityService.DataBase.Persistence.Repositories;
+using System.Threading.Tasks;
 
 namespace IdentityService.DataBase
 {
@@ -30,6 +31,11 @@ namespace IdentityService.DataBase
 		public int Complete()
 		{
 			return context.SaveChanges();
+		}
+
+		public async Task<int> CompleteAsync()
+		{
+			return await context.SaveChangesAsync();
 		}
 
 		public void Dispose()

@@ -6,7 +6,7 @@
   <PropertyGroup>
     <ActiveDebugProfile>LocalDB</ActiveDebugProfile>
     <ShowAllFiles>false</ShowAllFiles>
-    <NameOfLastUsedPublishProfile>FolderLocal</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>Self_Local_NotDelete</NameOfLastUsedPublishProfile>
     <Controller_SelectedScaffolderID>ApiControllerEmptyScaffolder</Controller_SelectedScaffolderID>
     <Controller_SelectedScaffolderCategoryPath>root/Controller</Controller_SelectedScaffolderCategoryPath>
     <WebStackScaffolding_ControllerDialogWidth>600</WebStackScaffolding_ControllerDialogWidth>

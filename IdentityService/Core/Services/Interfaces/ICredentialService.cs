@@ -7,15 +7,16 @@ namespace IdentityService.Core.Services.Interfaces
     public interface ICredentialService
     {
         Task<bool> IsEmailExistedAsync(string email);
-        bool Logout(int loginId, bool all = false);
         Task RegisterAsync(CredentialDto credential);
         Task VerifyEmailAsync(string token);
-        AuthTokenDto Login(Credential credential, Client? client = null);
         Task SendForgotPasswordRequestLinkAsync(string email);
-        Task ChangePasswordAsync(Credential cr, string newPass);
+        //Task ChangePasswordAsync(Credential cr, string newPass);
+        Task ChangePasswordAsync(CredentialDto crdt, string uid);
         Task<Credential> CreateCredentialAsync(CredentialDto crDto, string uid);
         Task<Credential> CreateCredentialAsync(string uid);
         Task<Credential> CreateCredentialAsync(CredentialDto crDto);
-        Task SendEmailVerificationToken(string email);
+        Task SendEmailVerificationTokenAsync(string email);
+        Task<AuthTokenDto> LoginAsync(Credential credential, Client? client = null);
+        Task<bool> LogoutAsync(int LogintId, bool all = false);
     }
 }

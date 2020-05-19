@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using IdentityService.Core.DAL.IRepositories;
 
 namespace IdentityService.Core.DAL
@@ -10,5 +11,6 @@ namespace IdentityService.Core.DAL
 		ILogsheetRepo Logsheet { get; }
 
 		int Complete();
-	}
+        Task<int> CompleteAsync();
+    }
 }

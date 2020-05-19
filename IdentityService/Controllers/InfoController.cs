@@ -24,7 +24,28 @@ namespace IdentityService.Controllers
         {
             var payload = new
             {
-                Message = "This is initial data"
+                ServiceNAme = "Identity Service",
+                version = "V1",
+                endpoints = new
+                {
+                    info="/info",
+                    credential = new string[]
+                    {
+                        "GET/credential",
+                        "POST/credential",
+                        "GET/credential/emailverification/{email}",
+                        "GET/credential/forgotpassword/{email}",
+                        "POST/credential/emailverification",
+                        "PUT/credential/forgotpassword",
+                        "PUT/credential/password",
+                    },
+                    auth=new string[]
+                    {
+                        "POST/auth",
+                        "DELETE/auth",
+                        "DELETE/auth/all",
+                    }
+                }
             };
             return new Response(HttpStatusCode.Accepted, payload).ToActionResult();
         }

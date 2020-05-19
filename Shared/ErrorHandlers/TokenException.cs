@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Shared.ErrorHandlers
 {
-    public class TokenException:HttpResponseException
+    public class TokenException:BaseException
     {
         public TokenException(HttpStatusCode status = HttpStatusCode.Unauthorized, string title = null, string description = null)
         {

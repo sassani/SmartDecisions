@@ -15,6 +15,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.VisualBasic;
 using Shared.ErrorHandlers;
 using System.Net;
+using static IdentityService.CONSTANTS;
 
 namespace IdentityService.Core.Services
 {
@@ -37,13 +38,14 @@ namespace IdentityService.Core.Services
             config = options.Value;
         }
 
+        #region Create Credential
         public async Task<Credential> CreateCredentialAsync(CredentialDto crDto)
         {
             try
             {
                 switch (crDto.RequestType.ToLower())
                 {
-                    case CONSTANTS.REQUEST_TYPE.REFRESH_TOKEN:
+                    case REQUEST_TYPE.REFRESH_TOKEN:
                         {
                             refreshToken = crDto.RefreshToken!;
                             logsheet = await unitOfWork.Logsheet.FindLogsheetByRefreshTokenAsync(refreshToken);
@@ -54,7 +56,7 @@ namespace IdentityService.Core.Services
                             }
                             break;
                         }
-                    case CONSTANTS.REQUEST_TYPE.ID_TOKEN:
+                    case REQUEST_TYPE.ID_TOKEN:
                         {
                             var credentialDb = await unitOfWork.Credential.FindByEmailAsync(crDto.Email!);
                             if (credentialDb != null)
@@ -64,7 +66,7 @@ namespace IdentityService.Core.Services
                             }
                             break;
                         }
-                    case CONSTANTS.REQUEST_TYPE.FORGOT_PASSWORD:
+                    case REQUEST_TYPE.FORGOT_PASSWORD:
                         {
                             ForgotPasswordRequestTokenDto validatedToken = tokenSrvice.ValidateDtoToken<ForgotPasswordRequestTokenDto>(crDto.ResetPasswordToken!);
                             var credentialDb = await unitOfWork.Credential.FindByEmailAsync(validatedToken.Email);
@@ -116,13 +118,10 @@ namespace IdentityService.Core.Services
                 throw new Exception(err.Message);
             }
         }
+        #endregion
 
-        private bool CheckPassword(Credential cr, CredentialDto crDto)
-        {
-            return StringHelper.CompareStringToHash(cr.Password, crDto.Password);
-        }
-
-        public AuthTokenDto Login(Credential credential, Client? client = null)
+        #region Login-Logout
+        public async Task<AuthTokenDto> LoginAsync(Credential credential, Client? client = null)
         {
             if (refreshToken == null && client != null)
             {
@@ -145,11 +144,11 @@ namespace IdentityService.Core.Services
                 unitOfWork.Logsheet.UpdateLastTimeLogin(logsheet);
             }
             unitOfWork.Credential.UpdateLastLogin(credential);
-            unitOfWork.Complete();
+            await unitOfWork.CompleteAsync();
             return tokenSrvice.GenerateAuthToken(credential, logsheet.Id, refreshToken);
         }
 
-        public bool Logout(int LogintId, bool all = false)
+        public async Task<bool> LogoutAsync(int LogintId, bool all = false)
         {
             var ucdb = unitOfWork.Logsheet.Get(LogintId);
             if (ucdb == null) return false;
@@ -162,28 +161,29 @@ namespace IdentityService.Core.Services
             {
                 unitOfWork.Logsheet.Remove(ucdb);
             }
-            unitOfWork.Complete();
+            await unitOfWork.CompleteAsync();
             return true;
         }
+        #endregion
 
+        #region Registeration & Verification
         public async Task RegisterAsync(CredentialDto credential)
         {
             try
             {
+                var cr = await unitOfWork.Credential.FindByEmailAsync(credential.Email!);
+                if (cr != null) throw new BaseException(HttpStatusCode.Conflict, "Invalid Email", "This email address is already being used.");
                 var newCredential = new Credential
                 {
-                    Email = credential.Email,
+                    Email = credential.Email!,
                     Password = StringHelper.StringToHash(credential.Password),
                     IsActive = true,
                     PublicId = Guid.NewGuid().ToString(),
                 };
                 unitOfWork.Credential.Add(newCredential);
-                unitOfWork.Complete();
+                await unitOfWork.CompleteAsync();
 
-                //string url = config.RedirectUrls.EmailVerification;
-                //MailServiceApi ms = new MailServiceApi(config.ServicesApiKeys.MailService);
-                //await ms.SendVerificationEmail(credential.Email, $"{url}/{tokenSrvice.EmailVerificationToken(credential.Email)}");
-                await SendEmailVerificationToken(credential.Email);
+                await SendEmailVerificationTokenAsync(credential.Email!);
             }
             catch (Exception err)
             {
@@ -191,9 +191,13 @@ namespace IdentityService.Core.Services
             }
         }
 
-        public async Task SendEmailVerificationToken(string email)
+        public async Task SendEmailVerificationTokenAsync(string email)
         {
-            if (await IsEmailExistedAsync(email))
+            var cr = await unitOfWork.Credential.FindByEmailAsync(email);
+            if (cr == null) throw new BaseException(HttpStatusCode.NotFound, "Invalid email", "This Email is not registered in our system");
+            if (cr.IsEmailVerified) throw new BaseException(HttpStatusCode.Conflict, "Verified Email", "This Email has been verified before");
+
+            try
             {
                 string url = config.RedirectUrls.EmailVerification;
                 MailServiceApi ms = new MailServiceApi(
@@ -201,10 +205,11 @@ namespace IdentityService.Core.Services
                     config.ServicesSettings.EmailService.ServerUrl);
                 await ms.SendVerificationEmail(email, $"{url}/{tokenSrvice.EmailVerificationToken(email)}");
             }
-            else
+            catch (IntraServiceException err)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound,"Invalid email","This Email is not registered in our system");
+                throw new BaseException(HttpStatusCode.InternalServerError, err.Title, err.Description);
             }
+
         }
 
         public async Task<bool> IsEmailExistedAsync(string email) => await unitOfWork.Credential.IsEmailExistAsync(email);
@@ -214,37 +219,59 @@ namespace IdentityService.Core.Services
             try
             {
                 var validatedToken = tokenSrvice.ValidateDtoToken<EmailVerificationTokenDto>(token);
-                await unitOfWork.Credential.VerifyEmailAsync(validatedToken.Email);
+                var cr = await unitOfWork.Credential.FindByEmailAsync(validatedToken.Email);
+                cr.IsEmailVerified = true;
+                await unitOfWork.CompleteAsync();
+            }
+            catch (TokenException err)
+            {
+                throw new BaseException(err.Status, err.Title, err.Description);
             }
             catch (Exception err)
             {
                 throw new Exception(err.Message);
             }
         }
+        #endregion
 
+        #region Password
         public async Task SendForgotPasswordRequestLinkAsync(string email)
         {
-            string uri = config.RedirectUrls.ForgotPasswordChange;
             try
             {
+                string uri = config.RedirectUrls.ForgotPasswordChange;
+                var cr = await unitOfWork.Credential.FindByEmailAsync(email);
+                if (cr == null) throw new BaseException(HttpStatusCode.NotFound, "Invalid Email Address", "The provided email address is not registered in our system");
+                if (!cr.IsEmailVerified) throw new BaseException(HttpStatusCode.NotFound, "Not Verified Email Address", "This email address was not verified. Please verify your email before changing password.");
+
                 MailServiceApi ms = new MailServiceApi(
                     config.ServicesSettings.EmailService.ServerApiKey,
                     config.ServicesSettings.EmailService.ServerUrl);
                 await ms.SendForgotPasswordLink(email, $"{uri}/{tokenSrvice.ForgotPasswordRequestToken(email)}");
             }
-            catch (Exception err)
+            catch (IntraServiceException err)
             {
-                throw new Exception(err.Message);
+                throw new BaseException(err.Status, err.Title, err.Description);
             }
 
         }
 
-        public async Task ChangePasswordAsync(Credential cr, string newPass)
+        public async Task ChangePasswordAsync(CredentialDto crdto, string? uid = null)
         {
             try
             {
-                cr.Password = StringHelper.StringToHash(newPass);
-                await Task.Run(() => unitOfWork.Complete());
+                if (uid != null)
+                {
+                    await CreateCredentialAsync(crdto, uid);
+                    if (!CheckPassword(credential, crdto)) throw new BaseException(HttpStatusCode.Forbidden, "Wrong Password", "The old password is not matched. Try forgot password instead.");
+                }
+                else
+                {
+                    await CreateCredentialAsync(crdto);
+                }
+
+                credential.Password = StringHelper.StringToHash(crdto.NewPassword);
+                await unitOfWork.CompleteAsync();
             }
             catch (Exception err)
             {
@@ -252,5 +279,10 @@ namespace IdentityService.Core.Services
             }
         }
 
+        private bool CheckPassword(Credential cr, CredentialDto crDto)
+        {
+            return StringHelper.CompareStringToHash(cr.Password, crDto.Password);
+        }
+        #endregion
     }
 }

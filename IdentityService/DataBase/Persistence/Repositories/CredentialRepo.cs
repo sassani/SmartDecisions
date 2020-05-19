@@ -48,18 +48,6 @@ namespace IdentityService.DataBase.Persistence.Repositories
             context.Credential.Update(credential);
         }
 
-        public async Task VerifyEmailAsync(string email)
-        {
-            Credential credential = context.Credential
-                .Where(cr => cr.Email.ToLower() == email.ToLower()).FirstOrDefault();
-            credential.IsEmailVerified = true;
-            await Task.Run(() =>
-            {
-                context.Credential.Update(credential);
-                context.SaveChanges();
-            });
-        }
-
         public async Task<Credential> FindByUidAsync(string uid)
         {
             return await context.Credential.Where(cr => cr.PublicId == uid).FirstOrDefaultAsync();

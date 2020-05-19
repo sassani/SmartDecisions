@@ -13,6 +13,8 @@ using IdentityService.Core.Services.Interfaces;
 using Filters;
 using Shared.Attributes;
 using Shared.ErrorHandlers;
+using IdentityService.Core.DAL;
+using Shared.Responses;
 
 namespace IdentityService.Controllers
 {
@@ -22,8 +24,10 @@ namespace IdentityService.Controllers
     [ServiceFilter(typeof(ValidateModelAttributeFilter))]
     public class CredentialController : BaseController
     {
-        public CredentialController(ICredentialService credentialSrvice) : base(credentialSrvice)
+        private IUnitOfWork unitOfWork;
+        public CredentialController(ICredentialService credentialSrvice, IUnitOfWork unitOfWork) : base(credentialSrvice)
         {
+            this.unitOfWork = unitOfWork;
         }
 
         [EndPointData("00")]
@@ -40,6 +44,7 @@ namespace IdentityService.Controllers
             return new Response(HttpStatusCode.OK, payload).ToActionResult();
         }
 
+        #region Registration & Verification
         [AllowAnonymous]
         [EndPointData("01")]
         [HttpPost()]
@@ -47,192 +52,121 @@ namespace IdentityService.Controllers
         {
             try
             {
-                if (await credentialSrvice.IsEmailExistedAsync(crDto.Email!))
-                {
-                    return new Response(HttpStatusCode.Conflict,
-                            new Error[] { new Error {
-                            Code = ErrorCode+"02",
-                            Title = "Invalid Email",
-                            Detail = "This email address is already being used."
-                        } }).ToActionResult();
-                }
-
                 await credentialSrvice.RegisterAsync(crDto);
                 return new Response(HttpStatusCode.OK, crDto.Email!).ToActionResult();
             }
-            catch (Exception err)
+            catch (BaseException err)
             {
-
-                return new Response(HttpStatusCode.InternalServerError,
-                        new Error[] { new Error {
-                            Code = ErrorCode+"03",
-                            Title = "Registering Error",
-                            Detail = err.Message
-                        } }).ToActionResult();
+                return Errors.BaseExceptionResponse(err, ErrorCode + "01");
+            }
+            catch (Exception)
+            {
+                return Errors.InternalServer(ErrorCode + "00", "Registering Error");
             }
         }
 
         [AllowAnonymous]
         [EndPointData("02")]
         [HttpGet("emailverification/{email}")]
-        public async Task<IActionResult> EmailVerificationRequest(string email)
+        public async Task<IActionResult> RequestEmailVerificationToken(string email)
         {
             try
             {
-                //var cr = await GetCredentialAsync();
-                await credentialSrvice.SendEmailVerificationToken(email);
-                return new Response(HttpStatusCode.OK, email).ToActionResult();
+                await credentialSrvice.SendEmailVerificationTokenAsync(email);
+                return new Response(HttpStatusCode.OK, new { message = $"We've just sent an email to ({email}). Please check your email" }).ToActionResult();
             }
-            catch (HttpResponseException err)
+            catch (BaseException err)
             {
-                return new Response(err.Status,
-                        new Error[] { new Error {
-                            Code =ErrorCode+"01",
-                            Title = err.Title,
-                            Detail = err.Description
-                        } }).ToActionResult();
+                return Errors.BaseExceptionResponse(err, ErrorCode + "01");
             }
-            catch (Exception err)
+            catch (Exception)
             {
-                return new Response(HttpStatusCode.InternalServerError,
-                       new Error[] { new Error {
-                            Code =ErrorCode+"01",
-                            Title = "Email Verification Request Hass Been Failed",
-                            //Detail = err.Message TODO: make it based on environment
-                        } }).ToActionResult();
+                return Errors.InternalServer(ErrorCode + "00", "Email Verification Request Hass Been Failed");
             }
         }
 
         [AllowAnonymous]
         [EndPointData("06")]
         [HttpPost("emailverification")]
-        public async Task<IActionResult> VerifyEmail([FromBody] EmailVerificationDto evDto)
+        public async Task<IActionResult> VerifyEmailByToken([FromBody] EmailVerificationDto evDto)
         {
             try
             {
                 await credentialSrvice.VerifyEmailAsync(evDto.Token);
                 return new Response(HttpStatusCode.OK).ToActionResult();
             }
-            catch (Exception err)
+            catch (BaseException err)
             {
-                return new Response(HttpStatusCode.InternalServerError,
-                        new Error[] { new Error {
-                            Code = ErrorCode+"01",
-                            Title = "Email Verification Failed",
-                            Detail = err.Message
-                        } }).ToActionResult();
+                return Errors.BaseExceptionResponse(err, ErrorCode + "01");
+            }
+            catch (Exception)
+            {
+                return Errors.InternalServer(ErrorCode + "00", "Email Verification Failed");
             }
         }
+        #endregion
 
+        #region Password
         [AllowAnonymous]
         [EndPointData("03")]
         [HttpGet("forgotpassword/{email}")]
-        public async Task<IActionResult> ForgotPassword(string email)
+        public async Task<IActionResult> RequestForgotPasswordToken(string email)
         {
             try
             {
-                // Check Email Address
-                if (await credentialSrvice.IsEmailExistedAsync(email))
-                {
-                    await credentialSrvice.SendForgotPasswordRequestLinkAsync(email);
-                    return new Response(HttpStatusCode.OK, email).ToActionResult();
-                }
-                else
-                {
-                    return new Response(HttpStatusCode.BadRequest,
-                        new Error[] { new Error {
-                            Code = ErrorCode+"01",
-                            Title = "Invalid Email Address",
-                            Detail = "The provided email address is not registered in our system"
-                        } }).ToActionResult();
-                }
-            }
-            catch (Exception err)
-            {
+                await credentialSrvice.SendForgotPasswordRequestLinkAsync(email);
+                return new Response(HttpStatusCode.OK, new { message = $"We've just sent an email to ({email}). Please check your email" }).ToActionResult();
 
-                return new Response(HttpStatusCode.InternalServerError,
-                       new Error[] { new Error {
-                            Code = ErrorCode+"02",
-                            Title = "Password Change has been Failed",
-                            Detail = err.Message
-                        } }).ToActionResult();
+            }
+            catch (BaseException err)
+            {
+                return Errors.BaseExceptionResponse(err, ErrorCode + "01");
+            }
+            catch (Exception)
+            {
+                return Errors.InternalServer(ErrorCode + "00", "Password Change has been Failed");
             }
         }
 
         [AllowAnonymous]
         [EndPointData("04")]
         [HttpPut("forgotpassword")]
-        public async Task<IActionResult> ForgotPasswordChange([FromBody] CredentialDto crDto)
+        public async Task<IActionResult> ForgotPasswordChangeByToken([FromBody] CredentialDto crDto)
         {
             try
             {
-                Credential cr = await credentialSrvice.CreateCredentialAsync(crDto);
-                return await ChangePassword(cr, crDto.NewPassword!);
-            }
-            catch (Exception err)
-            {
+                await credentialSrvice.ChangePasswordAsync(crDto, GetCredentialId());
+                return new Response(HttpStatusCode.OK, new { message = "password has been successfully changed" }).ToActionResult();
 
-                return new Response(HttpStatusCode.InternalServerError,
-                       new Error[] { new Error {
-                            Code = ErrorCode+"02",
-                            Title = "Password Change has been Failed",
-                            Detail = err.Message
-                        } }).ToActionResult();
+            }
+            catch (BaseException err)
+            {
+                return Errors.BaseExceptionResponse(err, ErrorCode + "01");
+            }
+            catch (Exception)
+            {
+                return Errors.InternalServer(ErrorCode + "00", "Password Change has been Failed");
             }
         }
 
         [EndPointData("05")]
         [HttpPut("password")]
-        public async Task<IActionResult> ChangePassword([FromBody] CredentialDto crDto)
+        public async Task<IActionResult> ChangePasswordByOldPassword([FromBody] CredentialDto crDto)
         {
             try
             {
-                Credential cr = await credentialSrvice.CreateCredentialAsync(crDto, GetCredentialId());
-                if (!cr.IsAuthenticated)
-                {
-                    return new Response(HttpStatusCode.Forbidden,
-                    new Error[] { new Error {
-                            Code = ErrorCode+"01",
-                            Title = "Old Password is wrong",
-                            Detail = "Try forget password instead."
-                        } }).ToActionResult();
-                }
-                return await ChangePassword(cr, crDto.NewPassword!);
+                await credentialSrvice.ChangePasswordAsync(crDto, GetCredentialId());
+                return new Response(HttpStatusCode.OK, new { message = "password has been successfully changed" }).ToActionResult();
             }
-            catch (Exception err)
+            catch (BaseException err)
             {
-
-                return new Response(HttpStatusCode.InternalServerError,
-                       new Error[] { new Error {
-                            Code = ErrorCode+"02",
-                            Title = "Password Change has been Failed",
-                            Detail = err.Message
-                        } }).ToActionResult();
+                return Errors.BaseExceptionResponse(err, ErrorCode + "01");
+            }
+            catch (Exception)
+            {
+                return Errors.InternalServer(ErrorCode + "00", "Password Change has been Failed");
             }
         }
-
-        [EndPointData("06")]
-        private async Task<IActionResult> ChangePassword(Credential cr, string newPassword)
-        {
-            try
-            {
-                if (!cr.IsEmailVerified)
-                {
-                    return new Response(HttpStatusCode.Forbidden,
-                    new Error[] { new Error {
-                            Code = ErrorCode+"01",
-                            Title = "Not Verified Email Address",
-                            Detail = "This email address was not verified. Please verify your email before changing password."
-                        } }).ToActionResult();
-                }
-                await credentialSrvice.ChangePasswordAsync(cr, newPassword);
-
-                return new Response(HttpStatusCode.OK, "password has been successfully changed").ToActionResult();
-            }
-            catch (Exception err)
-            {
-                throw new Exception(err.Message);
-            }
-        }
+        #endregion
     }
 }

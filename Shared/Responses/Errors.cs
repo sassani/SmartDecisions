@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using Shared.ErrorHandlers;
 using Shared.Response;
 
 namespace Shared.Responses
@@ -50,7 +51,7 @@ namespace Shared.Responses
             return new Response.Response(HttpStatusCode.Conflict, err).ToActionResult();
         }
 
-        public static IActionResult BadRequest(string code = null,string title =null, string detail = null)
+        public static IActionResult BadRequest(string code = null, string title = null, string detail = null)
         {
             var err = new Error
             {
@@ -61,6 +62,15 @@ namespace Shared.Responses
             return new Response.Response(HttpStatusCode.BadRequest, err).ToActionResult();
         }
 
-
+        public static IActionResult BaseExceptionResponse(BaseException exception, string code = null)
+        {
+            var err = new Error
+            {
+                Code = code != null ? code : exception.Status.ToString(),
+                Title = exception.Title != null ? exception.Title : "Internal Server Error",
+                Detail = exception.Description != null ? exception.Description : "There is something wrong in our system. Sorry about that."
+            };
+            return new Response.Response(exception.Status, err).ToActionResult();
+        }
     }
 }
