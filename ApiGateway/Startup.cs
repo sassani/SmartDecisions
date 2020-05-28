@@ -54,10 +54,10 @@ namespace ApiGateway
                 Console.WriteLine("API Gateway is running ...");
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors("CorsPolicy");
 
             //app.UseAuthorization();
 

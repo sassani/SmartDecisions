@@ -19,13 +19,9 @@ namespace ApiGateway.Extensions
             {
                 options.AddPolicy("CorsPolicy",
                     builder => builder
-                    //.WithOrigins(config.CrossUrls)
-                    .WithOrigins("http://localhost:4200")
-                    .WithHeaders("*")
-                    //.AllowAnyOrigin() // TODO: change this before deployment!
+                    .WithOrigins(config.CrossUrls)
                     .AllowAnyMethod()
-                    //.AllowAnyHeader()
-                    //.WithMethods("GET","POST","DELETE","OPTIONS")
+                    .AllowAnyHeader()
                     );
             });
         }
