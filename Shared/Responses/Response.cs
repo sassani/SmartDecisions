@@ -34,6 +34,14 @@ namespace Shared.Response
             this.status = status;
             Errors = errors;
         }
+        public Response(HttpStatusCode status, Error error)
+        {
+            this.status = status;
+            Errors = new List<Error>()
+            {
+                error
+            };
+        }
 
         public Response(HttpStatusCode status)
         {
