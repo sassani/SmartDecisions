@@ -1,14 +1,14 @@
 ﻿
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace IdentityService.Core.Domain.DTOs
 {
     public class UserDto
     {
-        [JsonProperty(propertyName: "firstName")]
+        [JsonPropertyName("firstName")]
         public string? FirstName { get; set; }
 
-        [JsonProperty(propertyName: "lastName")]
+        [JsonPropertyName("lastName")]
         public string? LastName { get; set; }
     }
 }

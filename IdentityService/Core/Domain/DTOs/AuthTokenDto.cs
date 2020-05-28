@@ -1,20 +1,19 @@
-﻿using Newtonsoft.Json;
-using System.Linq;
+﻿using System.Text.Json.Serialization;
 
 namespace IdentityService.Core.Domain.DTOs
 {
 	public class AuthTokenDto
 	{
-		[JsonProperty(propertyName: "accessToken")]
+		[JsonPropertyName("accessToken")]
 		public string AccessToken { get; set; }
 
-		[JsonProperty(propertyName: "refreshToken")]
+		[JsonPropertyName("refreshToken")]
 		public string RefreshToken { get; set; }
 
-		[JsonProperty(propertyName: "tokenType")]
+		[JsonPropertyName("tokenType")]
 		public string TokenType { get; set; }
 
-		[JsonProperty(propertyName: "uid")]
+		[JsonPropertyName("uid")]
 		public string CredentialId { get; set; }
 
 		public AuthTokenDto(string token, string refresh, string type, Credential credential)
