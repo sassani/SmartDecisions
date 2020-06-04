@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ApplicationService.Migrations
 {
-    public partial class initialize : Migration
+    public partial class sqlserver_init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,7 +26,7 @@ namespace ApplicationService.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     OwnerId = table.Column<string>(maxLength: 36, nullable: false),
                     ProfileId = table.Column<string>(maxLength: 36, nullable: false),
                     Address1 = table.Column<string>(nullable: true),
@@ -49,10 +48,38 @@ namespace ApplicationService.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Avatar",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OwnerId = table.Column<string>(maxLength: 36, nullable: false),
+                    SharedWith = table.Column<string>(nullable: true),
+                    Url = table.Column<string>(nullable: false),
+                    ProfileId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Avatar", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Avatar_Profile_ProfileId",
+                        column: x => x.ProfileId,
+                        principalTable: "Profile",
+                        principalColumn: "OwnerId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Address_ProfileId",
                 table: "Address",
                 column: "ProfileId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Avatar_ProfileId",
+                table: "Avatar",
+                column: "ProfileId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Profile_OwnerId",
@@ -65,6 +92,9 @@ namespace ApplicationService.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Address");
+
+            migrationBuilder.DropTable(
+                name: "Avatar");
 
             migrationBuilder.DropTable(
                 name: "Profile");

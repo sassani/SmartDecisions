@@ -12,9 +12,13 @@ namespace ApplicationService.Extensions
 {
     public static class ServiceExtensions
     {
-        public static void AddValidators(this IServiceCollection services)
+        public static void ConfigureDb(this IServiceCollection services, AppSettingsModel config)
         {
-            //services.AddTransient<IValidator<CredentialDto>, CredentialDtoValidator>();
+
+            services.AddDbContext<ApiContext>(options => options
+            //.UseMySql(config.DbConnectionString));
+            .UseSqlServer(config.DbConnectionString));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
         public static void ConfigureDbMySql(this IServiceCollection services, AppSettingsModel config)

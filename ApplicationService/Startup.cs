@@ -44,7 +44,7 @@ namespace ApplicationService
             services.Configure<AppSettingsModel>(appSettingSection);
             AppSettingsModel appSettings = appSettingSection.Get<AppSettingsModel>();
 
-            services.ConfigureDbMySql(appSettings);
+            services.ConfigureDb(appSettings);
             services.ConfigureAuthentication(appSettings);
             services.ConfigureCors(appSettings);
             services.AddScoped<ValidateModelAttributeFilter>();
