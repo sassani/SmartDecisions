@@ -35,7 +35,7 @@ namespace IdentityService
             services.Configure<AppSettingsModel>(appSettingSection);
             AppSettingsModel appSettings = appSettingSection.Get<AppSettingsModel>();
 
-            services.ConfigureDbMySql(appSettings);
+            services.ConfigureDb(appSettings);
             services.ConfigureCors(appSettings);
             services.ConfigureAuthentication(appSettings);
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

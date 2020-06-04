@@ -23,8 +23,8 @@ namespace IdentityService.DataBase.Configurations
             builder.Property(f => f.PublicId).IsRequired();
             builder.Property(f => f.Email).IsUnicode().IsRequired().HasMaxLength(25);
             builder.Property(f => f.Password).IsRequired().HasMaxLength(75);
-            builder.Property(f => f.IsActive).HasColumnType("TINYINT(1)");
-            builder.Property(f => f.IsEmailVerified).HasColumnType("TINYINT(1)");
+            //builder.Property(f => f.IsActive).HasColumnType("TINYINT(1)");
+            //builder.Property(f => f.IsEmailVerified).HasColumnType("TINYINT(1)");
 
             //Ignored properties
             builder.Ignore(f => f.IsAuthenticated);

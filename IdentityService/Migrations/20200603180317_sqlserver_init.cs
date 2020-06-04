@@ -1,10 +1,9 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace IdentityService.Migrations
 {
-    public partial class initialCreate : Migration
+    public partial class sqlserver_init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,10 +12,10 @@ namespace IdentityService.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     ClientPublicId = table.Column<string>(maxLength: 25, nullable: false),
                     ClientSecret = table.Column<string>(maxLength: 75, nullable: false),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: false),
                     Type = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -29,12 +28,12 @@ namespace IdentityService.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    PublicId = table.Column<string>(nullable: true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PublicId = table.Column<string>(nullable: false),
                     Email = table.Column<string>(maxLength: 25, nullable: false),
                     Password = table.Column<string>(maxLength: 75, nullable: false),
-                    IsEmailVerified = table.Column<bool>(type: "TINYINT(1)", nullable: false),
-                    IsActive = table.Column<bool>(type: "TINYINT(1)", nullable: false),
+                    IsEmailVerified = table.Column<bool>(nullable: false),
+                    IsActive = table.Column<bool>(nullable: false),
                     LastLoginAt = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
@@ -47,7 +46,7 @@ namespace IdentityService.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Type = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -60,8 +59,8 @@ namespace IdentityService.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    RefreshToken = table.Column<string>(nullable: true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RefreshToken = table.Column<string>(nullable: false),
                     CredentialId = table.Column<int>(nullable: false),
                     ClientId = table.Column<int>(nullable: false),
                     Platform = table.Column<string>(nullable: true),
@@ -92,7 +91,7 @@ namespace IdentityService.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CredentialId = table.Column<int>(nullable: false),
                     RoleId = table.Column<int>(nullable: false)
                 },
@@ -116,12 +115,12 @@ namespace IdentityService.Migrations
             migrationBuilder.InsertData(
                 table: "Client",
                 columns: new[] { "Id", "ClientPublicId", "ClientSecret", "Name", "Type" },
-                values: new object[] { 1, "cuv12t7", "$5$10$mFiFWP2TGzuYtOEcH6ymaB$L48XHvOZDumRmt2euRv9b2pRJ93pOOMLsgIPAmAyBsg=", "localhost", 1 });
+                values: new object[] { 1, "cuv12t7", "$5$10$oURSNe5iuOVRE2EdVOVZgh$VoLOwW3wNnWJJRdW3yyUKe3H4dHmZK4LwR1ixbNZuow=", "localhost", 1 });
 
             migrationBuilder.InsertData(
                 table: "Credential",
                 columns: new[] { "Id", "Email", "IsActive", "IsEmailVerified", "LastLoginAt", "Password", "PublicId" },
-                values: new object[] { 1, "a.sassani@gmail.com", true, true, null!, "$5$10$dGxTx7tECwnupyQxo0iAGN$6EwyCSDswb2JBJUZoKQQUqGCxdkU43SiMszlbglV59k=", "41e6655b-cf0b-4c37-8239-07f62f11b266" });
+                values: new object[] { 1, "a.sassani@gmail.com", true, true, null, "$5$10$4rGGwfd4YAzHNTdLxGYEH5$t7+5q42NVNAF8Wu5Y7f22Gjo9v35e6m4uOqLBigiGi8=", "abf243f7-9ac0-428b-b7b3-f14dc1979b65" });
 
             migrationBuilder.InsertData(
                 table: "Role",

@@ -20,14 +20,14 @@ namespace IdentityService.Extensions
 {
 	public static class ServiceExtensions
 	{
-		//public static void ConfigureDb(this IServiceCollection services, AppSettings config)
-		//{
+		public static void ConfigureDb(this IServiceCollection services, AppSettingsModel config)
+		{
 
-		//	services.AddDbContext<ApiContext>(options => options
-		//	///.UseLazyLoadingProxies()
-		//	.UseSqlServer(config.DbConnection));
-		//	services.AddScoped<IUnitOfWork, UnitOfWork>();
-		//}
+			services.AddDbContext<ApiContext>(options => options
+			//.UseMySql(config.DbConnectionString));
+			.UseSqlServer(config.DbConnectionString));
+			services.AddScoped<IUnitOfWork, UnitOfWork>();
+		}
 		public static void AddValidators(this IServiceCollection services)
 		{
 			services.AddTransient<IValidator<CredentialDto>, CredentialDtoValidator>();
