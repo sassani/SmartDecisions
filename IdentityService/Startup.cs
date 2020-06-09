@@ -1,17 +1,16 @@
+using System;
+using Filters;
 using FluentValidation.AspNetCore;
+using IdentityService.Core.Services;
+using IdentityService.Core.Services.Interfaces;
+using IdentityService.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using IdentityService.Core.Services;
-using IdentityService.Core.Services.Interfaces;
-using IdentityService.Extensions;
-using Filters;
-using System;
-using Microsoft.AspNetCore.Http;
-using Shared.Middlewares;
+using Shared.Middlewares.Extensions;
 
 namespace IdentityService
 {
@@ -66,7 +65,7 @@ namespace IdentityService
                 app.UseDeveloperExceptionPage();
                 Console.WriteLine("Identity Service is running ...");
             }
-            SecurityMiddleware.UseSharedApiKey(app, appSettings.SharedApiKey);
+            app.UseRequestSharedApiKey(appSettings.SharedApiKey);
             //app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors("CorsPolicy");

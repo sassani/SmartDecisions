@@ -17,6 +17,8 @@ using Microsoft.Net.Http.Headers;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Shared.Response;
+using Shared.Middlewares;
+using Shared;
 
 namespace ApiGateway
 {
@@ -66,32 +68,36 @@ namespace ApiGateway
                 endpoints.MapControllers();
             });
 
+            app.Use(async (context, next) =>
+            {
+                context.Request.Headers.Add(GLOBAL_CONSTANTS.SHARED_API_KEY_HEADER_NAME, config.SharedApiKey);
+                await next();
+            });
+
             var ocelotConfig = new OcelotPipelineConfiguration
             {
-
                 AuthenticationMiddleware = async (context, next) =>
                 {
                     if (context.DownstreamReRoute.IsAuthenticated)
                     {
-                        var tokenValidationParams = new TokenValidationParameters
-                        {
-                            ClockSkew = TimeSpan.Zero,
-                            RequireSignedTokens = true,
-                            ValidateIssuer = false,
-                            ValidateAudience = false,
-                            ValidateLifetime = true,
-                            ValidateIssuerSigningKey = true,
+                        //var tokenValidationParams = new TokenValidationParameters
+                        //{
+                        //    ClockSkew = TimeSpan.Zero,
+                        //    RequireSignedTokens = true,
+                        //    ValidateIssuer = false,
+                        //    ValidateAudience = false,
+                        //    ValidateLifetime = true,
+                        //    ValidateIssuerSigningKey = true,
 
-                            ValidIssuer = config.Token.Issuer,
-                            ValidAudience = config.Token.Audience,
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.Token.SecretKey))
-                        };
+                        //    ValidIssuer = config.Token.Issuer,
+                        //    ValidAudience = config.Token.Audience,
+                        //    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.Token.SecretKey))
+                        //};
                         try
                         {
                             var authorizationHeader = context.HttpContext.Request.Headers["Authorization"];
                             if (authorizationHeader.Count == 0) throw new Exception("Authorization token is required");
 
-                            context.DownstreamRequest.Content.Headers.Add("XXX_SHARED_API_KEY", config.SharedApiKey);
                             await next.Invoke();
                         }
                         catch (Exception err)
@@ -117,6 +123,7 @@ namespace ApiGateway
             };
 
             app.UseOcelot(ocelotConfig).Wait();
+            
         }
     }
 }

@@ -6,6 +6,7 @@ namespace Shared
 {
     public static class GLOBAL_CONSTANTS
     {
+        public const string SHARED_API_KEY_HEADER_NAME = "XXX_SHARED_API_KEY";
         public static class SERVICES
         {
             public static class IDENTITY_SERVICE

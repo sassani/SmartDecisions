@@ -1,4 +1,10 @@
 using System;
+using ApplicationService.Core;
+using ApplicationService.Core.Services;
+using ApplicationService.Core.Services.Interfaces;
+using ApplicationService.DataBase;
+using ApplicationService.Extensions;
+using ApplicationService.Extentions;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using Filters;
@@ -9,14 +15,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using ApplicationService.Core;
-using ApplicationService.DataBase;
-using ApplicationService.Extensions;
-using ApplicationService.Extentions;
-using ApplicationService.Core.Services.Interfaces;
-using ApplicationService.Core.Services;
+using Shared.Middlewares.Extensions;
 using Shared.Storage;
-using Shared.Middlewares;
 
 namespace ApplicationService
 {
@@ -72,7 +72,7 @@ namespace ApplicationService
                 app.UseDeveloperExceptionPage();
                 Console.WriteLine("Application Service is running ...");
             }
-            SecurityMiddleware.UseSharedApiKey(app, appSettings.SharedApiKey);
+            app.UseRequestSharedApiKey(appSettings.SharedApiKey);
             //app.UseHttpsRedirection();
             app.UseCors("CorsPolicy");
 
