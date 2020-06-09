@@ -10,11 +10,14 @@ using IdentityService.Core.Services.Interfaces;
 using IdentityService.Extensions;
 using Filters;
 using System;
+using Microsoft.AspNetCore.Http;
+using Shared.Middlewares;
 
 namespace IdentityService
 {
     public class Startup
     {
+        private AppSettingsModel appSettings;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -33,7 +36,7 @@ namespace IdentityService
 
             var appSettingSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettingsModel>(appSettingSection);
-            AppSettingsModel appSettings = appSettingSection.Get<AppSettingsModel>();
+            appSettings = appSettingSection.Get<AppSettingsModel>();
 
             services.ConfigureDb(appSettings);
             services.ConfigureCors(appSettings);
@@ -42,8 +45,7 @@ namespace IdentityService
 
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
-                .AddFluentValidation(opt => { })
-                ;
+                .AddFluentValidation(opt => { });
             services.AddValidators();
             services.AddScoped<ValidateModelAttributeFilter>();
 
@@ -64,7 +66,7 @@ namespace IdentityService
                 app.UseDeveloperExceptionPage();
                 Console.WriteLine("Identity Service is running ...");
             }
-
+            SecurityMiddleware.UseSharedApiKey(app, appSettings.SharedApiKey);
             //app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors("CorsPolicy");

@@ -51,8 +51,8 @@ namespace ApiGateway
         {
             if (env.IsDevelopment())
             {
-                Console.WriteLine("API Gateway is running ...");
                 app.UseDeveloperExceptionPage();
+                Console.WriteLine("API Gateway is running ...");
             }
             app.UseHttpsRedirection();
 
@@ -86,18 +86,12 @@ namespace ApiGateway
                             ValidAudience = config.Token.Audience,
                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.Token.SecretKey))
                         };
-
-                        SecurityToken validatedToken;
-                        JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
                         try
                         {
                             var authorizationHeader = context.HttpContext.Request.Headers["Authorization"];
                             if (authorizationHeader.Count == 0) throw new Exception("Authorization token is required");
 
-                            var token = authorizationHeader[0].Split(" ")[1];
-                            var user = handler.ValidateToken(token, tokenValidationParams, out validatedToken);
-                            // TODO: clean errors descriptions by its Ids
-                            context.DownstreamRequest.Content.Headers.Add("XXX_VALIDATED_TOKEN", validatedToken.ToString());
+                            context.DownstreamRequest.Content.Headers.Add("XXX_SHARED_API_KEY", config.SharedApiKey);
                             await next.Invoke();
                         }
                         catch (Exception err)
@@ -105,16 +99,14 @@ namespace ApiGateway
                             var res = context.HttpContext.Response;
                             res.StatusCode = (int)HttpStatusCode.Unauthorized;
                             res.Headers.Append(HeaderNames.ContentType, "application/json");
-                            List<Error> errors = new List<Error>();
                             Error error = new Error
                             {
                                 Code = "00000000",
                                 Title = "Authorization Failed",
                                 Detail = err.Message
                             };
-                            errors.Add(error);
 
-                            await res.WriteAsync(new Response(HttpStatusCode.BadRequest, errors).ToString());
+                            await res.WriteAsync(new Response(HttpStatusCode.Unauthorized, error).ToString());
                         }
                     }
                     else

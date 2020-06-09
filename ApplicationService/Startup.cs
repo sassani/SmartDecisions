@@ -16,11 +16,13 @@ using ApplicationService.Extentions;
 using ApplicationService.Core.Services.Interfaces;
 using ApplicationService.Core.Services;
 using Shared.Storage;
+using Shared.Middlewares;
 
 namespace ApplicationService
 {
     public class Startup
     {
+        private AppSettingsModel appSettings;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -42,7 +44,7 @@ namespace ApplicationService
 
             var appSettingSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettingsModel>(appSettingSection);
-            AppSettingsModel appSettings = appSettingSection.Get<AppSettingsModel>();
+            appSettings = appSettingSection.Get<AppSettingsModel>();
 
             services.ConfigureDb(appSettings);
             services.ConfigureAuthentication(appSettings);
@@ -70,7 +72,7 @@ namespace ApplicationService
                 app.UseDeveloperExceptionPage();
                 Console.WriteLine("Application Service is running ...");
             }
-
+            SecurityMiddleware.UseSharedApiKey(app, appSettings.SharedApiKey);
             //app.UseHttpsRedirection();
             app.UseCors("CorsPolicy");
 

@@ -6,6 +6,7 @@ namespace IdentityService.Extensions
 	public class AppSettingsModel
 	{
 		public string DbConnectionString { get; set; }
+		public string SharedApiKey { get; set; }
 		public string BaseUrl { get; set; }
 		public string[] CrossUrls { get; set; }
 		public Token Token { get; set; }
