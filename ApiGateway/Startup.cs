@@ -80,24 +80,28 @@ namespace ApiGateway
                 {
                     if (context.DownstreamReRoute.IsAuthenticated)
                     {
-                        //var tokenValidationParams = new TokenValidationParameters
-                        //{
-                        //    ClockSkew = TimeSpan.Zero,
-                        //    RequireSignedTokens = true,
-                        //    ValidateIssuer = false,
-                        //    ValidateAudience = false,
-                        //    ValidateLifetime = true,
-                        //    ValidateIssuerSigningKey = true,
+                        var tokenValidationParams = new TokenValidationParameters
+                        {
+                            ClockSkew = TimeSpan.Zero,
+                            RequireSignedTokens = true,
+                            ValidateIssuer = false,
+                            ValidateAudience = false,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
 
-                        //    ValidIssuer = config.Token.Issuer,
-                        //    ValidAudience = config.Token.Audience,
-                        //    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.Token.SecretKey))
-                        //};
+                            ValidIssuer = config.Token.Issuer,
+                            ValidAudience = config.Token.Audience,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.Token.SecretKey))
+                        };
+
+                        SecurityToken validatedToken;
+                        JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
                         try
                         {
                             var authorizationHeader = context.HttpContext.Request.Headers["Authorization"];
                             if (authorizationHeader.Count == 0) throw new Exception("Authorization token is required");
-
+                            var token = authorizationHeader[0].Split(" ")[1];
+                            var user = handler.ValidateToken(token, tokenValidationParams, out validatedToken);
                             await next.Invoke();
                         }
                         catch (Exception err)
