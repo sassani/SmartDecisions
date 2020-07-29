@@ -70,7 +70,14 @@ namespace ApiGateway
 
             app.Use(async (context, next) =>
             {
-                context.Request.Headers.Add(GLOBAL_CONSTANTS.SHARED_API_KEY_HEADER_NAME, config.SharedApiKey);
+                if (!context.Request.Headers.ContainsKey(GLOBAL_CONSTANTS.SHARED_API_KEY_HEADER_NAME))
+                {
+                    context.Request.Headers.Add(GLOBAL_CONSTANTS.SHARED_API_KEY_HEADER_NAME, config.SharedApiKey);
+                }
+                else
+                {
+                    context.Request.Headers[GLOBAL_CONSTANTS.SHARED_API_KEY_HEADER_NAME] = config.SharedApiKey;
+                }
                 await next();
             });
 
@@ -127,7 +134,7 @@ namespace ApiGateway
             };
 
             app.UseOcelot(ocelotConfig).Wait();
-            
+
         }
     }
 }
