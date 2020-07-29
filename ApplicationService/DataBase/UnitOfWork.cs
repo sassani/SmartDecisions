@@ -13,12 +13,12 @@ namespace ApplicationService.DataBase
         {
             this.context = context;
             Profile = new ProfileRepo(context);
-            Address = new AddressRepo(context);
+            Contact = new ContactRepo(context);
             Avatar = new AvatarRepo(context);
         }
 
         public IProfileRepo Profile { get; }
-        public IAddressRepo Address { get; }
+        public IContactRepo Contact { get; }
         public IAvatarRepo Avatar { get; }
 
         public async Task<int> Complete()

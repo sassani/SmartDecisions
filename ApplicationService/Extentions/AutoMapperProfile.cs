@@ -11,12 +11,12 @@ namespace ApplicationService.Extentions
         {
             CreateMap<Core.Domain.Profile, ProfileDto>();
             CreateMap<ProfileDto, Core.Domain.Profile>()
-                .ForMember(u => u.Addresses, opt => opt.Ignore())
+                .ForMember(u => u.Contacts, opt => opt.Ignore())
                 .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
 
 
-            CreateMap<Address, AddressDto>();
-            CreateMap<AddressDto, Address>()
+            CreateMap<Contact, ContactDto>();
+            CreateMap<ContactDto, Contact>()
                 .ForMember(a=>a.Id, opt=>opt.Ignore())
                 .EqualityComparison((dto, entity) => dto.Id == entity.Id)
                 .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));

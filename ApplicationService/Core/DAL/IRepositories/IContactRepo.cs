@@ -5,8 +5,8 @@ using Shared.DAL.Interfaces;
 
 namespace ApplicationService.Core.DAL.IRepositories
 {
-    public interface IAddressRepo:IRepository<Address>
+    public interface IContactRepo:IRepository<Contact>
     {
-        Task<ICollection<Address>> GetAllUserAddressesAsync(string userId);
+        Task<ICollection<Contact>> GetAllUserAddressesAsync(string userId);
     }
 }

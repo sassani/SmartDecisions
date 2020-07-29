@@ -14,10 +14,24 @@ namespace ApplicationService.Extensions
     {
         public static void ConfigureDb(this IServiceCollection services, AppSettingsModel config)
         {
+            switch (config.DatabaseProvider)
+            {
+                case "MYSQL":
+                    services.AddDbContext<ApiContext>(options => options
+                    .UseMySql(config.DbConnectionString));
+                    break;
 
-            services.AddDbContext<ApiContext>(options => options
+                case "MSSQL":
+                    services.AddDbContext<ApiContext>(options => options
+                    .UseSqlServer(config.DbConnectionString));
+                    break;
+
+                default:
+                    break;
+            }
+            //services.AddDbContext<ApiContext>(options => options
             //.UseMySql(config.DbConnectionString));
-            .UseSqlServer(config.DbConnectionString));
+            //.UseSqlServer(config.DbConnectionString));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
@@ -35,7 +49,7 @@ namespace ApplicationService.Extensions
                 options.AddPolicy("CorsPolicy",
                     builder => builder
                     .WithOrigins(config.CrossUrls)
-                    .WithHeaders("*")
+                    .AllowAnyHeader()
                     .AllowAnyMethod()
                     );
             });

@@ -114,14 +114,14 @@ namespace ApplicationService.Controllers
 
         #region Address
         [EndPointData("04")]
-        [HttpGet("address/{id}")]
-        public async Task<IActionResult> GetAddress(int id)
+        [HttpGet("contact/{id}")]
+        public async Task<IActionResult> GetContact(int id)
         {
             try
             {
-                var addresses = UnitOfWork.Address.Get(id);
+                var addresses = UnitOfWork.Contact.Get(id);
                 if (addresses != null && !addresses.IsOwnedByUser(GetCredentialId())) return Errors.Forbiden(ErrorCode + "00");
-                return new Response(HttpStatusCode.OK, mapper.Map<AddressDto>(addresses)).ToActionResult();
+                return new Response(HttpStatusCode.OK, mapper.Map<ContactDto>(addresses)).ToActionResult();
             }
             catch (Exception err)
             {
@@ -130,27 +130,27 @@ namespace ApplicationService.Controllers
         }
 
         [EndPointData("05")]
-        [HttpGet("address")]
-        public async Task<IActionResult> GetAddresses()
+        [HttpGet("contact")]
+        public async Task<IActionResult> GetContacts()
         {
-            var addresses = await UnitOfWork.Address.GetAllUserAddressesAsync(GetCredentialId());
-            return new Response(HttpStatusCode.OK, mapper.Map<List<AddressDto>>(addresses)).ToActionResult();
+            var addresses = await UnitOfWork.Contact.GetAllUserAddressesAsync(GetCredentialId());
+            return new Response(HttpStatusCode.OK, mapper.Map<List<ContactDto>>(addresses)).ToActionResult();
         }
 
         [EndPointData("06")]
-        [HttpPost("address")]
-        public async Task<IActionResult> AddAddress([FromBody] AddressDto addressDto)
+        [HttpPost("contact")]
+        public async Task<IActionResult> AddContact([FromBody] ContactDto addressDto)
         {
             try
             {
-                Address newAddress = mapper.Map<Address>(addressDto);
+                Contact newAddress = mapper.Map<Contact>(addressDto);
                 newAddress.OwnerId = GetCredentialId();
                 newAddress.ProfileId = newAddress.OwnerId;
 
-                UnitOfWork.Address.Add(newAddress);
+                UnitOfWork.Contact.Add(newAddress);
                 await UnitOfWork.Complete();
-                var addresses = await UnitOfWork.Address.GetAllUserAddressesAsync(GetCredentialId());
-                return new Response(HttpStatusCode.Accepted, mapper.Map<List<AddressDto>>(addresses)).ToActionResult();
+                var addresses = await UnitOfWork.Contact.GetAllUserAddressesAsync(GetCredentialId());
+                return new Response(HttpStatusCode.Accepted, mapper.Map<List<ContactDto>>(addresses)).ToActionResult();
             }
             catch (Exception err)
             {
@@ -159,17 +159,17 @@ namespace ApplicationService.Controllers
         }
 
         [EndPointData("07")]
-        [HttpPatch("address/{id}")]
-        public async Task<IActionResult> EditAddress(int id, [FromBody] AddressDto addressDto)
+        [HttpPatch("contact/{id}")]
+        public async Task<IActionResult> EditContact(int id, [FromBody] ContactDto addressDto)
         {
             try
             {
-                Address address = UnitOfWork.Address.Get(id);
+                Contact address = UnitOfWork.Contact.Get(id);
                 if (address == null) return Errors.NotFound(ErrorCode + "00", detail: $"There is no address with id ({id})");
                 if (!address.IsOwnedByUser(GetCredentialId())) return Errors.Forbiden(ErrorCode + "00");
                 mapper.Map(addressDto, address);
                 await UnitOfWork.Complete();
-                return new Response(HttpStatusCode.Accepted, mapper.Map<AddressDto>(address)).ToActionResult();
+                return new Response(HttpStatusCode.Accepted, mapper.Map<ContactDto>(address)).ToActionResult();
             }
             catch (Exception err)
             {
@@ -178,15 +178,15 @@ namespace ApplicationService.Controllers
         }
 
         [EndPointData("08")]
-        [HttpDelete("address/{id}")]
-        public async Task<IActionResult> RemoveAddress(int id)
+        [HttpDelete("contact/{id}")]
+        public async Task<IActionResult> RemoveContact(int id)
         {
             try
             {
-                Address address = UnitOfWork.Address.Get(id);
+                Contact address = UnitOfWork.Contact.Get(id);
                 if (address == null) return Errors.NotFound(ErrorCode + "00", detail: $"There is no address with id ({id})");
                 if (address.OwnerId != GetCredentialId()) Errors.Forbiden(ErrorCode + "00", detail: "you don't have permission to access this resource");
-                UnitOfWork.Address.Remove(address);
+                UnitOfWork.Contact.Remove(address);
                 await UnitOfWork.Complete();
                 return new Response(HttpStatusCode.NoContent).ToActionResult();
             }

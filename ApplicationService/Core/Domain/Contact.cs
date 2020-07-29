@@ -2,7 +2,7 @@
 
 namespace ApplicationService.Core.Domain
 {
-    public class Address : Owner
+    public class Contact : Owner
     {
         public int Id { get; set; }
         [MaxLength(36)]

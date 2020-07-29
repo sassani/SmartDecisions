@@ -16,7 +16,7 @@ namespace ApplicationService.DataBase.Repositories
         {
             return await entities
                 .Where(u => u.OwnerId == id)
-                .Include(u => u.Addresses)
+                .Include(u => u.Contacts)
                 .Include(u=>u.Avatar)
                 .FirstOrDefaultAsync();
         }

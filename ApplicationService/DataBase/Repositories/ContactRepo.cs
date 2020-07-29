@@ -8,13 +8,13 @@ using Shared.DAL;
 
 namespace ApplicationService.DataBase.Repositories
 {
-    public class AddressRepo : Repository<Address>, IAddressRepo
+    public class ContactRepo : Repository<Contact>, IContactRepo
     {
-        public AddressRepo(ApiContext context) : base(context)
+        public ContactRepo(ApiContext context) : base(context)
         {
         }
 
-        public async Task<ICollection<Address>> GetAllUserAddressesAsync(string userId)
+        public async Task<ICollection<Contact>> GetAllUserAddressesAsync(string userId)
         {
             return await entities
                 .Where(a => a.OwnerId == userId)

@@ -9,6 +9,6 @@ namespace ApplicationService.Core.Domain
         public string? ImageUrl { get; set; }
         public Avatar? Avatar { get; set; }
         public string? Company { get; set; }
-        public virtual List<Address>? Addresses { get; set; }
+        public virtual List<Contact>? Contacts { get; set; }
     }
 }

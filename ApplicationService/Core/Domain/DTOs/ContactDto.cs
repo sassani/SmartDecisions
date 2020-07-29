@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace ApplicationService.Core.Domain.DTOs
 {
-    public class AddressDto
+    public class ContactDto
     {
         [JsonPropertyName("id")]
         [JsonRequired]

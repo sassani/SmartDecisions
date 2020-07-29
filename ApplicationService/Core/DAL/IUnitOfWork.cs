@@ -7,7 +7,7 @@ namespace ApplicationService.Core.DAL
     public interface IUnitOfWork: IDisposable
     {
         IProfileRepo Profile { get; }
-        IAddressRepo Address { get; }
+        IContactRepo Contact { get; }
         IAvatarRepo Avatar { get; }
 
 

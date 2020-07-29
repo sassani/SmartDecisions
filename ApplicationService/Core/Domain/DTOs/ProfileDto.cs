@@ -20,7 +20,7 @@ namespace ApplicationService.Core.Domain.DTOs
         [JsonPropertyName("company")]
         public string? Company { get; set; }
 
-        [JsonPropertyName("address")]
-        public virtual ICollection<AddressDto>? Addresses { get; set; }
+        [JsonPropertyName("contacts")]
+        public virtual ICollection<ContactDto>? Contacts { get; set; }
     }
 }
