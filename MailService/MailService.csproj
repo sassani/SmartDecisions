@@ -19,5 +19,8 @@
   <ItemGroup>
     <None Remove="Templates\ActionLinkTemplate.html" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Shared\Shared.csproj" />
+  </ItemGroup>
 
 </Project>

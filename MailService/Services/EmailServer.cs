@@ -9,15 +9,18 @@ using Microsoft.Extensions.Options;
 using MailService.Services.Interfaces;
 using System.Threading.Tasks;
 using MailService.DTOs;
+using MailService.Templates;
 
 namespace MailService.Services
 {
     public class EmailServer : IEmailServer
     {
         private readonly MailServerSettings config;
-        public EmailServer(IOptions<MailServerSettings> options)
+        private readonly IMessageDispatcher messageDispatcher;
+        public EmailServer(IOptions<MailServerSettings> options, IMessageDispatcher messageDispatcher)
         {
             config = options.Value;
+            this.messageDispatcher = messageDispatcher;
         }
 
         public async Task SendAsync(string fromAdd,
@@ -27,12 +30,12 @@ namespace MailService.Services
                       string subject,
                       BodyBuilder body)
         {
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress(fromName, fromAdd));
-            message.To.Add(new MailboxAddress(toName, toAdd));
-            message.Subject = subject;
-            message.Body = body.ToMessageBody();
-            await SendMessageAsync(message);
+            var mMessage = new MimeMessage();
+            mMessage.From.Add(new MailboxAddress(fromName, fromAdd));
+            mMessage.To.Add(new MailboxAddress(toName, toAdd));
+            mMessage.Subject = subject;
+            mMessage.Body = body.ToMessageBody();
+            await messageDispatcher.DispatchMessageAsync(mMessage);
         }
 
         public async Task SendAsync(MessageDto message)
@@ -45,14 +48,14 @@ namespace MailService.Services
             {
                 Text = message.Body
             };
-            await SendMessageAsync(mMessage);
+            await messageDispatcher.DispatchMessageAsync(mMessage);
         }
 
         public async Task SendVerification(string email, string token, string name = null)
         {
             string subject = $"Welcome {(name != null ? name : "To FSS")} Please Verify your Email";
 
-            var body = CreateBodyFromTemplate("Templates/verificationTemplate.html", new Dictionary<string, string>() {
+            var body = TemplateManager.CreateBodyFromTemplate("Templates/verificationTemplate.html", new Dictionary<string, string>() {
                 { "email" , email },
                 { "verifingToken" , token }
             });
@@ -65,7 +68,7 @@ namespace MailService.Services
         {
             string subject = $"{data.Title}";
 
-            var body = CreateBodyFromTemplate("Templates/ActionLinkTemplate.html", new Dictionary<string, string>() {
+            var body = TemplateManager.CreateBodyFromTemplate("Templates/ActionLinkTemplate.html", new Dictionary<string, string>() {
                 { "title" , data.Title },
                 { "description" , data.Description },
                 { "url" , data.Url },
@@ -74,35 +77,5 @@ namespace MailService.Services
 
             await SendAsync($"noreply@{config.DomainName}", config.CompanyName, data.Email, null, subject, body);
         }
-
-        private async Task SendMessageAsync(MimeMessage message)
-        {
-            using var client = new SmtpClient
-            {
-                ServerCertificateValidationCallback = (s, c, h, e) => true
-            };
-
-            await client.ConnectAsync(config.SmtpServer, config.SmtpPort, config.UsingSSL);
-            await client.AuthenticateAsync(config.Username, config.Password);
-            await client.SendAsync(message);
-            await client.DisconnectAsync(true);
-        }
-
-        private BodyBuilder CreateBodyFromTemplate(string filePath, Dictionary<string, string> parameters)
-        {
-            BodyBuilder template = new BodyBuilder();
-
-            using (StreamReader SourceReader = File.OpenText(filePath))
-            {
-                string rawBody = SourceReader.ReadToEnd();
-                foreach (var param in parameters)
-                {
-                    rawBody = rawBody.Replace("{" + param.Key + "}", param.Value);
-                }
-                template.HtmlBody = rawBody;
-            }
-            return template;
-        }
-
     }
 }
