@@ -183,11 +183,11 @@ namespace IdentityService.Core.Services
                 unitOfWork.Credential.Add(newCredential);
                 await unitOfWork.CompleteAsync();
 
-                await SendEmailVerificationTokenAsync(credential.Email!);
+                //await SendEmailVerificationTokenAsync(credential.Email!);
             }
             catch (Exception err)
             {
-                throw new Exception(err.Message);
+                throw err;
             }
         }
 
@@ -197,18 +197,19 @@ namespace IdentityService.Core.Services
             if (cr == null) throw new BaseException(HttpStatusCode.NotFound, "Invalid email", "This Email is not registered in our system");
             if (cr.IsEmailVerified) throw new BaseException(HttpStatusCode.Conflict, "Verified Email", "This Email has been verified before");
 
-            try
-            {
+            //try
+            //{
                 string url = config.RedirectUrls.EmailVerification;
                 MailServiceApi ms = new MailServiceApi(
                     config.ServicesSettings.EmailService.ServerApiKey,
                     config.ServicesSettings.EmailService.ServerUrl);
                 await ms.SendVerificationEmail(email, $"{url}/{tokenSrvice.EmailVerificationToken(email)}");
-            }
-            catch (IntraServiceException err)
-            {
-                throw new BaseException(HttpStatusCode.InternalServerError, err.Title, err.Description);
-            }
+            //}
+            //catch (IntraServiceException err)
+            //{
+            //    //throw new BaseException(HttpStatusCode.InternalServerError, err.Title, err.Description);
+
+            //}
 
         }
 

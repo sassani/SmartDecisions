@@ -18,98 +18,102 @@ using Shared.Response;
 
 namespace IdentityService.Extensions
 {
-	public static class ServiceExtensions
-	{
-		public static void ConfigureDb(this IServiceCollection services, AppSettingsModel config)
-		{
+    public static class ServiceExtensions
+    {
+        public static void ConfigureDb(this IServiceCollection services, AppSettingsModel config)
+        {
+            switch (config.DatabaseProvider)
+            {
+                case "MYSQL":
+                    services.AddDbContext<ApiContext>(options => options
+                    .UseMySql(config.DbConnectionString));
+                    break;
 
-			services.AddDbContext<ApiContext>(options => options
-			//.UseMySql(config.DbConnectionString));
-			.UseSqlServer(config.DbConnectionString));
-			services.AddScoped<IUnitOfWork, UnitOfWork>();
-		}
-		public static void AddValidators(this IServiceCollection services)
-		{
-			services.AddTransient<IValidator<CredentialDto>, CredentialDtoValidator>();
-		}
+                case "MSSQL":
+                    services.AddDbContext<ApiContext>(options => options
+                    .UseSqlServer(config.DbConnectionString));
+                    break;
 
-		public static void ConfigureDbMySql(this IServiceCollection services, AppSettingsModel config)
-		{
-			services.AddDbContext<ApiContext>(options => options
-			///.UseLazyLoadingProxies()
-			.UseMySql(config.DbConnectionString));
-			services.AddScoped<IUnitOfWork, UnitOfWork>();
-		}
+                default:
+                    break;
+            }
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+        }
 
-		public static void ConfigureCors(this IServiceCollection services, AppSettingsModel config)
-		{
-			services.AddCors(options =>
-			{
-				options.AddPolicy("CorsPolicy",
-					builder => builder
-					.WithOrigins(config.CrossUrls)
-					.AllowAnyMethod()
-					.AllowAnyHeader()
-					);
-			});
-		}
+        public static void AddValidators(this IServiceCollection services)
+        {
+            services.AddTransient<IValidator<CredentialDto>, CredentialDtoValidator>();
+        }
 
-		public static void ConfigureAuthentication(this IServiceCollection services, AppSettingsModel config)
-		{
-			services.AddAuthentication(options =>
-			{
-				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-				options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
-				options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-			})
-			.AddJwtBearer(opt =>
-			{
-				opt.TokenValidationParameters = new TokenValidationParameters
-				{
-					ClockSkew = TimeSpan.Zero,
-					RequireSignedTokens = true,
-					ValidateIssuer = false,
-					ValidateAudience = false,
-					ValidateLifetime = true,
-					ValidateIssuerSigningKey = true,
+        public static void ConfigureCors(this IServiceCollection services, AppSettingsModel config)
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                    .WithOrigins(config.CrossUrls)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    );
+            });
+        }
 
-					ValidIssuer = config.Token.Issuer,
-					ValidAudience = config.Token.Audience,
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.Token.SecretKey))
-				};
-				opt.Events = new JwtBearerEvents // TODO: create a filter to handle this
-				{
-					OnChallenge = async context =>
-					{
-						// Override the response status code.
-						context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+        public static void ConfigureAuthentication(this IServiceCollection services, AppSettingsModel config)
+        {
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(opt =>
+            {
+                opt.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ClockSkew = TimeSpan.Zero,
+                    RequireSignedTokens = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
 
-						// Emit the WWW-Authenticate header.
-						context.Response.Headers.Append(
-							HeaderNames.WWWAuthenticate,
-							context.Options.Challenge);
-						context.Response.Headers.Append(
-							HeaderNames.ContentType,
-							"application/json");
+                    ValidIssuer = config.Token.Issuer,
+                    ValidAudience = config.Token.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.Token.SecretKey))
+                };
+                opt.Events = new JwtBearerEvents // TODO: create a filter to handle this
+                {
+                    OnChallenge = async context =>
+                    {
+                        // Override the response status code.
+                        context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
 
-						string title = "Authorization Failed";
-						string detail = "Authorization token is required";
-						if (!string.IsNullOrEmpty(context.Error))title = context.Error;
-						if (!string.IsNullOrEmpty(context.ErrorDescription))detail = context.ErrorDescription;
-						List<Error> errors = new List<Error>();
-						Error err = new Error
-						{
-							Code = "111111",
-							Title = title,
-							Detail = detail
-						};
-						errors.Add(err);
-						await context.Response.WriteAsync(new Response(System.Net.HttpStatusCode.BadRequest, errors).ToString());
+                        // Emit the WWW-Authenticate header.
+                        context.Response.Headers.Append(
+                            HeaderNames.WWWAuthenticate,
+                            context.Options.Challenge);
+                        context.Response.Headers.Append(
+                            HeaderNames.ContentType,
+                            "application/json");
 
-						context.HandleResponse();
-					}
-				};
-			});
-		}
-	}
+                        string title = "Authorization Failed";
+                        string detail = "Authorization token is required";
+                        if (!string.IsNullOrEmpty(context.Error)) title = context.Error;
+                        if (!string.IsNullOrEmpty(context.ErrorDescription)) detail = context.ErrorDescription;
+                        //List<Error> errors = new List<Error>();
+                        Error err = new Error
+                        {
+                            Code = "111111",
+                            Title = title,
+                            Detail = detail
+                        };
+                        //errors.Add(err);
+                        await context.Response.WriteAsync(new Response(System.Net.HttpStatusCode.BadRequest, err).ToString());
+
+                        context.HandleResponse();
+                    }
+                };
+            });
+        }
+    }
 }

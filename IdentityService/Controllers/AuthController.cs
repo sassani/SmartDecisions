@@ -83,7 +83,7 @@ namespace IdentityService.Controllers
             }
             catch (Exception)
             {
-                return Errors.Conflict(ErrorCode + "05", "Login failed");
+                return Errors.InternalServer(ErrorCode + "05", "Login failed");
             }
 
         }

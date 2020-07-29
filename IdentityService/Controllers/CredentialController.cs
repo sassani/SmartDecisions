@@ -15,6 +15,7 @@ using Shared.Attributes;
 using Shared.ErrorHandlers;
 using IdentityService.Core.DAL;
 using Shared.Responses;
+using IntraServicesApi;
 
 namespace IdentityService.Controllers
 {
@@ -53,7 +54,22 @@ namespace IdentityService.Controllers
             try
             {
                 await credentialSrvice.RegisterAsync(crDto);
-                return new Response(HttpStatusCode.OK, crDto.Email!).ToActionResult();
+                var payload = new
+                {
+                    registeredEmail = crDto.Email,
+                    verificationEmailHasBeenSent = true
+                };
+                return new Response(HttpStatusCode.OK, payload).ToActionResult();
+            }
+            catch (IntraServiceException err)
+            {
+                var payload = new
+                {
+                    registeredEmail = crDto.Email,
+                    verificationEmailHasBeenSent = false,
+                    details = err.Message
+                };
+                return new Response(HttpStatusCode.OK, payload).ToActionResult();
             }
             catch (BaseException err)
             {
