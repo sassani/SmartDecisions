@@ -52,6 +52,10 @@ namespace IntraServicesApi
                 HttpResponseMessage response = await client.PostAsync("actionlink", stringContent);
                 if (!response.IsSuccessStatusCode) throw new IntraServiceException(HttpStatusCode.InternalServerError, "Mail Server Error", $"The response status: ({response.StatusCode})");
             }
+            catch (IntraServiceException err)
+            {
+                throw err;
+            }
             catch (Exception)
             {
                 throw new IntraServiceException(HttpStatusCode.InternalServerError, "Mail Server Error", "Mail server does not respond");
