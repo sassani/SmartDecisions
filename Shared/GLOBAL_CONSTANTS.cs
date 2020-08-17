@@ -25,7 +25,8 @@ namespace Shared
                 public const string CODE = "02";
                 public static readonly Dictionary<string, string> CONTROLLERS = new Dictionary<string, string>() {
                     { "Info","00" },
-                    { "Profile","01" }
+                    { "Profile","01" },
+                    { "Ahp","02" }
                 };
             }
         }
