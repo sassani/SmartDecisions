@@ -8,12 +8,12 @@ namespace IdentityService.Extensions
 		public string DbConnectionString { get; set; }
         public string DatabaseProvider { get; set; }
         public string SharedApiKey { get; set; }
+        public string EmailServerUrl { get; set; }
 		public string BaseUrl { get; set; }
 		public string[] CrossUrls { get; set; }
 		public Token Token { get; set; }
 		public BaseClient BaseClient { get; set; }
 		public BaseAdmin BaseAdmin { get; set; }
-		public ServicesSettings ServicesSettings { get; set; }
 		public RedirectUrls RedirectUrls { get; set; }
 	}
 
@@ -37,17 +37,6 @@ namespace IdentityService.Extensions
 	{
 		public string Email { get; set; }
 		public string Password { get; set; }
-	}
-
-	public class ServicesSettings
-	{
-		public EmailServiceSettings EmailService { get; set; }
-	}
-
-	public class EmailServiceSettings
-	{
-		public string ServerUrl { get; set; }
-		public string ServerApiKey { get; set; }
 	}
 
 	public class RedirectUrls

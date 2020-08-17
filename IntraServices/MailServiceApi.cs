@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Shared;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -15,9 +16,8 @@ namespace IntraServicesApi
         {
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Add("apiKey", apikey);
-            client.BaseAddress = new Uri(mailServerUrl);
-        }
+            client.DefaultRequestHeaders.Add(GLOBAL_CONSTANTS.SHARED_API_KEY_HEADER_NAME, apikey);
+            client.BaseAddress = new Uri(mailServerUrl);        }
 
         public async Task SendVerificationEmail(string email, string token)
         {

@@ -200,9 +200,7 @@ namespace IdentityService.Core.Services
             //try
             //{
                 string url = config.RedirectUrls.EmailVerification;
-                MailServiceApi ms = new MailServiceApi(
-                    config.ServicesSettings.EmailService.ServerApiKey,
-                    config.ServicesSettings.EmailService.ServerUrl);
+                MailServiceApi ms = new MailServiceApi(config.SharedApiKey, config.EmailServerUrl);
                 await ms.SendVerificationEmail(email, $"{url}/{tokenSrvice.EmailVerificationToken(email)}");
             //}
             //catch (IntraServiceException err)
@@ -240,15 +238,13 @@ namespace IdentityService.Core.Services
         {
             try
             {
-                string uri = config.RedirectUrls.ForgotPasswordChange;
+                //string uri = config.RedirectUrls.ForgotPasswordChange;
                 var cr = await unitOfWork.Credential.FindByEmailAsync(email);
                 if (cr == null) throw new BaseException(HttpStatusCode.NotFound, "Invalid Email Address", "The provided email address is not registered in our system");
                 if (!cr.IsEmailVerified) throw new BaseException(HttpStatusCode.NotFound, "Not Verified Email Address", "This email address was not verified. Please verify your email before changing password.");
 
-                MailServiceApi ms = new MailServiceApi(
-                    config.ServicesSettings.EmailService.ServerApiKey,
-                    config.ServicesSettings.EmailService.ServerUrl);
-                await ms.SendForgotPasswordLink(email, $"{uri}/{tokenSrvice.ForgotPasswordRequestToken(email)}");
+                MailServiceApi ms = new MailServiceApi(config.SharedApiKey, config.EmailServerUrl);
+                await ms.SendForgotPasswordLink(email, $"{config.RedirectUrls.ForgotPasswordChange}/{tokenSrvice.ForgotPasswordRequestToken(email)}");
             }
             catch (IntraServiceException err)
             {

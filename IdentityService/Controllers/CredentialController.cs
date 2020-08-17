@@ -97,7 +97,7 @@ namespace IdentityService.Controllers
             }
             catch (Exception)
             {
-                return Errors.InternalServer(ErrorCode + "00", "Email Verification Request Hass Been Failed");
+                return Errors.InternalServer(ErrorCode + "00", "Email Verification Request Has Been Failed");
             }
         }
 
