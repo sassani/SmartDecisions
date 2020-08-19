@@ -43,7 +43,7 @@ namespace MathEngine.AHP
             while (queue.Count > 0)
             {
                 AHPNode node = queue.Pop();
-                node.FillLocalPriorityVector();
+                node.Activate();
                 if (node.Criterias.Count == 0)
                 {
                     var pv = node.LocalPriorityVector.Multiply(node.InheritedWeight);

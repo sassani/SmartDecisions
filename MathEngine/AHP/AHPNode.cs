@@ -16,13 +16,21 @@ namespace MathEngine.AHP
         public Vector<double> LocalPriorityVector { get; set; }
         public double InconsistencyIndex { get; set; }
 
-        public void FillLocalPriorityVector()
+
+        public void Activate()
         {
-            LocalPriorityVector = Solver.PriorityVectorByPcm(Matrix<double>.Build.DenseOfRowArrays(Comparison));
-            SetConsistencyIndex();
+            SetInConsistencyIndex();
+            // TODO: add some logic based on inconsistency value
+            FillLocalPriorityVector();
         }
 
-        private void SetConsistencyIndex()
+        private void FillLocalPriorityVector()
+        {
+            LocalPriorityVector = Solver.PriorityVectorByPcm(Matrix<double>.Build.DenseOfRowArrays(Comparison));
+            
+        }
+
+        private void SetInConsistencyIndex()
         {
             InconsistencyIndex = 0;
             int n = Comparison[0].Length;
