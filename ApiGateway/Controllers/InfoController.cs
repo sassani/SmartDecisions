@@ -15,7 +15,7 @@ namespace ApiGateway.Controllers
             {
                 Message = "Smart Solutions Web Api v1."
             };
-            return new Response(HttpStatusCode.Accepted, payload).ToActionResult();
+            return new Response(HttpStatusCode.OK, payload).ToActionResult();
         }
 
         [HttpDelete]
@@ -23,7 +23,7 @@ namespace ApiGateway.Controllers
         {
             var payload = new
             {
-                Message = "Smart Solutions Web Api v1."
+                Message = "Smart Solutions Web Api v1. (!DELETE!)"
             };
             return new Response(HttpStatusCode.Accepted, payload).ToActionResult();
         }

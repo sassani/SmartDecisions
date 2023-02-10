@@ -34,6 +34,11 @@ namespace IdentityService.Extensions
                     .UseSqlServer(config.DbConnectionString));
                     break;
 
+                case "POSTGRESQL":
+                    services.AddDbContext<ApiContext>(options => options
+                    .UseSqlServer(config.DbConnectionString));
+                    break;
+
                 default:
                     break;
             }
