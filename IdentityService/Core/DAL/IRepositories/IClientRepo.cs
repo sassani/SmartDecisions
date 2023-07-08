@@ -6,6 +6,6 @@ namespace IdentityService.Core.DAL.IRepositories
 {
     public interface IClientRepo : IRepository<Client>
 	{
-        Task<Client> FindByClientPublicIdAsync(string clientPublicId);
+        Task<Client?> FindByClientPublicIdAsync(string clientPublicId);
     }
 }

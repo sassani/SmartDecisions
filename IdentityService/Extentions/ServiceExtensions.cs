@@ -15,6 +15,10 @@ using IdentityService.Core.Domain.DTOs.Validators;
 using IdentityService.DataBase;
 using IdentityService.DataBase.Persistence;
 using Shared.Response;
+using Microsoft.Extensions.Options;
+using System.Security.Cryptography;
+using System.IO;
+using IdentityService.Core.Security;
 
 namespace IdentityService.Extensions
 {
@@ -26,7 +30,7 @@ namespace IdentityService.Extensions
             {
                 case "MYSQL":
                     services.AddDbContext<ApiContext>(options => options
-                    .UseMySql(config.DbConnectionString));
+                    .UseMySql(config.DbConnectionString, ServerVersion.AutoDetect(config.DbConnectionString)));
                     break;
 
                 case "MSSQL":
@@ -36,7 +40,7 @@ namespace IdentityService.Extensions
 
                 case "POSTGRESQL":
                     services.AddDbContext<ApiContext>(options => options
-                    .UseSqlServer(config.DbConnectionString));
+                    .UseNpgsql(config.DbConnectionString));
                     break;
 
                 default:
@@ -84,8 +88,9 @@ namespace IdentityService.Extensions
 
                     ValidIssuer = config.Token.Issuer,
                     ValidAudience = config.Token.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.Token.SecretKey))
+                    IssuerSigningKey = new RsaSecurityKey(TokenRSA.RsaPublicKey().Result)
                 };
+
                 opt.Events = new JwtBearerEvents // TODO: create a filter to handle this
                 {
                     OnChallenge = async context =>

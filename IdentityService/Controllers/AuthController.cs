@@ -33,7 +33,7 @@ namespace IdentityService.Controllers
         /// <summary>
         /// </summary>
         /// <error-code>01</error-code>
-        /// <param name="login User Credential"></param>
+        /// <param name="crDto">credential DTO</param>
         /// <returns></returns>
         [AllowAnonymous]
         [EndPointData("01")]
@@ -81,9 +81,14 @@ namespace IdentityService.Controllers
                         "Email or password is incorrect.");
                 }
             }
-            catch (Exception)
+            catch (Exception err)
             {
-                return Errors.InternalServer(ErrorCode + "05", "Login failed");
+                string? details = null;
+                if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")?.ToLower() == "development")
+                {
+                    details = err.InnerException?.Message;
+                }
+                return Errors.InternalServer(ErrorCode + "05", "Login failed", details);
             }
 
         }

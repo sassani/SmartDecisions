@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.29324.140
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityService", "IdentityService\IdentityService.csproj", "{D5E5F44F-A974-4EAC-A529-13D079F3E714}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestConsole", "TestConsole\TestConsole.csproj", "{00E0AF88-19C3-4EF1-86E6-D60587AE2E74}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailService", "MailService\MailService.csproj", "{4C031EC9-93CA-4FBE-A1A8-E2BA31D3E8C0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntraServicesApi", "IntraServices\IntraServicesApi.csproj", "{9E37C264-9C59-4838-874E-61274299EA11}"

@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Http;
 using System;
 using UAParser;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.Primitives;
 
 namespace IdentityService.Core.Services
 {
@@ -37,7 +40,7 @@ namespace IdentityService.Core.Services
 
         private async Task ValidateClient()
         {
-            Client dbClient = await unitOfWork.Client.FindByClientPublicIdAsync(client!.ClientPublicId);
+            Client? dbClient = await unitOfWork.Client.FindByClientPublicIdAsync(client!.ClientPublicId);
             if (dbClient != null)
             {
                 client = dbClient;
@@ -55,9 +58,16 @@ namespace IdentityService.Core.Services
 
         private void ClientParser()
         {
-            /// ref:https://github.com/ua-parser/uap-csharp
-            client!.IP = httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
-            string uaString = httpContextAccessor.HttpContext.Request.Headers["User-Agent"].ToString();
+            // ref:https://github.com/ua-parser/uap-csharp
+            client!.IP = httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+
+            //IEnumerable<string> headerValues;
+            //string uaString = httpContextAccessor.HttpContext?.Request?.Headers.TryGetValue("User-Agent").ToString();
+            string? uaString = httpContextAccessor.HttpContext?.Request?.Headers.UserAgent.ToString();
+            //var success = httpContextAccessor.HttpContext?.Request?.Headers.UserAgent;
+            //if ((bool)(httpContextAccessor.HttpContext?.Request?.Headers.TryGetValue("User-Agent", out headerValues))) {
+            //    uaString = "";
+            //}
 
             // get a parser with the embedded regex patterns
             var uaParser = Parser.GetDefault();

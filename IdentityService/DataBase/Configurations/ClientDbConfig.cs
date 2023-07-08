@@ -29,15 +29,15 @@ namespace IdentityService.DataBase.Configurations
 
         public override void Seed(EntityTypeBuilder<Client> builder)
         {
-            var client = config.Value.BaseClient;
-            builder.HasData(new Client
-            {
-                Id = 1,
-                ClientPublicId = client.ClientId,
-                ClientSecret = StringHelper.StringToHash(client.ClientSecret),
-                Name = client.Name,
-                Type = client.Type
-            });
+            //var client = config.Value.BaseClient;
+            //builder.HasData(new Client
+            //{
+            //    Id = 1,
+            //    ClientPublicId = client.ClientId,
+            //    ClientSecret = StringHelper.StringToHash(client.ClientSecret),
+            //    Name = client.Name,
+            //    Type = client.Type
+            //});
         }
     }
 }

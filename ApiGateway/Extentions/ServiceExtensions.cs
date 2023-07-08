@@ -81,7 +81,7 @@ namespace ApiGateway.Extensions
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(
-                config.AuthenticationProviderKey,
+                "basicJWT",
                 opt =>
                 {
                     opt.TokenValidationParameters = tokenValidationParams;

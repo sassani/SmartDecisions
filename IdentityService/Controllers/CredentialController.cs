@@ -31,6 +31,11 @@ namespace IdentityService.Controllers
             this.unitOfWork = unitOfWork;
         }
 
+
+        /// <summary>
+        /// Returns credential details by using a valid provided token.
+        /// </summary>
+        /// <returns></returns>
         [EndPointData("00")]
         [HttpGet]
         public async Task<IActionResult> GetCredentialInfo()

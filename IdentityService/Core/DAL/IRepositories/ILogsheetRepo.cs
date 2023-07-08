@@ -6,7 +6,7 @@ namespace IdentityService.Core.DAL.IRepositories
 {
 	public interface ILogsheetRepo : IRepository<Logsheet>
 	{
-		Task<Logsheet> FindLogsheetByRefreshTokenAsync(string refreshToken);
+		Task<Logsheet?> FindLogsheetByRefreshTokenAsync(string refreshToken);
 		void UpdateLastTimeLogin(Logsheet logSheetId);
 	}
 }

@@ -18,8 +18,13 @@ namespace IdentityService
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+            .ConfigureAppConfiguration((hostingContext, config) =>
+            {
+                config.AddJsonFile($"{Environment.GetEnvironmentVariable("ASPNET_APPSETTINGS_SSS_IDENTITY")}/appsettings.json");
+            })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+
                     webBuilder.UseStartup<Startup>();
                 });
     }

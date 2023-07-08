@@ -23,18 +23,15 @@ namespace IdentityService.Core.Services
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly ITokenService tokenSrvice;
-        private string refreshToken;
-        private Logsheet logsheet;
-        private Credential credential;
+        private string? refreshToken;
+        private Logsheet? logsheet = new();
+        private Credential credential = new();
         private readonly AppSettingsModel config;
 
         public CredentialService(IUnitOfWork unitOfWork, ITokenService tokenSrvice, IOptions<AppSettingsModel> options)
         {
             this.unitOfWork = unitOfWork;
             this.tokenSrvice = tokenSrvice;
-            credential = new Credential();
-            logsheet = new Logsheet();
-            refreshToken = default!;
             config = options.Value;
         }
 
@@ -47,7 +44,8 @@ namespace IdentityService.Core.Services
                 {
                     case REQUEST_TYPE.REFRESH_TOKEN:
                         {
-                            refreshToken = crDto.RefreshToken!;
+                            refreshToken = crDto.RefreshToken;
+                            if (refreshToken == null) { throw new ArgumentNullException(nameof(refreshToken)); }
                             logsheet = await unitOfWork.Logsheet.FindLogsheetByRefreshTokenAsync(refreshToken);
                             if (logsheet != null && logsheet.Credential != null)
                             {
@@ -134,8 +132,8 @@ namespace IdentityService.Core.Services
                     Platform = client.Platform,
                     Browser = client.Browser,
                     IP = client.IP,
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
                 };
                 unitOfWork.Logsheet.Add(logsheet);
             }
@@ -145,7 +143,7 @@ namespace IdentityService.Core.Services
             }
             unitOfWork.Credential.UpdateLastLogin(credential);
             await unitOfWork.CompleteAsync();
-            return tokenSrvice.GenerateAuthToken(credential, logsheet.Id, refreshToken);
+            return await tokenSrvice.GenerateAuthToken(credential, logsheet.Id, refreshToken);
         }
 
         public async Task<bool> LogoutAsync(int LogintId, bool all = false)
@@ -196,19 +194,9 @@ namespace IdentityService.Core.Services
             var cr = await unitOfWork.Credential.FindByEmailAsync(email);
             if (cr == null) throw new BaseException(HttpStatusCode.NotFound, "Invalid email", "This Email is not registered in our system");
             if (cr.IsEmailVerified) throw new BaseException(HttpStatusCode.Conflict, "Verified Email", "This Email has been verified before");
-
-            //try
-            //{
-                string url = config.RedirectUrls.EmailVerification;
-                MailServiceApi ms = new MailServiceApi(config.SharedApiKey, config.EmailServerUrl);
-                await ms.SendVerificationEmail(email, $"{url}/{tokenSrvice.EmailVerificationToken(email)}");
-            //}
-            //catch (IntraServiceException err)
-            //{
-            //    //throw new BaseException(HttpStatusCode.InternalServerError, err.Title, err.Description);
-
-            //}
-
+            string url = config.RedirectUrls.EmailVerification;
+            MailServiceApi ms = new MailServiceApi(config.SharedApiKey, config.EmailServerUrl);
+            await ms.SendVerificationEmail(email, $"{url}/{tokenSrvice.EmailVerificationToken(email)}");
         }
 
         public async Task<bool> IsEmailExistedAsync(string email) => await unitOfWork.Credential.IsEmailExistAsync(email);
@@ -219,8 +207,11 @@ namespace IdentityService.Core.Services
             {
                 var validatedToken = tokenSrvice.ValidateDtoToken<EmailVerificationTokenDto>(token);
                 var cr = await unitOfWork.Credential.FindByEmailAsync(validatedToken.Email);
-                cr.IsEmailVerified = true;
-                await unitOfWork.CompleteAsync();
+                if (cr != null)
+                {
+                    cr.IsEmailVerified = true;
+                    await unitOfWork.CompleteAsync();
+                }
             }
             catch (TokenException err)
             {
@@ -238,7 +229,6 @@ namespace IdentityService.Core.Services
         {
             try
             {
-                //string uri = config.RedirectUrls.ForgotPasswordChange;
                 var cr = await unitOfWork.Credential.FindByEmailAsync(email);
                 if (cr == null) throw new BaseException(HttpStatusCode.NotFound, "Invalid Email Address", "The provided email address is not registered in our system");
                 if (!cr.IsEmailVerified) throw new BaseException(HttpStatusCode.NotFound, "Not Verified Email Address", "This email address was not verified. Please verify your email before changing password.");

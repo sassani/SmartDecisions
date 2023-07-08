@@ -31,8 +31,12 @@ namespace Shared.Middlewares
             };
             try
             {
-                if (!context.Request.Headers.TryGetValue(SHARED_HEADER_NAME, out apiKey)) throw new Exception($"You need {SHARED_HEADER_NAME} header to access this API");
-                if (apiKey.ToString() != sharedApiKey) throw new Exception($"{SHARED_HEADER_NAME} header value is wrong");
+                if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").ToLower() != "development")
+                {
+
+                    if (!context.Request.Headers.TryGetValue(SHARED_HEADER_NAME, out apiKey)) throw new Exception($"You need {SHARED_HEADER_NAME} header to access this API");
+                    if (apiKey.ToString() != sharedApiKey) throw new Exception($"{SHARED_HEADER_NAME} header value is wrong");
+                }
 
                 await next(context);
             }

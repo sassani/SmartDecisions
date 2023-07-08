@@ -13,12 +13,12 @@ namespace IdentityService.DataBase.Configurations
 
         public override void Seed(EntityTypeBuilder<CredentialRole> builder)
         {
-            builder.HasData(new CredentialRole
-            {
-                Id = 1,
-                CredentialId = 1,
-                RoleId = 1
-            });
+            //builder.HasData(new CredentialRole
+            //{
+            //    Id = 1,
+            //    CredentialId = 1,
+            //    RoleId = 1
+            //});
 
         }
     }

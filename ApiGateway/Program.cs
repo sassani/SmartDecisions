@@ -20,9 +20,8 @@ namespace ApiGateway
             Host.CreateDefaultBuilder(args)
             .ConfigureAppConfiguration((hostingContext, config) =>
             {
-                config.AddJsonFile("ocelot.json",
-                    optional: true,
-                    reloadOnChange: true);
+                config.AddJsonFile($"{Environment.GetEnvironmentVariable("ASPNET_APPSETTINGS_SSS_GATEWAY")}/ocelot.json",optional: true,reloadOnChange: true);
+                config.AddJsonFile($"{Environment.GetEnvironmentVariable("ASPNET_APPSETTINGS_SSS_GATEWAY")}/appsettings.json");
             })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

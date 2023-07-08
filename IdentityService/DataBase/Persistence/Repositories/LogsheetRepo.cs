@@ -17,7 +17,7 @@ namespace IdentityService.DataBase.Persistence.Repositories
             this.context = context;
         }
 
-        public Task<Logsheet> FindLogsheetByRefreshTokenAsync(string refreshToken)
+        public Task<Logsheet?> FindLogsheetByRefreshTokenAsync(string refreshToken)
         {
             return context.Logsheet
                 .Where(ls => ls.RefreshToken == refreshToken)
@@ -27,7 +27,7 @@ namespace IdentityService.DataBase.Persistence.Repositories
 
         public void UpdateLastTimeLogin(Logsheet logSheet)
         {
-            logSheet.UpdatedAt = DateTime.Now;
+            logSheet.UpdatedAt = DateTime.UtcNow;
             context.Logsheet.Update(logSheet);
         }
     }

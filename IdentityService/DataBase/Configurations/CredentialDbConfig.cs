@@ -32,17 +32,17 @@ namespace IdentityService.DataBase.Configurations
 
         public override void Seed(EntityTypeBuilder<Credential> builder)
         {
-            var admin = config.Value.BaseAdmin;
-            builder.HasData(new Credential
-            {
-                Id = 1,
-                PublicId = Guid.NewGuid().ToString(),
-                Email = admin.Email,
-                Password = StringHelper.StringToHash(admin.Password),
-                IsActive = true,
-                IsEmailVerified = true,
-                LastLoginAt = null
-            });
+            //var admin = config.Value.BaseAdmin;
+            //builder.HasData(new Credential
+            //{
+            //    Id = 1,
+            //    PublicId = Guid.NewGuid().ToString(),
+            //    Email = admin.Email,
+            //    Password = StringHelper.StringToHash(admin.Password),
+            //    IsActive = true,
+            //    IsEmailVerified = true,
+            //    LastLoginAt = null
+            //});
         }
     }
 }

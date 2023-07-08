@@ -1,60 +1,64 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>e5ad4bf4-651d-4070-bc01-9772b8858a16</UserSecretsId>
-    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
-    <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
-    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-	<Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
+		<UserSecretsId>e5ad4bf4-651d-4070-bc01-9772b8858a16</UserSecretsId>
+		<RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+		<RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+		<Nullable>enable</Nullable>
+		<StartupObject>IdentityService.Program</StartupObject>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>$(NoWarn);1591</NoWarn>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="DataBase\Core\**" />
-    <Compile Remove="DataBase\Persistence\Repositories\Interfaces\**" />
-    <Compile Remove="Entities\**" />
-    <Content Remove="DataBase\Core\**" />
-    <Content Remove="DataBase\Persistence\Repositories\Interfaces\**" />
-    <Content Remove="Entities\**" />
-    <EmbeddedResource Remove="DataBase\Core\**" />
-    <EmbeddedResource Remove="DataBase\Persistence\Repositories\Interfaces\**" />
-    <EmbeddedResource Remove="Entities\**" />
-    <None Remove="DataBase\Core\**" />
-    <None Remove="DataBase\Persistence\Repositories\Interfaces\**" />
-    <None Remove="Entities\**" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="DataBase\Core\**" />
+		<Compile Remove="DataBase\Persistence\Repositories\Interfaces\**" />
+		<Compile Remove="Entities\**" />
+		<Content Remove="DataBase\Core\**" />
+		<Content Remove="DataBase\Persistence\Repositories\Interfaces\**" />
+		<Content Remove="Entities\**" />
+		<EmbeddedResource Remove="DataBase\Core\**" />
+		<EmbeddedResource Remove="DataBase\Persistence\Repositories\Interfaces\**" />
+		<EmbeddedResource Remove="Entities\**" />
+		<None Remove="DataBase\Core\**" />
+		<None Remove="DataBase\Persistence\Repositories\Interfaces\**" />
+		<None Remove="Entities\**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="Migrations\20200630194626_change_address_to_contact.cs" />
-    <Compile Remove="Migrations\20200630194626_change_address_to_contact.Designer.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+		<PackageReference Include="jose-jwt" Version="4.1.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.8">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.8">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.7" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Npgsql" Version="7.0.4" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
+		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
+		<PackageReference Include="UAParser" Version="3.1.47" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="FluentValidation.AspNetCore" Version="8.6.2" />
-    <PackageReference Include="jose-jwt" Version="2.5.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.7">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.7">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.4" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.1" />
-    <PackageReference Include="UAParser" Version="3.1.44" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Filters\Filters.csproj" />
-    <ProjectReference Include="..\Helpers\Helpers.csproj" />
-    <ProjectReference Include="..\IntraServices\IntraServicesApi.csproj" />
-    <ProjectReference Include="..\Shared\Shared.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Filters\Filters.csproj" />
+		<ProjectReference Include="..\Helpers\Helpers.csproj" />
+		<ProjectReference Include="..\IntraServices\IntraServicesApi.csproj" />
+		<ProjectReference Include="..\Shared\Shared.csproj" />
+	</ItemGroup>
 
 </Project>

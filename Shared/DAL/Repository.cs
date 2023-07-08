@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Shared.DAL.Interfaces;
 
@@ -47,7 +48,10 @@ namespace Shared.DAL
 			return entities.SingleOrDefault(predicate);
 		}
 
-		public void Add(TEntity entity)
+        public async Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate) => await entities.FirstOrDefaultAsync(predicate);
+
+
+        public void Add(TEntity entity)
 		{
 			entities.Add(entity);
 		}
@@ -66,5 +70,40 @@ namespace Shared.DAL
 		{
 			this.entities.RemoveRange(entities);
 		}
-	}
+
+        Task<TEntity> IRepository<TEntity>.GetAsync(int id)
+        {
+			return Task.FromResult(entities.SingleOrDefault());
+        }
+
+        Task<TEntity> IRepository<TEntity>.GetAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<TEntity> IRepository<TEntity>.GetAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IEnumerable<TEntity>> IRepository<TEntity>.GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IEnumerable<TEntity>> IRepository<TEntity>.FindAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IRepository<TEntity>.AddAsync(TEntity entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IRepository<TEntity>.AddRangeAsync(IEnumerable<TEntity> entities)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

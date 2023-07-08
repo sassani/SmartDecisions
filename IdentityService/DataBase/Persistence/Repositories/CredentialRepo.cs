@@ -27,11 +27,9 @@ namespace IdentityService.DataBase.Persistence.Repositories
             return true;
         }
 
-        public async Task<Credential> FindByEmailAsync(string email)
+        public async Task<Credential?> FindByEmailAsync(string email)
         {
-            return await context.Credential
-                .Where(cr => cr.Email.ToLower() == email.ToLower())
-                .FirstOrDefaultAsync();
+            return await SingleOrDefaultAsync(cr => cr.Email.ToLower() == email.ToLower());
         }
 
         public CredentialRole[] GetRoles(Credential credential)
@@ -44,11 +42,11 @@ namespace IdentityService.DataBase.Persistence.Repositories
 
         public void UpdateLastLogin(Credential credential)
         {
-            credential.LastLoginAt = DateTime.Now;
+            credential.LastLoginAt = DateTime.UtcNow;
             context.Credential.Update(credential);
         }
 
-        public async Task<Credential> FindByUidAsync(string uid)
+        public async Task<Credential?> FindByUidAsync(string uid)
         {
             return await context.Credential.Where(cr => cr.PublicId == uid).FirstOrDefaultAsync();
         }

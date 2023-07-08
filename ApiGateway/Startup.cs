@@ -19,16 +19,14 @@ using Ocelot.Middleware;
 using Shared.Response;
 using Shared.Middlewares;
 using Shared;
+using System.IO;
 
 namespace ApiGateway
 {
     public class Startup
     {
         private AppSettingsModel config;
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        public Startup(IConfiguration configuration) =>  Configuration = configuration;
 
         public IConfiguration Configuration { get; }
 
@@ -37,6 +35,7 @@ namespace ApiGateway
         {
 
             services.AddControllers();
+            var path = Directory.GetCurrentDirectory();
 
             var appSettingSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettingsModel>(appSettingSection);

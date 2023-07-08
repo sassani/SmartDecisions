@@ -9,6 +9,13 @@ using IdentityService.Core.Services.Interfaces;
 using IdentityService.Extensions;
 using Shared.ErrorHandlers;
 using System.Net;
+using System.Security.Cryptography;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.IO;
+using System.Threading.Tasks;
+using IdentityService.Core.Security;
 
 namespace IdentityService.Core.Services
 {
@@ -24,12 +31,19 @@ namespace IdentityService.Core.Services
             jwsAlg = JwsAlgorithm.HS256;
         }
 
-        public AuthTokenDto GenerateAuthToken(Credential credential, int userClientId, string refreshToken)
+        public async Task<AuthTokenDto> GenerateAuthToken(Credential credential, int userClientId, string refreshToken)
         {
             AccessTokenDto accessToken = new AccessTokenDto(credential, userClientId, config.Token.ValidationPeriod);
-            var accessTokenJson = System.Text.Json.JsonSerializer.Serialize(accessToken);
-            string signedAccessToken = JWT.Encode(accessTokenJson, secretKey, jwsAlg);
+            string jsonPayload = System.Text.Json.JsonSerializer.Serialize(accessToken);
+            RSA rsaKey = await TokenRSA.RsaPrivateKeyAsync();
+
+            string signedAccessToken = JWT.Encode(jsonPayload, rsaKey, JwsAlgorithm.RS256);
             return new AuthTokenDto(signedAccessToken, refreshToken, "bearer", credential);
+        }
+
+        public async Task<string> GetPublicKey()
+        {
+            return await TokenRSA.PublicKeyString();
         }
 
         public string EmailVerificationToken(string email)
@@ -55,7 +69,7 @@ namespace IdentityService.Core.Services
             T validatedDtoToken;
             try
             {
-                validatedDtoToken = JWT.Decode<T>(tokenString, secretKey,jwsAlg);
+                validatedDtoToken = JWT.Decode<T>(tokenString, secretKey, jwsAlg);
                 if (validatedDtoToken == null) throw new TokenException(HttpStatusCode.BadRequest, "Invalid Token", "Signature validation failed.");
                 long now = DateTimeHelper.GetUnixTimestamp();
                 foreach (var item in validatedDtoToken.GetType().GetProperties())
@@ -78,6 +92,6 @@ namespace IdentityService.Core.Services
             return validatedDtoToken;
         }
 
-        
+
     }
 }

@@ -15,7 +15,7 @@ namespace IdentityService.DataBase.Persistence.Repositories
 			this.context = context;
 		}
 
-		public async Task<Client> FindByClientPublicIdAsync(string clientPublicId)
+		public async Task<Client?> FindByClientPublicIdAsync(string clientPublicId)
 		{
 			return await context.Client
 				.Where(a => a.ClientPublicId == clientPublicId)

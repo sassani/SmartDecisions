@@ -10,7 +10,7 @@ namespace ApiGateway.Extensions
 		public string[] CrossUrls { get; set; }
         public string SharedApiKey { get; set; }
         public Token Token { get; set; }
-		public string AuthenticationProviderKey { get; set; }
+		//public string AuthenticationProviderKey { get; set; }
 	}
 
 	public class Token
